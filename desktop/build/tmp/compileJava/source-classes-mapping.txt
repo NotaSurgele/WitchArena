@@ -1,2 +1,0 @@
-com/arena/game/desktop/DesktopLauncher.java
- com.arena.game.desktop.DesktopLauncher
