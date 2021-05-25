@@ -1,28 +1,29 @@
 package com.arena.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import org.w3c.dom.Text;
 
 public class Animator {
     float frameDuration;
     int FRAME_COLS;
     int FRAME_ROWS;
 
-    public Animator(int cols, int rows)
-    {
-        this.FRAME_COLS = cols;
-        this.FRAME_ROWS = rows;
-    }
+    public Animator() {}
 
-    public Animation<TextureRegion> getAnimation(Texture img, Animation<TextureRegion> animation, float frameDuration)
+    public Animation<TextureRegion> getAnimation(Texture img, Animation<TextureRegion> animation, float frameDuration,
+                                                                                                    int cols, int rows)
     {
         if (img == null) {
-            System.err.println("You should initialise sheet!!");
+            System.err.println("You should initialise Texture!!");
             return null;
         }
+        this.FRAME_COLS = cols;
+        this.FRAME_ROWS = rows;
         this.frameDuration = frameDuration;
         TextureRegion[][] tmp = TextureRegion.split(
                         img,

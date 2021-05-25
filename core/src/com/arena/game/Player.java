@@ -6,41 +6,95 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Input.Keys;
 
 public class Player {
+    //basic
+    Input input;
     SpriteBatch batch;
-    Texture img;
-    Animator animator;
-    Animation<TextureRegion>idle;
+
+    //random value
+    public float x = 50;
+    public float y = 50;
+
+    //animation
+    boolean isRotate;
+    public Texture idle_img;
+    public Texture left_right_img;
+    public Animator animator;
+    public Animation<TextureRegion> idle;
+    public Animation<TextureRegion> left_right;
     float stateTime;
-    TextureRegion currentFrame = null;
+    public TextureRegion currentFrame = null;
 
     public Player()
     {
-        animator = new Animator(1, 6);
+        animator = new Animator();
         batch = new SpriteBatch();
-        img = new Texture("B_witch_idle.png");
-        idle = animator.getAnimation(img, idle, 0.1f);
+        idle_img = new Texture("B_witch_idle.png");
+        left_right_img = new Texture("B_witch_run.png");
+        left_right = animator.getAnimation(left_right_img, left_right, 0.090f, 1, 8);
+        idle = animator.getAnimation(idle_img, idle, 0.090f, 1, 6);
     }
 
-
-    public void render(TextureRegion currentFrame)
+    public void Render(TextureRegion currentFrame)
     {
         batch.begin();
-        batch.draw(currentFrame, 50, 50, 70, 100);
+        batch.draw(currentFrame, x, y, 70, 100);
         batch.end();
     }
 
     public void Update()
     {
         stateTime += Gdx.graphics.getDeltaTime();
-        currentFrame = idle.getKeyFrame(stateTime, true);
-        render(currentFrame);
+        currentFrame = input.Move();
+        Render(currentFrame);
     }
 
-    public void dispose()
+    public void Dispose()
     {
         batch.dispose();
-        img.dispose();
+        idle_img.dispose();
+    }
+
+    public static class Input {
+
+        Player player;
+
+        public Input(Player player) {
+            this.player = player;
+        }
+
+        public TextureRegion Move()
+        {
+            player.currentFrame = player.idle.getKeyFrame(player.stateTime, true);
+            if (player.isRotate && !player.currentFrame.isFlipX()) {
+                player.currentFrame.flip(true, false);
+            }
+            if (!player.isRotate && player.currentFrame.isFlipX()) {
+                player.currentFrame.flip(true, false);
+            }
+            if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.Q))
+            {
+                player.x -= 5;
+                player.currentFrame = player.left_right.getKeyFrame(player.stateTime, true);
+                if (!player.currentFrame.isFlipX()) {
+                    player.currentFrame.flip(true, false);
+                    player.isRotate = true;
+                }
+            }
+            if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.D)) {
+                player.x += 5;
+                player.currentFrame = player.left_right.getKeyFrame(player.stateTime, true);
+                if (player.currentFrame.isFlipX()) {
+                    player.currentFrame.flip(true, false);
+                    player.isRotate = false;
+                }
+            }
+            return player.currentFrame;
+        }
     }
 }

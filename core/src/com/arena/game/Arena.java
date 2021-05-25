@@ -14,19 +14,20 @@ public class Arena extends ApplicationAdapter {
 	public void create () {
 		player = new Player();
 		debug = new Debug();
+		player.input = new Player.Input(player);
 	}
 
 	@Override
 	public void render () {
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		player.Update();
 		debug.render();
+		player.Update();
 	}
 
 	@Override
 	public void dispose () {
-		player.dispose();
+		player.Dispose();
 		debug.dispose();
 	}
 }
