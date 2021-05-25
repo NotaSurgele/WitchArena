@@ -17,11 +17,12 @@ public class Player {
     SpriteBatch batch;
 
     //random value
+    public boolean isMoving;
     public float x = 50;
     public float y = 50;
 
     //animation
-    boolean isRotate;
+    public boolean isRotate;
     public Texture idle_img;
     public Texture left_right_img;
     public Animator animator;
@@ -73,11 +74,9 @@ public class Player {
             player.currentFrame = player.idle.getKeyFrame(player.stateTime, true);
             if (player.isRotate && !player.currentFrame.isFlipX()) {
                 player.currentFrame.flip(true, false);
-            }
-            if (!player.isRotate && player.currentFrame.isFlipX()) {
+            } if (!player.isRotate && player.currentFrame.isFlipX()) {
                 player.currentFrame.flip(true, false);
-            }
-            if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.Q))
+            } if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.Q))
             {
                 player.x -= 5;
                 player.currentFrame = player.left_right.getKeyFrame(player.stateTime, true);
@@ -85,8 +84,7 @@ public class Player {
                     player.currentFrame.flip(true, false);
                     player.isRotate = true;
                 }
-            }
-            if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.D)) {
+            } if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.D)) {
                 player.x += 5;
                 player.currentFrame = player.left_right.getKeyFrame(player.stateTime, true);
                 if (player.currentFrame.isFlipX()) {

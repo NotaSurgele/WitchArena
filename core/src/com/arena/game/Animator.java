@@ -40,4 +40,5 @@ public class Animator {
         animation = new Animation<TextureRegion>(frameDuration, animationFrame);
         return animation;
     }
+
 }
