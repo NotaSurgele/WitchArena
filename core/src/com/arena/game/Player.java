@@ -39,6 +39,7 @@ public class Player {
     public Animation<TextureRegion> moveLeft;
     public Animation<TextureRegion> attackRight;
     public Animation<TextureRegion> attackLeft;
+    public TextureRegion currentFrame = null;
     float stateTime;
 
     //useful
@@ -50,6 +51,7 @@ public class Player {
         animator = new Animator();
         batch = new SpriteBatch();
         animator.initializePlayerAnimation(this);
+        currentFrame = idleRight.getKeyFrame(stateTime, true);
     }
 
     public void move()
@@ -63,18 +65,22 @@ public class Player {
     }
 
     //Libgdx Rendering function
-    public void render()
+    public void render(TextureRegion currentFrame, StateMachine state)
     {
         batch.begin();
-        batch.draw(idleRight_img, x, y);
+        if (state.playerisRotating && state.playerisAttacking) {
+            batch.draw(currentFrame, (x - 65), y);
+        } else {
+            batch.draw(currentFrame, x, y);
+        }
         batch.end();
     }
 
     public void update(StateMachine state)
     {
         stateTime += Gdx.graphics.getDeltaTime();
-        move();
-        render();
+        currentFrame = animator.setPlayerCurrentFrame(this, state);
+        render(currentFrame, state);
     }
 
     public void dispose()

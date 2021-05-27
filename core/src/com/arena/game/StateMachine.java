@@ -12,6 +12,7 @@ public class StateMachine {
     //Player variable
     public boolean playerisMoving = false;
     public boolean playerisAttacking = false;
+    public boolean playerisRotating = false;
 
     //Others
 
@@ -19,20 +20,33 @@ public class StateMachine {
 
     public StateMachine getPlayerState() {
         if (isPlaying) {
-            if (Gdx.input.isKeyPressed(D) || Gdx.input.isKeyPressed(Q)) {
+            boolean left = false;
+
+            if ((left = Gdx.input.isKeyPressed(D)) || Gdx.input.isKeyPressed(Q)) {
                 if (this.playerisAttacking) {
                     return this;
                 }
+                this.playerisRotating = !left;
                 this.playerisAttacking = false;
                 this.playerisMoving = true;
-            } if (Gdx.input.isButtonPressed(LEFT)) {
+            } else if (Gdx.input.isButtonPressed(LEFT)) {
                 if (this.playerisMoving) {
                     return this;
                 }
                 this.playerisMoving = false;
                 this.playerisAttacking = true;
+            } else {
+                this.playerisMoving = false;
+                this.playerisAttacking = false;
             }
         }
         return this;
+    }
+
+    void applyPlayerState(Player player)
+    {
+        if (this.playerisMoving) {
+            player.move();
+        }
     }
 }
