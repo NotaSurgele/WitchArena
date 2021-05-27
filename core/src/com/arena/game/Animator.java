@@ -95,4 +95,20 @@ public class Animator {
         }
         return attackTime;
     }
+
+    public Sprite updatePlayerSprite(Player player, StateMachine state, SpriteBatch batch)
+    {
+        if (state.playerisAttacking) {
+            if (state.playerisRotating) {
+                player.sprite.setBounds(player.x - 170, player.y, player.changeX, player.changeY);
+            } else {
+                player.sprite.setBounds(player.x, player.y, player.changeX, player.changeY);
+            }
+            player.sprite.draw(batch);
+        } else {
+            player.sprite.setBounds(player.x, player.y, player.staticX, player.staticY);
+            player.sprite.draw(batch);
+        }
+        return player.sprite;
+    }
 }

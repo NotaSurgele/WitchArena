@@ -10,12 +10,13 @@ public class Arena extends ApplicationAdapter {
 	Player player;
 	Debug debug;
 	StateMachine state;
-
+	SpriteBatch batch;
 	//System variable
 	float stateTime = 0;
 
 	@Override
 	public void create () {
+		batch = new SpriteBatch();
 		player = new Player(50,50);
 		debug = new Debug();
 		state = new StateMachine();
@@ -33,6 +34,7 @@ public class Arena extends ApplicationAdapter {
 
 	@Override
 	public void dispose () {
+		batch.dispose();
 		player.dispose();
 		debug.dispose();
 	}
