@@ -3,6 +3,7 @@ package com.arena.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.loaders.AssetLoader;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
@@ -18,8 +19,7 @@ import sun.jvm.hotspot.gc.shared.Space;
 public class Player {
 
     //basic
-    SpriteBatch batch;
-    Camera camera;
+    OrthographicCamera camera;
     Sprite sprite;
     Texture texture;
 
@@ -31,6 +31,10 @@ public class Player {
     static final int changeY = 100;
     static final int staticX = 80;
     static final int staticY = 100;
+
+    Texture img;
+
+
     //animation
 
     Animator animator;
@@ -56,13 +60,14 @@ public class Player {
     {
         this.x = posX;
         this.y = posY;
+        camera = new OrthographicCamera(1280, 720);
+        camera.translate(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+        camera.update();
         animator = new Animator();
-        batch = new SpriteBatch();
         animator.initializePlayerAnimation(this);
         currentFrame = idleRight.getKeyFrame(stateTime, true);
         camera = new OrthographicCamera(1280 ,720);
         sprite = new Sprite();
-        texture = new Texture("idle_left.png");
         sprite.setBounds(0, 0, staticX, staticY);
         sprite.setRegion(currentFrame);
         sprite.setPosition(x, y);
@@ -81,14 +86,15 @@ public class Player {
     //Libgdx Rendering function
     public void render(TextureRegion currentFrame, StateMachine state, SpriteBatch batch)
     {
+        camera.position.set(x, y, 0);
         attackTime = animator.getAttackTime(state, attackTime);
         sprite = animator.updatePlayerSprite(this, state, batch);
-        batch.end();
     }
 
-    public void update(StateMachine state)
+    public void update(StateMachine state, SpriteBatch batch)
     {
-        batch.begin();
+        camera.update();
+        batch.setProjectionMatrix(camera.combined);
         stateTime += Gdx.graphics.getDeltaTime();
         currentFrame = animator.setPlayerCurrentFrame(this, state);
         sprite.setRegion(currentFrame);
@@ -97,7 +103,6 @@ public class Player {
 
     public void dispose()
     {
-        batch.dispose();
         idleRight_img.dispose();
     }
 
