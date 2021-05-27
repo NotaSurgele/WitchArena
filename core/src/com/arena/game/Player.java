@@ -26,7 +26,7 @@ public class Player {
     //value
     public float x;
     public float y;
-    public float moveSpeed = 5f;
+    public final float moveSpeed = 2f;
     static final int changeX = 250;
     static final int changeY = 100;
     static final int staticX = 80;
@@ -61,6 +61,7 @@ public class Player {
         this.x = posX;
         this.y = posY;
         camera = new OrthographicCamera(1280, 720);
+        camera.setToOrtho(false);
         camera.translate(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
         camera.update();
         animator = new Animator();
@@ -83,18 +84,28 @@ public class Player {
         }
     }
 
+    private OrthographicCamera setCameraAccordingToPlayer(StateMachine state)
+    {
+        if (state.playerisAttacking && state.playerisRotating) {
+            camera.position.set(sprite.getX() + 170,  sprite.getY(), 0);
+        } else {
+            camera.position.set(sprite.getX(), sprite.getY(), 0);
+        }
+        return camera;
+    }
+
     //Libgdx Rendering function
     public void render(TextureRegion currentFrame, StateMachine state, SpriteBatch batch)
     {
-        camera.position.set(x, y, 0);
         attackTime = animator.getAttackTime(state, attackTime);
         sprite = animator.updatePlayerSprite(this, state, batch);
+        this.camera = setCameraAccordingToPlayer(state);
+        batch.setProjectionMatrix(camera.combined);
+        camera.update();
     }
 
     public void update(StateMachine state, SpriteBatch batch)
     {
-        camera.update();
-        batch.setProjectionMatrix(camera.combined);
         stateTime += Gdx.graphics.getDeltaTime();
         currentFrame = animator.setPlayerCurrentFrame(this, state);
         sprite.setRegion(currentFrame);

@@ -101,6 +101,7 @@ public class Animator {
         if (state.playerisAttacking) {
             if (state.playerisRotating) {
                 player.sprite.setBounds(player.x - 170, player.y, player.changeX, player.changeY);
+                player.camera.position.set(player.sprite.getX() + 170, player.sprite.getY(), 0);
             } else {
                 player.sprite.setBounds(player.x, player.y, player.changeX, player.changeY);
             }
