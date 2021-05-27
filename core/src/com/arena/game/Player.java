@@ -40,7 +40,8 @@ public class Player {
     public Animation<TextureRegion> attackRight;
     public Animation<TextureRegion> attackLeft;
     public TextureRegion currentFrame = null;
-    float stateTime;
+    float stateTime = 0;
+    float attackTime = 0;
 
     //useful
 
@@ -68,6 +69,8 @@ public class Player {
     public void render(TextureRegion currentFrame, StateMachine state)
     {
         batch.begin();
+
+        attackTime = animator.getAttackTime(state, attackTime);
         if (state.playerisRotating && state.playerisAttacking) {
             batch.draw(currentFrame, (x - 65), y);
         } else {

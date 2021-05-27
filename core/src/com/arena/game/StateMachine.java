@@ -18,21 +18,15 @@ public class StateMachine {
 
     public StateMachine() {}
 
-    public StateMachine getPlayerState() {
+    public StateMachine getPlayerState(Player player) {
         if (isPlaying) {
             boolean left = false;
 
             if ((left = Gdx.input.isKeyPressed(D)) || Gdx.input.isKeyPressed(Q)) {
-                if (this.playerisAttacking) {
-                    return this;
-                }
                 this.playerisRotating = !left;
                 this.playerisAttacking = false;
                 this.playerisMoving = true;
             } else if (Gdx.input.isButtonPressed(LEFT)) {
-                if (this.playerisMoving) {
-                    return this;
-                }
                 this.playerisMoving = false;
                 this.playerisAttacking = true;
             } else {

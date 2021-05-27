@@ -1,11 +1,14 @@
 package com.arena.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import static com.badlogic.gdx.Input.Keys.*;
+import com.badlogic.gdx.Gdx;
 import org.w3c.dom.Text;
 
 public class Animator {
@@ -74,12 +77,22 @@ public class Animator {
                 }
             } else if (state.playerisAttacking) {
                 if (state.playerisRotating) {
-                    player.currentFrame = player.attackLeft.getKeyFrame(player.stateTime, true);
+                    player.currentFrame = player.attackLeft.getKeyFrame(player.attackTime, true);
                 } else {
-                    player.currentFrame = player.attackRight.getKeyFrame(player.stateTime, true);
+                    player.currentFrame = player.attackRight.getKeyFrame(player.attackTime, true);
                 }
             }
         }
         return player.currentFrame;
+    }
+
+    public float getAttackTime(StateMachine state, float attackTime)
+    {
+        if (state.playerisAttacking) {
+            attackTime += Gdx.graphics.getDeltaTime();
+        } else {
+            attackTime = 0;
+        }
+        return attackTime;
     }
 }

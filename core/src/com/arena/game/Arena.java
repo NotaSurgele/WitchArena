@@ -12,7 +12,7 @@ public class Arena extends ApplicationAdapter {
 	StateMachine state;
 
 	//System variable
-	float stateTime;
+	float stateTime = 0;
 
 	@Override
 	public void create () {
@@ -25,7 +25,7 @@ public class Arena extends ApplicationAdapter {
 	public void render () {
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		state.getPlayerState();
+		state.getPlayerState(player);
 		state.applyPlayerState(player);
 		player.update(state);
 		debug.render();
