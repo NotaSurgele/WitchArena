@@ -1,6 +1,7 @@
 package com.arena.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.loaders.AssetLoader;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -11,130 +12,75 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Input.Keys;
+import jdk.javadoc.internal.doclets.formats.html.markup.BodyContents;
 import sun.jvm.hotspot.gc.shared.Space;
 
 public class Player {
     //basic
-    Input input;
     SpriteBatch batch;
 
-    //random value
-    public float x = 50;
-    public float y = 50;
+    //value
+    public float x;
+    public float y;
+    public float moveSpeed = 5f;
 
     //animation
-    public boolean isRotate;
-    public Texture idle_img;
-    public Texture left_right_img;
-    public Texture attackImg;
+
     Animator animator;
-    public Animation<TextureRegion> idle;
-    public Animation<TextureRegion> left_right;
-    public Animation<TextureRegion> attack;
+    public Texture idleRight_img;
+    public Texture idleLeft_img;
+    public Texture attackRight_img;
+    public Texture attackLeft_img;
+    public Texture moveRight_img;
+    public Texture moveLeft_img;
+    public Animation<TextureRegion> idleRight;
+    public Animation<TextureRegion> idleLeft;
+    public Animation<TextureRegion> moveRight;
+    public Animation<TextureRegion> moveLeft;
+    public Animation<TextureRegion> attackRight;
+    public Animation<TextureRegion> attackLeft;
     float stateTime;
-    public TextureRegion currentFrame = null;
 
-    //Statemachine
-    public StateMachine state;
+    //useful
 
-    public Player()
+    public Player(float posX, float posY)
     {
-        state = new StateMachine();
+        this.x = posX;
+        this.y = posY;
         animator = new Animator();
         batch = new SpriteBatch();
-        idle_img = new Texture("B_witch_idle.png");
-        left_right_img = new Texture("B_witch_run.png");
-        left_right = animator.getAnimation(left_right_img, left_right, 0.090f, 1, 8);
-        idle = animator.getAnimation(idle_img, idle, 0.090f, 1, 6);
-        attackImg = new Texture("B_witch_attack.png");
-        attack = animator.getAnimation(attackImg, attack, 0.1f, 1, 9);
+        animator.initializePlayerAnimation(this);
     }
 
-    public void render(TextureRegion currentFrame, StateMachine state)
+    public void move()
+    {
+        if (Gdx.input.isKeyPressed(D)) {
+            this.x += moveSpeed;
+        }
+        if (Gdx.input.isKeyPressed(Q)) {
+            this.x -= moveSpeed;
+        }
+    }
+
+    //Libgdx Rendering function
+    public void render()
     {
         batch.begin();
-        if (state.isAttacking)
-        {
-            batch.draw(currentFrame, x, y, 200, 100);
-        } else {
-            batch.draw(currentFrame, x, y, 70, 100);
-        }
+        batch.draw(idleRight_img, x, y);
         batch.end();
     }
 
-    public void update()
+    public void update(StateMachine state)
     {
         stateTime += Gdx.graphics.getDeltaTime();
-        currentFrame = input.move();
-        currentFrame = input.attack();
-        render(currentFrame, state);
+        move();
+        render();
     }
 
     public void dispose()
     {
         batch.dispose();
-        idle_img.dispose();
+        idleRight_img.dispose();
     }
 
-    public static class Input {
-
-        Player player;
-
-        public Input(Player player) {
-            this.player = player;
-        }
-
-        private Player checkIdleFlip(Player player)
-        {
-            player.state.isMoving = false;
-            player.state.isAttacking = false;
-            player.currentFrame = player.idle.getKeyFrame(player.stateTime, true);
-            if (player.isRotate && !player.currentFrame.isFlipX()) {
-                player.currentFrame.flip(true, false);
-            } if (!player.isRotate && player.currentFrame.isFlipX()) {
-                player.currentFrame.flip(true, false);
-            }
-            return player;
-        }
-
-        public TextureRegion move()
-        {
-            player = checkIdleFlip(player);
-            if (Gdx.input.isKeyPressed(Q)) {
-                player.state.isMoving = true;
-                player.x -= 4f;
-                player.currentFrame = player.left_right.getKeyFrame(player.stateTime, true);
-                if (!player.currentFrame.isFlipX()) {
-                    player.currentFrame.flip(true, false);
-                    player.isRotate = true;
-                }
-            } if (Gdx.input.isKeyPressed(D)) {
-                player.x += 4f;
-                player.state.isMoving = true;
-                player.currentFrame = player.left_right.getKeyFrame(player.stateTime, true);
-                if (player.currentFrame.isFlipX()) {
-                    player.currentFrame.flip(true, false);
-                    player.isRotate = false;
-                }
-            }
-            return player.currentFrame;
-        }
-
-        public TextureRegion attack()
-        {
-            player.currentFrame = move();
-            if (player.state.isMoving) {
-                return player.currentFrame;
-            } if (Gdx.input.isKeyPressed(SPACE)) {
-                player.state.isAttacking = true;
-                player.currentFrame = player.attack.getKeyFrame(player.stateTime, true);
-                if (player.isRotate && !player.currentFrame.isFlipX() && player.state.isAttacking) {
-                    player.currentFrame.flip(true, false);
-                } if (!player.isRotate && player.currentFrame.isFlipX()) {
-                    player.currentFrame.flip(true, false);
-                }
-            }
-            return player.currentFrame;
-        }
-    }
 }

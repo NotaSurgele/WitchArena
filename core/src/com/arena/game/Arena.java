@@ -9,12 +9,16 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class Arena extends ApplicationAdapter {
 	Player player;
 	Debug debug;
+	StateMachine state;
+
+	//System variable
+	float stateTime;
 
 	@Override
 	public void create () {
-		player = new Player();
+		player = new Player(50,50);
 		debug = new Debug();
-		player.input = new Player.Input(player);
+		state = new StateMachine();
 	}
 
 	@Override
@@ -22,7 +26,7 @@ public class Arena extends ApplicationAdapter {
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		debug.render();
-		player.update();
+		player.update(state);
 	}
 
 	@Override

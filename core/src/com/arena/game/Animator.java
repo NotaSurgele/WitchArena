@@ -12,6 +12,7 @@ public class Animator {
     float frameDuration;
     int FRAME_COLS;
     int FRAME_ROWS;
+    public TextureRegion currentFrame = null;
 
     public Animator() {}
 
@@ -40,5 +41,23 @@ public class Animator {
         animation = new Animation<TextureRegion>(frameDuration, animationFrame);
         return animation;
     }
+
+    public Player initializePlayerAnimation(Player player)
+    {
+        player.idleRight_img = new Texture("B_witch_idle.png");
+        player.idleLeft_img = new Texture("idle_left.png");
+        player.moveRight_img = new Texture("B_witch_run.png");
+        player.moveLeft_img = new Texture("run_left.png");
+        player.attackRight_img = new Texture("B_witch_attack.png");
+        player.attackLeft_img = new Texture("attack_left.png");
+        player.idleRight = player.animator.getAnimation(player.idleRight_img, player.idleRight, 0.1f, 1, 8);
+        player.idleLeft = player.animator.getAnimation(player.idleLeft_img, player.idleLeft, 0.1f, 1, 8);
+        player.attackLeft = player.animator.getAnimation(player.attackLeft_img, player.attackLeft, 0.1f, 1, 9);
+        player.attackRight = player.animator.getAnimation(player.attackRight_img, player.attackRight, 0.1f, 1, 9);
+        player.moveRight = player.animator.getAnimation(player.moveRight_img, player.moveRight, 0.1f, 1, 8);
+        player.moveLeft = player.animator.getAnimation(player.moveLeft_img, player.moveLeft, 0.1f, 1, 8);
+        return player;
+    }
+
 
 }
