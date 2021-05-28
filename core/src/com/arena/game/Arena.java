@@ -22,7 +22,7 @@ public class Arena extends ApplicationAdapter {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		player = new Player(50,50);
+		player = new Player(0,0);
 		debug = new Debug();
 		state = new StateMachine();
 		img = new Texture("idle_left.png");

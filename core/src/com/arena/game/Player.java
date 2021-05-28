@@ -13,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Input.Keys;
-import jdk.javadoc.internal.doclets.formats.html.markup.BodyContents;
 import sun.jvm.hotspot.gc.shared.Space;
 
 public class Player {
@@ -31,12 +30,12 @@ public class Player {
     static final int changeY = 100;
     static final int staticX = 80;
     static final int staticY = 100;
-
+    static final int paddingX = 170;
+    static final int paddingY = 200;
     Texture img;
 
 
     //animation
-
     Animator animator;
     public Texture idleRight_img;
     public Texture idleLeft_img;
@@ -60,18 +59,26 @@ public class Player {
     {
         this.x = posX;
         this.y = posY;
-        camera = new OrthographicCamera(1280, 720);
-        camera.setToOrtho(false);
-        camera.translate(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
-        camera.update();
         animator = new Animator();
         animator.initializePlayerAnimation(this);
         currentFrame = idleRight.getKeyFrame(stateTime, true);
-        camera = new OrthographicCamera(1280 ,720);
         sprite = new Sprite();
         sprite.setBounds(0, 0, staticX, staticY);
         sprite.setRegion(currentFrame);
         sprite.setPosition(x, y);
+        camera = new OrthographicCamera(1280, 720);
+        camera.setToOrtho(false, 1280, 720);
+        camera.update();
+    }
+
+    private float getCenteredCameraPosX(Sprite sprite)
+    {
+        return sprite.getX() + paddingX;
+    }
+
+    private float getCenteredCameraPosY(Sprite sprite)
+    {
+        return sprite.getY() + paddingY;
     }
 
     public void move()
@@ -87,15 +94,15 @@ public class Player {
     private OrthographicCamera setCameraAccordingToPlayer(StateMachine state)
     {
         if (state.playerisAttacking && state.playerisRotating) {
-            camera.position.set(sprite.getX() + 170,  sprite.getY(), 0);
+            camera.position.set(this.getCenteredCameraPosX(this.sprite),  this.getCenteredCameraPosY(this.sprite), 0);
         } else {
-            camera.position.set(sprite.getX(), sprite.getY(), 0);
+            camera.position.set(sprite.getX(), sprite.getY() + 200, 0);
         }
         return camera;
     }
 
     //Libgdx Rendering function
-    public void render(TextureRegion currentFrame, StateMachine state, SpriteBatch batch)
+    public void render(StateMachine state, SpriteBatch batch)
     {
         attackTime = animator.getAttackTime(state, attackTime);
         sprite = animator.updatePlayerSprite(this, state, batch);
@@ -109,12 +116,17 @@ public class Player {
         stateTime += Gdx.graphics.getDeltaTime();
         currentFrame = animator.setPlayerCurrentFrame(this, state);
         sprite.setRegion(currentFrame);
-        render(currentFrame, state, batch);
+        render(state, batch);
     }
 
     public void dispose()
     {
         idleRight_img.dispose();
+        idleLeft_img.dispose();
+        moveLeft_img.dispose();
+        moveRight_img.dispose();
+        attackLeft_img.dispose();
+        attackRight_img.dispose();
     }
 
 }
