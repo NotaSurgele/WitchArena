@@ -13,8 +13,7 @@ public class Arena extends ApplicationAdapter {
 	Debug debug;
 	StateMachine state;
 	SpriteBatch batch;
-
-	Texture img;
+	Maps map;
 
 	//System variable
 	float stateTime = 0;
@@ -22,19 +21,18 @@ public class Arena extends ApplicationAdapter {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		player = new Player(0,0);
+		player = new Player(200,150);
 		debug = new Debug();
 		state = new StateMachine();
-		img = new Texture("idle_left.png");
+		map = new Maps(player.camera);
 	}
 
 	@Override
 	public void render () {
-
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
-		batch.draw(img, 0, 0);
+		map.render();
 		state.getPlayerState(player);
 		state.applyPlayerState(player);
 		player.update(state, batch);
@@ -44,7 +42,6 @@ public class Arena extends ApplicationAdapter {
 
 	@Override
 	public void dispose () {
-		img.dispose();
 		batch.dispose();
 		player.dispose();
 		debug.dispose();

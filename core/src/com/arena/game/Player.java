@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 
 import static com.badlogic.gdx.Input.Keys.*;
+
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
@@ -20,19 +22,19 @@ public class Player {
     //basic
     OrthographicCamera camera;
     Sprite sprite;
-    Texture texture;
 
     //value
-    public float x;
-    public float y;
-    public final float moveSpeed = 2f;
+    public Vector2 velocity;
+    public final float moveSpeed = 2 * 2;
+    public final float gravity = 40 * 1.8f;
     static final int changeX = 250;
     static final int changeY = 100;
     static final int staticX = 80;
     static final int staticY = 100;
     static final int paddingX = 170;
     static final int paddingY = 200;
-    Texture img;
+    static final int cameraX = Gdx.graphics.getWidth();
+    static final int cameraY = Gdx.graphics.getHeight();
 
 
     //animation
@@ -53,21 +55,25 @@ public class Player {
     float stateTime = 0;
     float attackTime = 0;
 
+
     //useful
+    public float deltaTime = 0;
+
 
     public Player(float posX, float posY)
     {
-        this.x = posX;
-        this.y = posY;
+        velocity = new Vector2();
+        this.velocity.x = posX;
+        this.velocity.y = posY;
         animator = new Animator();
         animator.initializePlayerAnimation(this);
         currentFrame = idleRight.getKeyFrame(stateTime, true);
         sprite = new Sprite();
         sprite.setBounds(0, 0, staticX, staticY);
         sprite.setRegion(currentFrame);
-        sprite.setPosition(x, y);
-        camera = new OrthographicCamera(1280, 720);
-        camera.setToOrtho(false, 1280, 720);
+        sprite.setPosition(velocity.x, velocity.y);
+        camera = new OrthographicCamera(cameraX, cameraY);
+        camera.setToOrtho(false, cameraX, cameraY);
         camera.update();
     }
 
@@ -81,17 +87,28 @@ public class Player {
         return sprite.getY() + paddingY;
     }
 
+    private void gravity()
+    {
+        velocity.y -= gravity * deltaTime;
+        //Clamp the velocity
+        /*if (velocity.y > moveSpeed) {
+            velocity.y = moveSpeed;
+        } else if (velocity.y < moveSpeed) {
+            velocity.y = -moveSpeed;
+        }*/
+    }
+
     public void move()
     {
         if (Gdx.input.isKeyPressed(D)) {
-            this.x += moveSpeed;
+            this.velocity.x += moveSpeed;
         }
         if (Gdx.input.isKeyPressed(Q)) {
-            this.x -= moveSpeed;
+            this.velocity.x -= moveSpeed;
         }
     }
 
-    private OrthographicCamera setCameraAccordingToPlayer(StateMachine state)
+    private OrthographicCamera setCameraPositionRelativeToPlayer(StateMachine state)
     {
         if (state.playerisAttacking && state.playerisRotating) {
             camera.position.set(this.getCenteredCameraPosX(this.sprite),  this.getCenteredCameraPosY(this.sprite), 0);
@@ -106,7 +123,7 @@ public class Player {
     {
         attackTime = animator.getAttackTime(state, attackTime);
         sprite = animator.updatePlayerSprite(this, state, batch);
-        this.camera = setCameraAccordingToPlayer(state);
+        this.camera = setCameraPositionRelativeToPlayer(state);
         batch.setProjectionMatrix(camera.combined);
         camera.update();
     }
@@ -114,6 +131,8 @@ public class Player {
     public void update(StateMachine state, SpriteBatch batch)
     {
         stateTime += Gdx.graphics.getDeltaTime();
+        deltaTime += Gdx.graphics.getDeltaTime();
+        gravity();
         currentFrame = animator.setPlayerCurrentFrame(this, state);
         sprite.setRegion(currentFrame);
         render(state, batch);
