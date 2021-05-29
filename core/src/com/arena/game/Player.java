@@ -10,6 +10,9 @@ import com.badlogic.gdx.graphics.g2d.*;
 
 import static com.badlogic.gdx.Input.Keys.*;
 
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.Input;
@@ -26,7 +29,7 @@ public class Player {
     //value
     public Vector2 velocity;
     public final float moveSpeed = 2 * 2;
-    public final float gravity = 40 * 1.8f;
+    public final float gravity = 1 * 1.8f;
     static final int changeX = 250;
     static final int changeY = 100;
     static final int staticX = 80;
@@ -35,7 +38,10 @@ public class Player {
     static final int paddingY = 200;
     static final int cameraX = Gdx.graphics.getWidth();
     static final int cameraY = Gdx.graphics.getHeight();
+    public float playerHeight = 0;
+    public float playerWidth = 0;
 
+    public boolean isGrounded = false;
 
     //animation
     Animator animator;
@@ -57,14 +63,16 @@ public class Player {
 
 
     //useful
+    Collider collider;
     public float deltaTime = 0;
-
+    public MapLayer collisionLayer;
+    public MapObjects objects;
 
     public Player(float posX, float posY)
     {
         velocity = new Vector2();
-        this.velocity.x = posX;
-        this.velocity.y = posY;
+        velocity.x = posX;
+        velocity.y = posY;
         animator = new Animator();
         animator.initializePlayerAnimation(this);
         currentFrame = idleRight.getKeyFrame(stateTime, true);
@@ -72,9 +80,12 @@ public class Player {
         sprite.setBounds(0, 0, staticX, staticY);
         sprite.setRegion(currentFrame);
         sprite.setPosition(velocity.x, velocity.y);
+        playerHeight = sprite.getHeight();
+        playerWidth = sprite.getWidth();
         camera = new OrthographicCamera(cameraX, cameraY);
         camera.setToOrtho(false, cameraX, cameraY);
         camera.update();
+        collider = new Collider();
     }
 
     private float getCenteredCameraPosX(Sprite sprite)
@@ -87,20 +98,33 @@ public class Player {
         return sprite.getY() + paddingY;
     }
 
+    public void getCollisionLayer(MapLayer layer)
+    {
+        if (this.collisionLayer == null) {
+            this.collisionLayer = layer;
+        }
+    }
+
+    public void getCollisionObject(MapObjects obj)
+    {
+        if (this.objects == null) {
+            this.objects = obj;
+        }
+    }
+
     private void gravity()
     {
-        velocity.y -= gravity * deltaTime;
-        //Clamp the velocity
-        /*if (velocity.y > moveSpeed) {
-            velocity.y = moveSpeed;
-        } else if (velocity.y < moveSpeed) {
-            velocity.y = -moveSpeed;
-        }*/
+        this.isGrounded = collider.playerIsGrounded(this);
+        if (!isGrounded) {
+            velocity.y -= gravity * deltaTime;
+        }
     }
 
     public void move()
     {
         if (Gdx.input.isKeyPressed(D)) {
+
+            //sprite.setX(sprite.getX() + );
             this.velocity.x += moveSpeed;
         }
         if (Gdx.input.isKeyPressed(Q)) {
@@ -132,8 +156,8 @@ public class Player {
     {
         stateTime += Gdx.graphics.getDeltaTime();
         deltaTime += Gdx.graphics.getDeltaTime();
-        gravity();
         currentFrame = animator.setPlayerCurrentFrame(this, state);
+        gravity();
         sprite.setRegion(currentFrame);
         render(state, batch);
     }

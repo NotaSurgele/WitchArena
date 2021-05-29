@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import org.w3c.dom.Text;
 
 public class Arena extends ApplicationAdapter {
@@ -21,7 +22,7 @@ public class Arena extends ApplicationAdapter {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		player = new Player(200,150);
+		player = new Player(200,500);
 		debug = new Debug();
 		state = new StateMachine();
 		map = new Maps(player.camera);
@@ -32,6 +33,7 @@ public class Arena extends ApplicationAdapter {
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
+		player.getCollisionLayer(map.map.getLayers().get(0));
 		map.render();
 		state.getPlayerState(player);
 		state.applyPlayerState(player);

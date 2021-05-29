@@ -28,4 +28,8 @@ public class Maps {
         mapRenderer.setView(camera);
         mapRenderer.render();
     }
+
+    public void dispose()  {
+        map.dispose();
+    }
 }
