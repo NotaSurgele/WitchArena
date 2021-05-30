@@ -22,7 +22,7 @@ public class Collider {
         for (RectangleMapObject obj : rectangleObjects) {
             Rectangle rectangle = obj.getRectangle();
             Rectangle playerHitbox = new Rectangle();
-            playerHitbox.x = player.sprite.getBoundingRectangle().x + 35;
+            playerHitbox.x = player.sprite.getBoundingRectangle().x + 32;
             playerHitbox.y = player.sprite.getBoundingRectangle().y + 9f;
             if (playerHitbox.overlaps(rectangle)) {
                 return true;

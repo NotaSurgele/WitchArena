@@ -32,7 +32,7 @@ public class Player {
     //value
     public Vector2 velocity;
     public final float moveSpeed = 2 * 2;
-    public final float gravity = 4 * 1.8f;
+    public final double gravity = 3.4 * 1.8f;
     static final int changeX = 250;
     static final int changeY = 100;
     static final int staticX = 80;
@@ -41,9 +41,12 @@ public class Player {
     static final int paddingY = 200;
     static final int cameraX = Gdx.graphics.getWidth();
     static final int cameraY = Gdx.graphics.getHeight();
+    static final float JUMPING_VALUE = 1f;
     public boolean isGrounded = false;
     public boolean isJumping = false;
+    public boolean isFlying = false;
     private float oldY = 0;
+    private float jumping = JUMPING_VALUE;
 
     //animation
     Animator animator;
@@ -68,7 +71,6 @@ public class Player {
     Collider collider;
     public float deltaTime = 0;
     public MapLayer collisionLayer;
-    //public MapObjects objects;
 
     public Player(float posX, float posY)
     {
@@ -109,9 +111,9 @@ public class Player {
     {
         this.isGrounded = collider.playerIsGrounded(this);
         if (!isGrounded) {
-            velocity.y -= gravity * deltaTime;
+            velocity.y -= gravity * deltaTime - this.jumping;
         } else {
-            deltaTime = 1.4f;
+            deltaTime = 1.3f;
         }
     }
 
@@ -125,16 +127,23 @@ public class Player {
         }
     }
 
-    public float jumping(float oldY) {
-        if ( !this.isJumping && Gdx.input.isKeyJustPressed(SPACE)) {
+    private float jumping(float oldY) {
+        this.isFlying = !this.isGrounded;
+
+        if (this.isGrounded && Gdx.input.isKeyJustPressed(SPACE)) {
+            this.jumping = JUMPING_VALUE;
             oldY = this.velocity.y;
             this.isJumping = true;
             this.isGrounded = false;
         }
+        if (this.jumping <= 0) {
+            this.isJumping = false;
+        }
         if (this.isJumping) {
-            velocity.y -= (float)(-0.5f * gravity * power(deltaTime, 3) * 2);
-            if (velocity.y >= (oldY + 200)) {
-                this.isJumping = false;
+            velocity.y += (float)(-0.5f * -gravity * power(deltaTime, 3.8f) * 2) - this.jumping;
+            if (velocity.y >= (oldY + 80)) {
+                this.jumping -= 0.07f;
+                this.deltaTime = 1.3f;
             }
         }
         return oldY;
@@ -162,13 +171,15 @@ public class Player {
 
     public void update(StateMachine state, SpriteBatch batch)
     {
-        stateTime += Gdx.graphics.getDeltaTime();
-        deltaTime += Gdx.graphics.getDeltaTime();
-        currentFrame = animator.setPlayerCurrentFrame(this, state);
-        gravity();
-        oldY = jumping(oldY);
-        sprite.setRegion(currentFrame);
-        render(state, batch);
+        if (state.isPlaying) {
+            stateTime += Gdx.graphics.getDeltaTime();
+            deltaTime += Gdx.graphics.getDeltaTime();
+            currentFrame = animator.setPlayerCurrentFrame(this, state);
+            gravity();
+            oldY = jumping(oldY);
+            sprite.setRegion(currentFrame);
+            render(state, batch);
+        }
     }
 
     public void dispose()
