@@ -66,7 +66,7 @@ public class Animator {
 
     public TextureRegion setPlayerCurrentFrame(Player player, StateMachine state) {
         if (state.isPlaying) {
-            if (state.playerisMoving || player.isFlying) {
+            if (state.playerisMoving || state.playerIsFlying) {
                 if (state.playerisRotating) {
                     player.currentFrame = player.moveLeft.getKeyFrame(player.stateTime, true);
                 } else {

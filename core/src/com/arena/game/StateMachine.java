@@ -13,6 +13,9 @@ public class StateMachine {
     public boolean playerisMoving = false;
     public boolean playerisAttacking = false;
     public boolean playerisRotating = false;
+    public boolean playerIsGrounded = false;
+    public boolean playerIsFlying = true;
+    public boolean playerIsJumping = false;
 
     //Others
 

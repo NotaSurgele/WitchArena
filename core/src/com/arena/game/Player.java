@@ -42,9 +42,6 @@ public class Player {
     static final int cameraX = Gdx.graphics.getWidth();
     static final int cameraY = Gdx.graphics.getHeight();
     static final float JUMPING_VALUE = 1f;
-    public boolean isGrounded = false;
-    public boolean isJumping = false;
-    public boolean isFlying = false;
     private float oldY = 0;
     private float jumping = JUMPING_VALUE;
 
@@ -107,10 +104,10 @@ public class Player {
         }
     }
 
-    private void gravity()
+    private void gravity(StateMachine state)
     {
-        this.isGrounded = collider.playerIsGrounded(this);
-        if (!isGrounded) {
+        state.playerIsGrounded = collider.playerIsGrounded(this);
+        if (!state.playerIsGrounded) {
             velocity.y -= gravity * deltaTime - this.jumping;
         } else {
             deltaTime = 1.3f;
@@ -127,19 +124,19 @@ public class Player {
         }
     }
 
-    private float jumping(float oldY) {
-        this.isFlying = !this.isGrounded;
+    private float jumping(float oldY, StateMachine state) {
+        state.playerIsFlying = !state.playerIsGrounded;
 
-        if (this.isGrounded && Gdx.input.isKeyJustPressed(SPACE)) {
+        if (state.playerIsGrounded && Gdx.input.isKeyJustPressed(SPACE)) {
             this.jumping = JUMPING_VALUE;
             oldY = this.velocity.y;
-            this.isJumping = true;
-            this.isGrounded = false;
+            state.playerIsJumping = true;
+            state.playerIsGrounded = false;
         }
         if (this.jumping <= 0) {
-            this.isJumping = false;
+            state.playerIsJumping = false;
         }
-        if (this.isJumping) {
+        if (state.playerIsJumping) {
             velocity.y += (float)(-0.5f * -gravity * power(deltaTime, 3.8f) * 2) - this.jumping;
             if (velocity.y >= (oldY + 80)) {
                 this.jumping -= 0.07f;
@@ -152,7 +149,7 @@ public class Player {
     private OrthographicCamera setCameraPositionRelativeToPlayer(StateMachine state)
     {
         if (state.playerisAttacking && state.playerisRotating) {
-            camera.position.set(this.getCenteredCameraPosX(this.sprite),  this.getCenteredCameraPosY(this.sprite), 0);
+            camera.position.set(this.getCenteredCameraPosX(this.sprite), this.getCenteredCameraPosY(this.sprite), 0);
         } else {
             camera.position.set(sprite.getX(), sprite.getY() + 200, 0);
         }
@@ -175,8 +172,8 @@ public class Player {
             stateTime += Gdx.graphics.getDeltaTime();
             deltaTime += Gdx.graphics.getDeltaTime();
             currentFrame = animator.setPlayerCurrentFrame(this, state);
-            gravity();
-            oldY = jumping(oldY);
+            gravity(state);
+            oldY = jumping(oldY, state);
             sprite.setRegion(currentFrame);
             render(state, batch);
         }
