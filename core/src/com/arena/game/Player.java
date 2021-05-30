@@ -106,7 +106,10 @@ public class Player {
 
     private void gravity(StateMachine state)
     {
-        state.playerIsGrounded = collider.playerIsGrounded(this);
+        float[] oldPos = new float[2];
+        oldPos[0] = sprite.getX();
+        oldPos[1] = sprite.getY();
+        collider.playerIsColliding(this, state, oldPos);
         if (!state.playerIsGrounded) {
             velocity.y -= gravity * deltaTime - this.jumping;
         } else {

@@ -35,8 +35,7 @@ public class Arena extends ApplicationAdapter {
 		batch.begin();
 		player.getCollisionLayer(map.map.getLayers().get(0));
 		map.render();
-		state.getPlayerState(player);
-		state.applyPlayerState(player);
+		state.update(player);
 		player.update(state, batch);
 		debug.render();
 		batch.end();
