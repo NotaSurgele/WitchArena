@@ -13,22 +13,25 @@ public class Collider {
 
     public Collider() {}
 
+    //Collision detection with the ground
     public boolean playerIsGrounded(Player player)
     {
         MapObjects mapObjects = player.collisionLayer.getObjects();
-
         Array<RectangleMapObject> rectangleObjects = mapObjects.getByType(RectangleMapObject.class);
 
         for (RectangleMapObject obj : rectangleObjects) {
             Rectangle rectangle = obj.getRectangle();
-            if (player.sprite.getBoundingRectangle().overlaps(rectangle)) {
+            Rectangle playerHitbox = new Rectangle();
+            playerHitbox.x = player.sprite.getBoundingRectangle().x + 35;
+            playerHitbox.y = player.sprite.getBoundingRectangle().y + 9f;
+            if (playerHitbox.overlaps(rectangle)) {
                 return true;
             }
         }
         return false;
     }
 
-    public Player playerMovementCollision(Player player, float oldY)
+    public Player playerMovementCollision(Player player)
     {
         return player;
     }

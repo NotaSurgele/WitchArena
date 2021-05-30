@@ -7,8 +7,10 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
-
+import java.lang.Math;
 import static com.badlogic.gdx.Input.Keys.*;
+import static com.sun.org.apache.xalan.internal.lib.ExsltMath.power;
+import static com.sun.org.apache.xalan.internal.lib.ExsltMath.sqrt;
 
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObjects;
@@ -18,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Input.Keys;
+import org.graalvm.compiler.hotspot.amd64.AMD64MathStub;
 import sun.jvm.hotspot.gc.shared.Space;
 
 public class Player {
@@ -29,7 +32,7 @@ public class Player {
     //value
     public Vector2 velocity;
     public final float moveSpeed = 2 * 2;
-    public final float gravity = 1 * 1.8f;
+    public final float gravity = 4 * 1.8f;
     static final int changeX = 250;
     static final int changeY = 100;
     static final int staticX = 80;
@@ -38,10 +41,9 @@ public class Player {
     static final int paddingY = 200;
     static final int cameraX = Gdx.graphics.getWidth();
     static final int cameraY = Gdx.graphics.getHeight();
-    public float playerHeight = 0;
-    public float playerWidth = 0;
-
     public boolean isGrounded = false;
+    public boolean isJumping = false;
+    private float oldY = 0;
 
     //animation
     Animator animator;
@@ -66,7 +68,7 @@ public class Player {
     Collider collider;
     public float deltaTime = 0;
     public MapLayer collisionLayer;
-    public MapObjects objects;
+    //public MapObjects objects;
 
     public Player(float posX, float posY)
     {
@@ -80,8 +82,6 @@ public class Player {
         sprite.setBounds(0, 0, staticX, staticY);
         sprite.setRegion(currentFrame);
         sprite.setPosition(velocity.x, velocity.y);
-        playerHeight = sprite.getHeight();
-        playerWidth = sprite.getWidth();
         camera = new OrthographicCamera(cameraX, cameraY);
         camera.setToOrtho(false, cameraX, cameraY);
         camera.update();
@@ -105,31 +105,39 @@ public class Player {
         }
     }
 
-    public void getCollisionObject(MapObjects obj)
-    {
-        if (this.objects == null) {
-            this.objects = obj;
-        }
-    }
-
     private void gravity()
     {
         this.isGrounded = collider.playerIsGrounded(this);
         if (!isGrounded) {
             velocity.y -= gravity * deltaTime;
+        } else {
+            deltaTime = 1.4f;
         }
     }
 
     public void move()
     {
         if (Gdx.input.isKeyPressed(D)) {
-
-            //sprite.setX(sprite.getX() + );
-            this.velocity.x += moveSpeed;
+            this.velocity.x += moveSpeed * deltaTime;
         }
         if (Gdx.input.isKeyPressed(Q)) {
-            this.velocity.x -= moveSpeed;
+            this.velocity.x -= moveSpeed * deltaTime;
         }
+    }
+
+    public float jumping(float oldY) {
+        if ( !this.isJumping && Gdx.input.isKeyJustPressed(SPACE)) {
+            oldY = this.velocity.y;
+            this.isJumping = true;
+            this.isGrounded = false;
+        }
+        if (this.isJumping) {
+            velocity.y -= (float)(-0.5f * gravity * power(deltaTime, 3) * 2);
+            if (velocity.y >= (oldY + 200)) {
+                this.isJumping = false;
+            }
+        }
+        return oldY;
     }
 
     private OrthographicCamera setCameraPositionRelativeToPlayer(StateMachine state)
@@ -158,6 +166,7 @@ public class Player {
         deltaTime += Gdx.graphics.getDeltaTime();
         currentFrame = animator.setPlayerCurrentFrame(this, state);
         gravity();
+        oldY = jumping(oldY);
         sprite.setRegion(currentFrame);
         render(state, batch);
     }
