@@ -156,7 +156,6 @@ public class Player {
         return camera;
     }
 
-    //Libgdx Rendering function
     public void render(StateMachine state, SpriteBatch batch)
     {
         attackTime = animator.getAttackTime(state, attackTime);

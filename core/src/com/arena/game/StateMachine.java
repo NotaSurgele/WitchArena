@@ -21,29 +21,4 @@ public class StateMachine {
 
     public StateMachine() {}
 
-    public StateMachine getPlayerState(Player player) {
-        if (isPlaying) {
-            boolean left = false;
-
-            if ((left = Gdx.input.isKeyPressed(D)) || Gdx.input.isKeyPressed(Q)) {
-                this.playerisRotating = !left;
-                this.playerisAttacking = false;
-                this.playerisMoving = true;
-            } else if (Gdx.input.isButtonPressed(LEFT)) {
-                this.playerisMoving = false;
-                this.playerisAttacking = true;
-            } else {
-                this.playerisMoving = false;
-                this.playerisAttacking = false;
-            }
-        }
-        return this;
-    }
-
-    void applyPlayerState(Player player)
-    {
-        if (this.playerisMoving) {
-            player.move();
-        }
-    }
 }
