@@ -22,10 +22,11 @@ public class Arena extends ApplicationAdapter {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		player = new Player(200,1000);
+		player = new Player(200,1500);
 		debug = new Debug();
 		state = new StateMachine();
 		map = new Maps(player.camera);
+		player.getCollLayer(map.collisionLayer);
 	}
 
 	@Override

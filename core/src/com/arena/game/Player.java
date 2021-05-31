@@ -31,6 +31,7 @@ public class Player {
 
     //value
     public Vector2 velocity;
+    public Vector2 moveV;
     public final float moveSpeed = 2 * 2;
     public final double gravity = 3.4 * 1.8f;
     static final int changeX = 250;
@@ -68,6 +69,7 @@ public class Player {
     Collider collider;
     public float deltaTime = 0;
     public MapLayer collisionLayer;
+    public TiledMapTileLayer colLayer;
 
     public Player(float posX, float posY)
     {
@@ -84,6 +86,7 @@ public class Player {
         camera = new OrthographicCamera(cameraX, cameraY);
         camera.setToOrtho(false, cameraX, cameraY);
         camera.update();
+        moveV = new Vector2();
         collider = new Collider();
     }
 
@@ -104,26 +107,34 @@ public class Player {
         }
     }
 
+    public void getCollLayer(TiledMapTileLayer layer)
+    {
+        if (layer != null) {
+            this.colLayer = layer;
+        }
+    }
+
     private void gravity(StateMachine state)
     {
-        float[] oldPos = new float[2];
-        oldPos[0] = sprite.getX();
-        oldPos[1] = sprite.getY();
-        collider.playerIsColliding(this, state, oldPos);
         if (!state.playerIsGrounded) {
-            velocity.y -= gravity * deltaTime - this.jumping;
+            moveV.y = -(float)gravity * deltaTime - this.jumping;
+            velocity.y += moveV.y;
         } else {
             deltaTime = 1.3f;
+        } if (state.playerIsGrounded) {
+            moveV.y = 0;
         }
     }
 
     public void move()
     {
         if (Gdx.input.isKeyPressed(D)) {
-            this.velocity.x += moveSpeed * deltaTime;
+            moveV.x = moveSpeed * deltaTime;
+            this.velocity.x += moveV.x;
         }
         if (Gdx.input.isKeyPressed(Q)) {
-            this.velocity.x -= moveSpeed * deltaTime;
+            moveV.x = moveSpeed * deltaTime;
+            this.velocity.x -= moveV.x;
         }
     }
 
@@ -162,9 +173,11 @@ public class Player {
     public void render(StateMachine state, SpriteBatch batch)
     {
         attackTime = animator.getAttackTime(state, attackTime);
+        collider.test_two(this, state);
         sprite = animator.updatePlayerSprite(this, state, batch);
         this.camera = setCameraPositionRelativeToPlayer(state);
         batch.setProjectionMatrix(camera.combined);
+        camera.update();
         camera.update();
     }
 
@@ -174,6 +187,8 @@ public class Player {
             stateTime += Gdx.graphics.getDeltaTime();
             deltaTime += Gdx.graphics.getDeltaTime();
             currentFrame = animator.setPlayerCurrentFrame(this, state);
+            move();
+            state = collider.playerIsColliding(this, state);
             gravity(state);
             oldY = jumping(oldY, state);
             sprite.setRegion(currentFrame);

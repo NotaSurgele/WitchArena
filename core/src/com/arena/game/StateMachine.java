@@ -24,7 +24,6 @@ public class StateMachine {
     public void update(Player player)
     {
         this.getPlayerState(player);
-        this.applyPlayerState(player);
     }
 
     public StateMachine getPlayerState(Player player) {

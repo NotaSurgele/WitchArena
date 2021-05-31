@@ -5,6 +5,9 @@ import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -22,49 +25,73 @@ public class Collider {
         feetHitbox.width = player.sprite.getBoundingRectangle().width;
         feetHitbox.x = player.sprite.getX();
         feetHitbox.y = (player.sprite.getY() - ((player.sprite.getHeight() / 2) - player.sprite.getHeight() + 32));
-        System.out.println(feetHitbox.y);
         return feetHitbox;
     }
 
-    private Rectangle getPlayerHitbox(Player player, Rectangle test)
+    private Rectangle getBodyHitbox(Player player)
     {
-        Rectangle playerHitbox = new Rectangle();
+        Rectangle bodyHitbox = new Rectangle();
 
-        playerHitbox.height = test.height;
-        playerHitbox.width = player.sprite.getBoundingRectangle().width + 5;
-        playerHitbox.x = player.sprite.getX();
-        playerHitbox.y = (player.sprite.getY() - ((player.sprite.getHeight() / 2) - player.sprite.getHeight() + 32));
-        System.out.println(playerHitbox.y);
-        System.out.println(player.sprite.getY());
-        return playerHitbox;
+        bodyHitbox.height = player.sprite.getBoundingRectangle().height / 2;
+        bodyHitbox.width = player.sprite.getBoundingRectangle().width + 5;
+        bodyHitbox.x = player.sprite.getBoundingRectangle().x;
+        bodyHitbox.y = player.sprite.getY() + player.sprite.getHeight() / 2;
+        return bodyHitbox;
     }
 
     //Collision detection with the ground
-    public float[] playerIsColliding(Player player, StateMachine state, float[] oldPos)
+    public StateMachine playerIsColliding(Player player, StateMachine state)
     {
         MapObjects mapObjects = player.collisionLayer.getObjects();
         Array<RectangleMapObject> rectangleObjects = mapObjects.getByType(RectangleMapObject.class);
 
         for (RectangleMapObject obj : rectangleObjects) {
-            Rectangle rectangle = obj.getRectangle();
+            Rectangle object = obj.getRectangle();
             Rectangle feetHitbox = getFeetHitbox(player);
-            Rectangle playerHitbox = getPlayerHitbox(player, feetHitbox);
+        }
+        return state;
+    }
 
-            if (playerHitbox.overlaps(rectangle)) {
-                System.out.println("hello world");
-                state.playerColliding = true;
-                player.sprite.setX(oldPos[0]);
-                player.sprite.setY(oldPos[1]);
-            } else {
-                state.playerColliding = false;
-            } if (feetHitbox.overlaps(rectangle)) {
+    Rectangle getBottom(float x, float y, float width, float height)
+    {
+        Rectangle bottom = new Rectangle();
+        bottom.x = x;
+        bottom.y = y - height - 32;
+        bottom.width = 32;
+        bottom.height = 32;
+        return bottom;
+    }
+
+    public void test_two(Player player, StateMachine state)
+    {
+        MapObjects mapObjects = player.collisionLayer.getObjects();
+        Array<RectangleMapObject> rectangleMapObjects = mapObjects.getByType(RectangleMapObject.class);
+
+        for (RectangleMapObject obj : rectangleMapObjects) {
+            Rectangle object = obj.getRectangle();
+            Rectangle bottom = getBottom(player.sprite.getX(), player.sprite.getY(), player.sprite.getWidth(), player.sprite.getHeight());
+
+            if (bottom.overlaps(object)) {
                 state.playerIsGrounded = true;
-                return oldPos;
+                return;
             } else {
                 state.playerIsGrounded = false;
             }
         }
-        return oldPos;
+    }
+
+    public boolean test(Player player, StateMachine state)
+    {
+        TiledMapTileLayer.Cell cell = player.colLayer.getCell((int)(player.sprite.getX() / 31), (int)player.sprite.getY() / 32);
+        if (cell != null) {
+            if (player.moveV.y < 0)
+                state.playerIsGrounded = true;
+            if (player.moveV.x > 0 )
+                System.out.println("Collision Droite");
+        } else {
+            state.playerIsGrounded = false;
+        }
+        return true;
     }
 
     public Player playerMovementCollision(Player player)
