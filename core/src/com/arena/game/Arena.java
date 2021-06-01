@@ -35,7 +35,7 @@ public class Arena extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
 		player.getCollisionLayer(map.map.getLayers().get(0));
-		map.render();
+		map.render(player, batch, state);
 		state.update(player);
 		player.update(state, batch);
 		debug.render();

@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.utils.viewport.FillViewport;
 import org.graalvm.compiler.hotspot.amd64.AMD64MathStub;
 import sun.jvm.hotspot.gc.shared.Space;
 
@@ -64,7 +65,6 @@ public class Player {
     float stateTime = 0;
     float attackTime = 0;
 
-
     //useful
     Collider collider;
     public float deltaTime = 0;
@@ -84,6 +84,7 @@ public class Player {
         sprite.setRegion(currentFrame);
         sprite.setPosition(velocity.x, velocity.y);
         camera = new OrthographicCamera(cameraX, cameraY);
+        camera.translate(camera.viewportWidth / 2, camera.viewportHeight / 2);
         camera.setToOrtho(false, cameraX, cameraY);
         camera.update();
         moveV = new Vector2();
@@ -175,9 +176,8 @@ public class Player {
         attackTime = animator.getAttackTime(state, attackTime);
         sprite = animator.updatePlayerSprite(this, state, batch);
         this.camera = setCameraPositionRelativeToPlayer(state);
+        camera.update();
         batch.setProjectionMatrix(camera.combined);
-        camera.update();
-        camera.update();
     }
 
     public void update(StateMachine state, SpriteBatch batch)

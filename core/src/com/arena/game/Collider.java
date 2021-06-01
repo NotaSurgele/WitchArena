@@ -79,30 +79,27 @@ public class Collider {
         TiledMapTileLayer.Cell bottomRight = player.colLayer.getCell((int) ((bodyHitbox.x + bodyHitbox.width) - 31) / 31, (int) bodyHitbox.y / 32);
         TiledMapTileLayer.Cell left = player.colLayer.getCell((int) bodyHitbox.x / 31, (int) (bodyHitbox.y + (bodyHitbox.height / 2)) / 32);
         TiledMapTileLayer.Cell right = player.colLayer.getCell((int) (bodyHitbox.x + bodyHitbox.width) / 33, (int) (bodyHitbox.y + (bodyHitbox.height / 2)) / 32);
-        TiledMapTileLayer.Cell top = player.colLayer.getCell((int) (bodyHitbox.x + (bodyHitbox.width / 2) / 32), (int) (bodyHitbox.y + bodyHitbox.height) / 32);
 
-        if (bottomMid != null) {
-            state.playerIsGrounded = true;
-        } else if (bottomLeft != null) {
-            state.playerIsGrounded = true;
-        } else if (bottomRight != null) {
-            state.playerIsGrounded = true;
-        } else {
-            state.playerIsGrounded = false;
-        }
         if (left != null) {
             state.playerCollideLeft = true;
         } else {
             state.playerCollideLeft = false;
-        }
-        if (right != null) {
+        } if (right != null) {
             state.playerCollideRight = true;
         } else {
             state.playerCollideRight = false;
-        }
-        if (top != null) {
-            System.out.println("We are colliding on top");
-            System.out.println(top.getTile().getId());
+        } if (bottomMid == null && bottomLeft == null && bottomRight == null)
+            state.playerIsGrounded = false;
+        if (!state.playerIsGrounded) {
+            if (bottomMid != null) {
+                state.playerIsGrounded = true;
+            }
+            if (bottomLeft != null) {
+                state.playerIsGrounded = true;
+            }
+            if (bottomRight != null) {
+                state.playerIsGrounded = true;
+            }
         }
     }
 
