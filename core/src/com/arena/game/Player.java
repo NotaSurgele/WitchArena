@@ -140,6 +140,8 @@ public class Player {
     }
 
     private float jumping(float oldY, StateMachine state) {
+        if (state.playerisAttacking)
+            return oldY;
         state.playerIsFlying = !state.playerIsGrounded;
 
         if (state.playerIsGrounded && Gdx.input.isKeyJustPressed(SPACE)) {
