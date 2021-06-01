@@ -15,6 +15,7 @@ public class Arena extends ApplicationAdapter {
 	StateMachine state;
 	SpriteBatch batch;
 	Maps map;
+	Texture b1;
 
 	//System variable
 	float stateTime = 0;
@@ -22,10 +23,10 @@ public class Arena extends ApplicationAdapter {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		player = new Player(200,1500);
+		player = new Player(200,1000);
 		debug = new Debug();
 		state = new StateMachine();
-		map = new Maps(player.camera);
+		map = new Maps(player.camera, batch);
 		player.getCollLayer(map.collisionLayer);
 	}
 
