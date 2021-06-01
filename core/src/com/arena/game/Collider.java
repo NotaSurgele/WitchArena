@@ -32,14 +32,16 @@ public class Collider {
     {
         Rectangle bodyHitbox = new Rectangle();
 
-        bodyHitbox.height = player.sprite.getBoundingRectangle().height / 2;
-        bodyHitbox.width = player.sprite.getBoundingRectangle().width + 5;
-        bodyHitbox.x = player.sprite.getBoundingRectangle().x;
-        bodyHitbox.y = player.sprite.getY() + player.sprite.getHeight() / 2;
+        bodyHitbox.height = player.sprite.getBoundingRectangle().height;
+        bodyHitbox.width = player.sprite.getBoundingRectangle().width;
+        bodyHitbox.x = player.sprite.getX();
+        bodyHitbox.y = player.sprite.getY();
         return bodyHitbox;
     }
 
-    //Collision detection with the ground
+    //OlderCollsion just keep it in case i have to change
+    // You just have to create an object layer in Tiled
+
     public StateMachine playerIsColliding(Player player, StateMachine state)
     {
         MapObjects mapObjects = player.collisionLayer.getObjects();
@@ -48,54 +50,55 @@ public class Collider {
         for (RectangleMapObject obj : rectangleObjects) {
             Rectangle object = obj.getRectangle();
             Rectangle feetHitbox = getFeetHitbox(player);
+            Rectangle bodyHitbox = getBodyHitbox(player);
+
+            if (bodyHitbox.overlaps(object)) {
+                System.out.println("Hello world !");
+            } if (!state.playerIsGrounded) {
+                if (feetHitbox.overlaps(object)) {
+                    state.playerIsGrounded = true;
+                    return state;
+                }
+            } else if (state.playerIsJumping || state.playerisMoving) {
+                if (feetHitbox.overlaps(object)) {
+                    state.playerIsGrounded = true;
+                    return state;
+                } else {
+                    state.playerIsGrounded = false;
+                }
+            }
         }
         return state;
     }
 
-    Rectangle getBottom(float x, float y, float width, float height)
+    public void getPlayerWorldCollision(Player player, StateMachine state)
     {
-        Rectangle bottom = new Rectangle();
-        bottom.x = x;
-        bottom.y = y - height - 32;
-        bottom.width = 32;
-        bottom.height = 32;
-        return bottom;
-    }
+        Rectangle feetHitbox = getFeetHitbox(player);
+        Rectangle bodyHitbox = getBodyHitbox(player);
+        TiledMapTileLayer.Cell bottom = player.colLayer.getCell((int)(feetHitbox.x / 31), (int)feetHitbox.y / 32);
+        TiledMapTileLayer.Cell left = player.colLayer.getCell((int) bodyHitbox.x / 31, (int) (bodyHitbox.y + (bodyHitbox.height / 2)) / 32);
+        TiledMapTileLayer.Cell right = player.colLayer.getCell((int) (bodyHitbox.x + bodyHitbox.width) / 33, (int) (bodyHitbox.y + (bodyHitbox.height / 2)) / 32);
+        TiledMapTileLayer.Cell top = player.colLayer.getCell((int) (bodyHitbox.x + (bodyHitbox.width / 2) / 32), (int) (bodyHitbox.y + bodyHitbox.height) / 32);
 
-    public void test_two(Player player, StateMachine state)
-    {
-        MapObjects mapObjects = player.collisionLayer.getObjects();
-        Array<RectangleMapObject> rectangleMapObjects = mapObjects.getByType(RectangleMapObject.class);
-
-        for (RectangleMapObject obj : rectangleMapObjects) {
-            Rectangle object = obj.getRectangle();
-            Rectangle bottom = getBottom(player.sprite.getX(), player.sprite.getY(), player.sprite.getWidth(), player.sprite.getHeight());
-
-            if (bottom.overlaps(object)) {
-                state.playerIsGrounded = true;
-                return;
-            } else {
-                state.playerIsGrounded = false;
-            }
-        }
-    }
-
-    public boolean test(Player player, StateMachine state)
-    {
-        TiledMapTileLayer.Cell cell = player.colLayer.getCell((int)(player.sprite.getX() / 31), (int)player.sprite.getY() / 32);
-        if (cell != null) {
-            if (player.moveV.y < 0)
-                state.playerIsGrounded = true;
-            if (player.moveV.x > 0 )
-                System.out.println("Collision Droite");
+        if (bottom != null) {
+            state.playerIsGrounded = true;
         } else {
             state.playerIsGrounded = false;
         }
-        return true;
+        if (left != null) {
+            state.playerCollideLeft = true;
+        } else {
+            state.playerCollideLeft = false;
+        }
+        if (right != null) {
+            state.playerCollideRight = true;
+        } else {
+            state.playerCollideRight = false;
+        }
+        if (top != null) {
+            System.out.println("We are colliding on top");
+            System.out.println(top.getTile().getId());
+        }
     }
 
-    public Player playerMovementCollision(Player player)
-    {
-        return player;
-    }
 }

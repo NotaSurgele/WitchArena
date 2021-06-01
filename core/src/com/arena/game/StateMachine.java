@@ -17,6 +17,8 @@ public class StateMachine {
     public boolean playerIsFlying = true;
     public boolean playerIsJumping = false;
     public boolean playerColliding = false;
+    public boolean playerCollideLeft = false;
+    public boolean playerCollideRight = false;
     //Others
 
     public StateMachine() {}
@@ -36,19 +38,13 @@ public class StateMachine {
                 this.playerisMoving = true;
             } else if (Gdx.input.isButtonPressed(LEFT)) {
                 this.playerisMoving = false;
-                this.playerisAttacking = true;
+                if (this.playerIsGrounded)
+                    this.playerisAttacking = true;
             } else {
                 this.playerisMoving = false;
                 this.playerisAttacking = false;
             }
         }
         return this;
-    }
-
-    void applyPlayerState(Player player)
-    {
-        if (this.playerisMoving) {
-            player.move();
-        }
     }
 }

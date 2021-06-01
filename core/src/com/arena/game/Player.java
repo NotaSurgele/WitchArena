@@ -126,13 +126,13 @@ public class Player {
         }
     }
 
-    public void move()
+    public void move(StateMachine state)
     {
-        if (Gdx.input.isKeyPressed(D)) {
+        if (!state.playerCollideRight && Gdx.input.isKeyPressed(D)) {
             moveV.x = moveSpeed * deltaTime;
             this.velocity.x += moveV.x;
         }
-        if (Gdx.input.isKeyPressed(Q)) {
+        if (!state.playerCollideLeft && Gdx.input.isKeyPressed(Q)) {
             moveV.x = moveSpeed * deltaTime;
             this.velocity.x -= moveV.x;
         }
@@ -153,7 +153,7 @@ public class Player {
         if (state.playerIsJumping) {
             velocity.y += (float)(-0.5f * -gravity * power(deltaTime, 3.8f) * 2) - this.jumping;
             if (velocity.y >= (oldY + 80)) {
-                this.jumping -= 0.07f;
+                this.jumping -= 0.06f;
                 this.deltaTime = 1.3f;
             }
         }
@@ -173,7 +173,6 @@ public class Player {
     public void render(StateMachine state, SpriteBatch batch)
     {
         attackTime = animator.getAttackTime(state, attackTime);
-        collider.test_two(this, state);
         sprite = animator.updatePlayerSprite(this, state, batch);
         this.camera = setCameraPositionRelativeToPlayer(state);
         batch.setProjectionMatrix(camera.combined);
@@ -187,8 +186,8 @@ public class Player {
             stateTime += Gdx.graphics.getDeltaTime();
             deltaTime += Gdx.graphics.getDeltaTime();
             currentFrame = animator.setPlayerCurrentFrame(this, state);
-            move();
-            state = collider.playerIsColliding(this, state);
+            collider.getPlayerWorldCollision(this, state);
+            move(state);
             gravity(state);
             oldY = jumping(oldY, state);
             sprite.setRegion(currentFrame);

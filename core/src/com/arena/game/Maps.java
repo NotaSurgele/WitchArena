@@ -24,7 +24,7 @@ public class Maps {
         camera.update();
         map = new TmxMapLoader().load(TESTING_MAP);
         mapRenderer = new OrthogonalTiledMapRenderer(map);
-        collisionLayer = (TiledMapTileLayer) map.getLayers().get(0);
+        collisionLayer = (TiledMapTileLayer) map.getLayers().get(1);
     }
 
     public void render() {
