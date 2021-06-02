@@ -35,21 +35,23 @@ public class BackgroundLayer {
         batch.begin();
         if (state.playerisMoving) {
             if (state.playerisRotating) {
-                movingX1 -= 0.3f * player.deltaTime;
-                movingX2 -= 0.5f * player.deltaTime;
-                movingX3 -= 0.7f * player.deltaTime;
-                movingX4 -= 1.0f * player.deltaTime;
+                movingX1 -= 0.3f;
+                movingX2 -= 0.5f ;
+                movingX3 -= 0.7f ;
+                movingX4 -= 1.0f ;
             } else {
-                movingX1 += 0.3f * player.deltaTime;
-                movingX2 += 0.5f * player.deltaTime;
-                movingX3 += 0.7f * player.deltaTime;
-                movingX4 += 1.0f * player.deltaTime;
+                movingX1 += 0.3f ;
+                movingX2 += 0.5f ;
+                movingX3 += 0.7f ;
+                movingX4 += 1.0f;
             }
         }
-        batch.draw(bgLayer.b1,0, -250, (int)movingX1, 0, 2000, 1000);
-        batch.draw(bgLayer.b2,0, -250, (int)movingX2, 0, 2000, 1000);
-        batch.draw(bgLayer.b3,0, -250, (int)movingX3, 0, 2000, 1000);
-        batch.draw(bgLayer.b4,0, -250, (int)movingX4, 0, 2000, 1000);
+        batch.draw(bgLayer.b1,0, 500, (int)movingX1, 0, 2000, 1500);
+        batch.draw(bgLayer.b2,0, 500, (int)movingX2, 0, 2000, 1000);
+        batch.draw(bgLayer.b3,0, 500, (int)movingX3, 0, 2000, 1000);
+        batch.draw(bgLayer.b4,0, 500, (int)movingX4, 0, 2000, 1000);
+        batch.setProjectionMatrix(camera.combined);
+        //batch.setProjectionMatrix(camera.view);
         batch.end();
         return bgLayer;
     }
