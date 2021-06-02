@@ -152,8 +152,7 @@ public class Player {
         }
         if (this.jumping <= 0) {
             state.playerIsJumping = false;
-        }
-        if (state.playerIsJumping) {
+        } if (state.playerIsJumping) {
             velocity.y += (float)(-0.5f * -gravity * power(deltaTime, 3.8f) * 2) - this.jumping;
             if (velocity.y >= (oldY + 80)) {
                 this.jumping -= 0.06f;

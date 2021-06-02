@@ -20,12 +20,9 @@ public class Maps {
     TiledMapRenderer mapRenderer;
     TiledMapTileLayer collisionLayer;
     SpriteBatch batch;
-    TextureRegion b1;
+    BackgroundLayer bgLayer;
 
     final String TESTING_MAP = "maps/testing_map/map.tmx";
-    final String LAYERS = "maps/2 Background/Layers/";
-
-    int check = 0;
 
     public Maps(OrthographicCamera camera, SpriteBatch batch) {
         this.camera = camera;
@@ -34,14 +31,11 @@ public class Maps {
         map = new TmxMapLoader().load(TESTING_MAP);
         mapRenderer = new OrthogonalTiledMapRenderer(map);
         collisionLayer = (TiledMapTileLayer) map.getLayers().get(0);
-        b1 = new TextureRegion(new Texture(LAYERS + "1.png"), 0, 500, 500, 500);
+        bgLayer = new BackgroundLayer();
     }
 
-    public void render(Player player, SpriteBatch batch, StateMachine state) {
-        this.batch.begin();
-        this.batch.setProjectionMatrix(camera.combined);
-        this.batch.draw(b1, 0, 500);
-        this.batch.end();
+    public void render(Player player, StateMachine state) {
+        bgLayer = bgLayer.parallax(bgLayer, this.batch, this.camera, state, player);
         mapRenderer.setView(camera);
         mapRenderer.render();
     }

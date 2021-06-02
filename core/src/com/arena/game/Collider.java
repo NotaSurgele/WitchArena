@@ -74,9 +74,9 @@ public class Collider {
     public void getPlayerWorldCollision(Player player, StateMachine state)
     {
         Rectangle bodyHitbox = getBodyHitbox(player);
-        TiledMapTileLayer.Cell bottomMid = player.colLayer.getCell((int)((bodyHitbox.x + (bodyHitbox.width / 2) - 31) / 32), (int)bodyHitbox.y / 32);
+        TiledMapTileLayer.Cell bottomMid = player.colLayer.getCell((int)((bodyHitbox.x + (bodyHitbox.width / 2) - 30) / 32), (int)bodyHitbox.y / 32);
         TiledMapTileLayer.Cell bottomLeft = player.colLayer.getCell((int) (bodyHitbox.x + 31) / 32, (int) bodyHitbox.y / 32);
-        TiledMapTileLayer.Cell bottomRight = player.colLayer.getCell((int) ((bodyHitbox.x + bodyHitbox.width) - 31) / 31, (int) bodyHitbox.y / 32);
+        TiledMapTileLayer.Cell bottomRight = player.colLayer.getCell((int) ((bodyHitbox.x + bodyHitbox.width) - 30) / 31, (int) bodyHitbox.y / 32);
         TiledMapTileLayer.Cell left = player.colLayer.getCell((int) bodyHitbox.x / 31, (int) (bodyHitbox.y + (bodyHitbox.height / 2)) / 32);
         TiledMapTileLayer.Cell right = player.colLayer.getCell((int) (bodyHitbox.x + bodyHitbox.width) / 33, (int) (bodyHitbox.y + (bodyHitbox.height / 2)) / 32);
 
