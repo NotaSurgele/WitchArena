@@ -39,8 +39,12 @@ public class Collider {
         return bodyHitbox;
     }
 
-    //OlderCollsion just keep it in case i have to change
-    // You just have to create an object layer in Tiled
+    /**
+     * This is the old collision system i let it here in case i need later
+     * @param player
+     * @param state
+     * @return
+     */
 
     public StateMachine playerIsColliding(Player player, StateMachine state)
     {
@@ -71,6 +75,11 @@ public class Collider {
         return state;
     }
 
+    /**
+     * This is the current used World Collision with the player
+     * @param player
+     * @param state
+     */
     public void getPlayerWorldCollision(Player player, StateMachine state)
     {
         Rectangle bodyHitbox = getBodyHitbox(player);

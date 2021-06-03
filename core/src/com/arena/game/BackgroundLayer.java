@@ -29,6 +29,15 @@ public class BackgroundLayer {
         b4.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.ClampToEdge);
     }
 
+    public void parrallaxDrawing(SpriteBatch batch, Player player, BackgroundLayer bgLayer, OrthographicCamera camera)
+    {
+        batch.draw(bgLayer.b1, player.sprite.getX() - 800, 500, (int)movingX1, 0, 2000, 1500);
+        batch.draw(bgLayer.b2, player.sprite.getX() - 800, 500, (int)movingX2, 0, 2000, 1000);
+        batch.draw(bgLayer.b3, player.sprite.getX() - 800, 500, (int)movingX3, 0, 2000, 1000);
+        batch.draw(bgLayer.b4, player.sprite.getX() - 800, 500, (int)movingX4, 0, 2000, 1000);
+        batch.setProjectionMatrix(camera.combined);
+    }
+
     public BackgroundLayer parallax(BackgroundLayer bgLayer, SpriteBatch batch, OrthographicCamera camera, StateMachine state,
                                                                                                                 Player player)
     {
@@ -46,12 +55,7 @@ public class BackgroundLayer {
                 movingX4 += 1.0f;
             }
         }
-        batch.draw(bgLayer.b1,0, 500, (int)movingX1, 0, 2000, 1500);
-        batch.draw(bgLayer.b2,0, 500, (int)movingX2, 0, 2000, 1000);
-        batch.draw(bgLayer.b3,0, 500, (int)movingX3, 0, 2000, 1000);
-        batch.draw(bgLayer.b4,0, 500, (int)movingX4, 0, 2000, 1000);
-        batch.setProjectionMatrix(camera.combined);
-        //batch.setProjectionMatrix(camera.view);
+        this.parrallaxDrawing(batch, player, bgLayer, camera);
         batch.end();
         return bgLayer;
     }

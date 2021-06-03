@@ -39,7 +39,6 @@ public class Player {
     static final int changeY = 100;
     static final int staticX = 80;
     static final int staticY = 100;
-    static final int paddingX = 170;
     static final int paddingY = 200;
     static final int cameraX = Gdx.graphics.getWidth();
     static final int cameraY = Gdx.graphics.getHeight();
@@ -93,6 +92,7 @@ public class Player {
 
     private float getCenteredCameraPosX(Sprite sprite)
     {
+        final int paddingX = 170;
         return sprite.getX() + paddingX;
     }
 
@@ -108,6 +108,10 @@ public class Player {
         }
     }
 
+    /**
+     *
+     *  saluuuuut
+     */
     public void getCollLayer(TiledMapTileLayer layer)
     {
         if (layer != null) {
@@ -143,7 +147,6 @@ public class Player {
         if (state.playerisAttacking)
             return oldY;
         state.playerIsFlying = !state.playerIsGrounded;
-
         if (state.playerIsGrounded && Gdx.input.isKeyJustPressed(SPACE)) {
             this.jumping = JUMPING_VALUE;
             oldY = this.velocity.y;
