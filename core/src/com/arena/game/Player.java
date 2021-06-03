@@ -108,10 +108,6 @@ public class Player {
         }
     }
 
-    /**
-     *
-     *  saluuuuut
-     */
     public void getCollLayer(TiledMapTileLayer layer)
     {
         if (layer != null) {

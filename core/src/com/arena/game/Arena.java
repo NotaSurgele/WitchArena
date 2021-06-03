@@ -16,6 +16,7 @@ public class Arena extends ApplicationAdapter {
 	SpriteBatch batch;
 	Maps map;
 	Texture b1;
+	Slime slime;
 
 	//System variable
 	float stateTime = 0;
@@ -28,6 +29,7 @@ public class Arena extends ApplicationAdapter {
 		state = new StateMachine();
 		map = new Maps(player.camera, batch);
 		player.getCollLayer(map.collisionLayer);
+		slime = new Slime();
 	}
 
 	@Override
@@ -39,6 +41,7 @@ public class Arena extends ApplicationAdapter {
 		map.render(player, state);
 		state.update(player);
 		player.update(state, batch);
+		slime.update();
 		debug.render();
 		batch.end();
 	}

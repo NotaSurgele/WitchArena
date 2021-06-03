@@ -18,7 +18,7 @@ public class Animator {
 
     //Assets Path
     final String PLAYER_PATH = "player/";
-    final String ENEMYS_PATH = "enemys/";
+    final String ENEMYS_PATH = "enemys/Enemy/";
 
     public Animator() {}
 

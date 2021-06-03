@@ -19,6 +19,10 @@ public class StateMachine {
     public boolean playerColliding = false;
     public boolean playerCollideLeft = false;
     public boolean playerCollideRight = false;
+
+    //Enemy
+    //Slime
+
     //Others
 
     public StateMachine() {}
