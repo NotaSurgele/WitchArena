@@ -22,7 +22,8 @@ public class Arena extends ApplicationAdapter {
 	float stateTime = 0;
 
 	@Override
-	public void create () {
+	public void create ()
+	{
 		batch = new SpriteBatch();
 		player = new Player(200,1000);
 		debug = new Debug();
@@ -33,7 +34,8 @@ public class Arena extends ApplicationAdapter {
 	}
 
 	@Override
-	public void render () {
+	public void render ()
+	{
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
@@ -41,13 +43,14 @@ public class Arena extends ApplicationAdapter {
 		map.render(player, state);
 		state.update(player);
 		player.update(state, batch);
-		slime.update(player.camera);
+		slime.update(player.camera, state, player.colLayer);
 		debug.render();
 		batch.end();
 	}
 
 	@Override
-	public void dispose () {
+	public void dispose ()
+	{
 		batch.dispose();
 		player.dispose();
 		debug.dispose();

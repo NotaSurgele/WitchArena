@@ -21,7 +21,9 @@ public class StateMachine {
     public boolean playerCollideRight = false;
 
     //Enemy
+
     //Slime
+    public boolean slimeIsGrounded = false;
 
     //Others
 

@@ -1,5 +1,6 @@
 package com.arena.game;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.utils.Array;
 
 public class Collider {
@@ -115,4 +117,21 @@ public class Collider {
         }
     }
 
+    private Rectangle getEntityHitbox(Sprite sprite)
+    {
+        Rectangle hitbox = new Rectangle().set(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
+        return hitbox;
+    }
+
+    public void getSlimeWorldCollision(Slime slime, StateMachine state, TiledMapTileLayer collisionLayer)
+    {
+        Rectangle hitbox = getEntityHitbox(slime.sprite);
+        TiledMapTileLayer.Cell bottom = collisionLayer.getCell((int)((hitbox.x + (hitbox.width / 2) - 30) / 32), (int)hitbox.y / 32);
+
+        if (bottom != null) {
+            state.slimeIsGrounded = true;
+        } else {
+            state.slimeIsGrounded = false;
+        }
+    }
 }
