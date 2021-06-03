@@ -41,7 +41,7 @@ public class Arena extends ApplicationAdapter {
 		map.render(player, state);
 		state.update(player);
 		player.update(state, batch);
-		slime.update();
+		slime.update(player.camera);
 		debug.render();
 		batch.end();
 	}

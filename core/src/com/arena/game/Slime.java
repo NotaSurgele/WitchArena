@@ -1,6 +1,7 @@
 package com.arena.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -33,16 +34,18 @@ public class Slime {
         sprite = new Sprite();
         sprite.setBounds(0, 0, 50, 50);
         sprite.setRegion(currentFrame);
-        sprite.setPosition(200, 200);
+        sprite.setPosition(200, 800);
         velocity = new Vector2();
     }
 
-    public void render(float stateTime)
+    public void render(float stateTime, OrthographicCamera camera)
     {
         batch.begin();
         currentFrame = run.getKeyFrame(stateTime, true);
         sprite.setRegion(currentFrame);
         sprite.draw(batch);
+        batch.setProjectionMatrix(camera.combined);
+        camera.update();
         batch.end();
     }
 
@@ -51,11 +54,11 @@ public class Slime {
 
     }
 
-    public void update()
+    public void update(OrthographicCamera camera)
     {
         deltaTime += Gdx.graphics.getDeltaTime();
         stateTime += Gdx.graphics.getDeltaTime();
-        render(stateTime);
+        render(stateTime, camera);
     }
 
     public void dispose()
