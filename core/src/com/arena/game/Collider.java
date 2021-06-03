@@ -84,10 +84,10 @@ public class Collider {
     {
         Rectangle bodyHitbox = getBodyHitbox(player);
         TiledMapTileLayer.Cell bottomMid = player.colLayer.getCell((int)((bodyHitbox.x + (bodyHitbox.width / 2) - 30) / 32), (int)bodyHitbox.y / 32);
-        TiledMapTileLayer.Cell bottomLeft = player.colLayer.getCell((int) (bodyHitbox.x + 31) / 32, (int) bodyHitbox.y / 32);
-        TiledMapTileLayer.Cell bottomRight = player.colLayer.getCell((int) ((bodyHitbox.x + bodyHitbox.width) - 30) / 31, (int) bodyHitbox.y / 32);
-        TiledMapTileLayer.Cell left = player.colLayer.getCell((int) bodyHitbox.x / 31, (int) (bodyHitbox.y + (bodyHitbox.height / 2)) / 32);
-        TiledMapTileLayer.Cell right = player.colLayer.getCell((int) (bodyHitbox.x + bodyHitbox.width) / 33, (int) (bodyHitbox.y + (bodyHitbox.height / 2)) / 32);
+        TiledMapTileLayer.Cell bottomLeft = player.colLayer.getCell((int) (bodyHitbox.x + 33) / 32, (int) bodyHitbox.y / 32);
+        TiledMapTileLayer.Cell bottomRight = player.colLayer.getCell((int) ((bodyHitbox.x + bodyHitbox.width) - 33) / 31, (int) bodyHitbox.y / 32);
+        TiledMapTileLayer.Cell left = player.colLayer.getCell((int) (bodyHitbox.x - 10) / 31, (int) (bodyHitbox.y + (bodyHitbox.height / 2)) / 32);
+        TiledMapTileLayer.Cell right = player.colLayer.getCell((int) (bodyHitbox.x + bodyHitbox.width + 10) / 33, (int) (bodyHitbox.y + (bodyHitbox.height / 2)) / 32);
 
         if (left != null) {
             state.playerCollideLeft = true;
@@ -97,11 +97,14 @@ public class Collider {
             state.playerCollideRight = true;
         } else {
             state.playerCollideRight = false;
-        } if (bottomMid == null && bottomLeft == null && bottomRight == null)
+        }
+        if (bottomMid == null && bottomLeft == null && bottomRight == null)
             state.playerIsGrounded = false;
         if (!state.playerIsGrounded) {
             if (bottomMid != null) {
                 state.playerIsGrounded = true;
+            } else {
+                state.playerIsGrounded = false;
             }
             if (bottomLeft != null) {
                 state.playerIsGrounded = true;

@@ -18,6 +18,7 @@ public class Animator {
 
     //Assets Path
     final String PLAYER_PATH = "player/";
+    final String ENEMYS_PATH = "enemys/";
 
     public Animator() {}
 
@@ -62,6 +63,13 @@ public class Animator {
         player.moveRight = player.animator.getAnimation(player.moveRight_img, player.moveRight, 0.1f, 1, 8);
         player.moveLeft = player.animator.getAnimation(player.moveLeft_img, player.moveLeft, 0.1f, 1, 8);
         return player;
+    }
+
+    public Slime initializeSlimeAnimation(Slime slime)
+    {
+        slime.run_img = new Texture(ENEMYS_PATH + slime.SLIME + "Slime_Spiked_Run.png");
+        slime.run = this.getAnimation(slime.run_img, slime.run, 0.1f, 4, 1);
+        return slime;
     }
 
     public TextureRegion setPlayerCurrentFrame(Player player, StateMachine state) {

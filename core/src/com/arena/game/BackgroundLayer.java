@@ -42,7 +42,7 @@ public class BackgroundLayer {
                                                                                                                 Player player)
     {
         batch.begin();
-        if (state.playerisMoving) {
+        if ((state.playerisMoving && !state.playerCollideLeft) || (state.playerisMoving && !state.playerCollideRight)) {
             if (state.playerisRotating) {
                 movingX1 -= 0.3f;
                 movingX2 -= 0.5f ;
