@@ -22,10 +22,10 @@ public class Slime {
 
     Vector2 velocity;
 
-    float jumpForce = 15f;
     float gravity = 6 * 1.8f;
     float stateTime = 0;
     float deltaTime = 0;
+    float coolDown = 0;
 
     final String SLIME = "Slime/";
 
@@ -38,7 +38,7 @@ public class Slime {
         sprite = new Sprite();
         sprite.setBounds(0, 0, 200, 200);
         sprite.setRegion(currentFrame);
-        velocity = new Vector2().add(200, 5000);
+        velocity = new Vector2().add(200, 1000);
         sprite.setPosition(velocity.x, velocity.y);
         collider = new Collider();
     }
@@ -59,15 +59,30 @@ public class Slime {
             velocity.y -= gravity * deltaTime;
     }
 
+    private float move(float coolDown, Vector2 velocity, StateMachine state)
+    {
+        if (!state.slimeIsMoving) {
+            if (coolDown >= 1 && coolDown <= 1.5) {
+                velocity.x += 3;
+            } else if (coolDown > 1.5f) {
+                state.slimeIsMoving = false;
+                coolDown = 0f;
+            }
+        }
+        return coolDown;
+    }
+
     public void update(OrthographicCamera camera, StateMachine state, TiledMapTileLayer collisionLayer)
     {
         deltaTime += Gdx.graphics.getDeltaTime();
         stateTime += Gdx.graphics.getDeltaTime();
+        coolDown += Gdx.graphics.getDeltaTime();
         currentFrame = run.getKeyFrame(stateTime, true);
         render(camera);
         sprite.setPosition(velocity.x, velocity.y);
         collider.getSlimeWorldCollision(this, state, collisionLayer);
         gravity(deltaTime, state);
+        coolDown = move(coolDown, velocity, state);
     }
 
     public void dispose()
