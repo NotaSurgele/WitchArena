@@ -83,7 +83,6 @@ public class Animator {
                     player.currentFrame = player.moveRight.getKeyFrame(player.stateTime, true);
                 }
             } else if (state.playerIsCharging) {
-                System.out.println("saluuut");
                 player.currentFrame = player.chargeRight.getKeyFrame(player.stateTime, true);
             } else if (!state.playerisMoving && !state.playerisAttacking) {
                 if (state.playerisRotating) {
@@ -114,6 +113,12 @@ public class Animator {
 
     public Sprite updatePlayerSprite(Player player, StateMachine state, SpriteBatch batch)
     {
+        if (state.playerIsCharging) {
+            player.sprite.setBounds(player.velocity.x, player.velocity.y, player.staticX + 30, player.staticY + 50);
+            player.camera.position.set(player.sprite.getX() - player.sprite.getWidth() / 2, player.sprite.getY(), 0);
+            player.sprite.draw(batch);
+            return player.sprite;
+        }
         if (state.playerisAttacking) {
             if (state.playerisRotating) {
                 player.sprite.setBounds(player.velocity.x - 170, player.velocity.y, player.changeX, player.changeY);
