@@ -1,14 +1,24 @@
 package com.arena.game;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 
 public class Enemys {
-    Animator animator;
+    Slime slime;
 
     public Enemys() {
-        animator = new Animator();
+        slime = new Slime();
     }
 
+    public void update(OrthographicCamera camera, StateMachine state, TiledMapTileLayer colLayer) {
+        slime.update(camera, state, colLayer);
+    }
+
+    public void dispose()
+    {
+        slime.dispose();
+    }
 }

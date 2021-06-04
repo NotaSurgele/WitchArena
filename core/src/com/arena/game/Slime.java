@@ -59,14 +59,15 @@ public class Slime {
             velocity.y -= gravity * deltaTime;
     }
 
-    private float move(float coolDown, Vector2 velocity, StateMachine state)
+    private float move(float coolDown,  StateMachine state)
     {
         if (!state.slimeIsMoving) {
             if (coolDown >= 1 && coolDown <= 1.4) {
-                velocity.x += 3;
+                velocity.x += 3 * deltaTime;
             } else if (coolDown >= 1.4f) {
                 state.slimeIsMoving = false;
                 coolDown = 0f;
+                deltaTime = 0f;
             }
         }
         return coolDown;
@@ -82,8 +83,7 @@ public class Slime {
         sprite.setPosition(velocity.x, velocity.y);
         collider.getSlimeWorldCollision(this, state, collisionLayer);
         gravity(deltaTime, state);
-        currentFrame.scroll(1, 1);
-        coolDown = move(coolDown, velocity, state);
+        //coolDown = move(coolDown, state);
     }
 
     public void dispose()

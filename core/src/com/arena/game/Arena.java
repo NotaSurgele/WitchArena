@@ -13,13 +13,9 @@ public class Arena extends ApplicationAdapter {
 	Player player;
 	Debug debug;
 	StateMachine state;
+	Enemys enemy;
 	SpriteBatch batch;
 	Maps map;
-	Texture b1;
-	Slime slime;
-
-	//System variable
-	float stateTime = 0;
 
 	@Override
 	public void create ()
@@ -30,7 +26,7 @@ public class Arena extends ApplicationAdapter {
 		state = new StateMachine();
 		map = new Maps(player.camera, batch);
 		player.getCollLayer(map.collisionLayer);
-		slime = new Slime();
+		enemy = new Enemys();
 	}
 
 	@Override
@@ -43,7 +39,7 @@ public class Arena extends ApplicationAdapter {
 		map.render(player, state);
 		state.update(player);
 		player.update(state, batch);
-		slime.update(player.camera, state, player.colLayer);
+		enemy.update(player.camera, state, player.colLayer);
 		debug.render();
 		batch.end();
 	}
@@ -54,5 +50,6 @@ public class Arena extends ApplicationAdapter {
 		batch.dispose();
 		player.dispose();
 		debug.dispose();
+		enemy.dispose();
 	}
 }

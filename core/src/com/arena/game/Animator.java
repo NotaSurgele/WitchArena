@@ -69,8 +69,8 @@ public class Animator {
 
     public Slime initializeSlimeAnimation(Slime slime)
     {
-        slime.run_img = new Texture(ENEMYS_PATH + slime.SLIME + "Slime_Spiked_Jump.png");
-        slime.run = this.getAnimation(slime.run_img, slime.run, 0.15f, 4, 2);
+        slime.run_img = new Texture( "enemys/slime.png");
+        slime.run = this.getAnimation(slime.run_img, slime.run, 0.15f, 18, 1);
         return slime;
     }
 
@@ -114,12 +114,11 @@ public class Animator {
     public Sprite updatePlayerSprite(Player player, StateMachine state, SpriteBatch batch)
     {
         if (state.playerIsCharging) {
-            player.sprite.setBounds(player.velocity.x, player.velocity.y, player.staticX + 30, player.staticY + 50);
+            player.sprite.setBounds(player.velocity.x, player.velocity.y, player.staticX + 30, player.staticY + 40);
             player.camera.position.set(player.sprite.getX() - player.sprite.getWidth() / 2, player.sprite.getY(), 0);
             player.sprite.draw(batch);
             return player.sprite;
-        }
-        if (state.playerisAttacking) {
+        } if (state.playerisAttacking) {
             if (state.playerisRotating) {
                 player.sprite.setBounds(player.velocity.x - 170, player.velocity.y, player.changeX, player.changeY);
                 player.camera.position.set(player.sprite.getX() + 170, player.sprite.getY(), 0);
