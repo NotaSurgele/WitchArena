@@ -54,12 +54,14 @@ public class Player {
     public Texture attackLeft_img;
     public Texture moveRight_img;
     public Texture moveLeft_img;
+    public Texture chargeRight_img;
     public Animation<TextureRegion> idleRight;
     public Animation<TextureRegion> idleLeft;
     public Animation<TextureRegion> moveRight;
     public Animation<TextureRegion> moveLeft;
     public Animation<TextureRegion> attackRight;
     public Animation<TextureRegion> attackLeft;
+    public Animation<TextureRegion> chargeRight;
     public TextureRegion currentFrame = null;
     float stateTime = 0;
     float attackTime = 0;

@@ -18,8 +18,9 @@ public class StateMachine {
     public boolean playerIsJumping = false;
     public boolean playerColliding = false;
     public boolean playerCollideLeft = false;
+    public boolean playerIsCharging = false;
     public boolean playerCollideRight = false;
-
+    float cd = 0;
     //Enemy
 
     //Slime
@@ -43,12 +44,20 @@ public class StateMachine {
                 this.playerisAttacking = false;
                 this.playerisMoving = true;
             } else if (Gdx.input.isButtonPressed(LEFT)) {
+                this.playerIsCharging = true;
+                if (this.playerIsCharging)
+                    this.cd += Gdx.graphics.getDeltaTime();
                 this.playerisMoving = false;
-                if (this.playerIsGrounded)
+                if (this.playerIsGrounded && cd > 3f) {
                     this.playerisAttacking = true;
+                    this.playerIsCharging = false;
+                }
+                System.out.println(playerIsCharging);
             } else {
+                cd = 0;
                 this.playerisMoving = false;
                 this.playerisAttacking = false;
+                this.playerIsCharging = false;
             }
         }
         return this;
