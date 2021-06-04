@@ -36,7 +36,7 @@ public class Slime {
         currentFrame = run.getKeyFrame(stateTime);
         batch = new SpriteBatch();
         sprite = new Sprite();
-        sprite.setBounds(0, 0, 50, 50);
+        sprite.setBounds(0, 0, 200, 200);
         sprite.setRegion(currentFrame);
         velocity = new Vector2().add(200, 5000);
         sprite.setPosition(velocity.x, velocity.y);

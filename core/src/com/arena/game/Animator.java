@@ -67,8 +67,8 @@ public class Animator {
 
     public Slime initializeSlimeAnimation(Slime slime)
     {
-        slime.run_img = new Texture(ENEMYS_PATH + slime.SLIME + "Slime_Spiked_Run.png");
-        slime.run = this.getAnimation(slime.run_img, slime.run, 0.1f, 4, 1);
+        slime.run_img = new Texture(ENEMYS_PATH + slime.SLIME + "Slime_Spiked_Jump.png");
+        slime.run = this.getAnimation(slime.run_img, slime.run, 0.12f, 4, 2);
         return slime;
     }
 
