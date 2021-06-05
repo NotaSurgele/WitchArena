@@ -79,7 +79,7 @@ public class Slime {
     {
         coolDown += Gdx.graphics.getDeltaTime();
         deltaTime = Gdx.graphics.getDeltaTime();
-        stateTime += Gdx.graphics.getDeltaTime();
+        stateTime = Gdx.graphics.getDeltaTime();
         //currentFrame = run.getKeyFrame(stateTime, true);
         test = run.getKeyFrames();
         /*if (i != 17) {

@@ -85,9 +85,9 @@ public class Collider {
     public void getPlayerWorldCollision(Player player, StateMachine state)
     {
         Rectangle bodyHitbox = getBodyHitbox(player);
-        TiledMapTileLayer.Cell bottomMid = player.colLayer.getCell((int)((bodyHitbox.x + (bodyHitbox.width / 2) - 30) / 32), (int)bodyHitbox.y / 32);
+        TiledMapTileLayer.Cell bottomMid = player.colLayer.getCell((int)((bodyHitbox.x + (bodyHitbox.width / 2)) / 32), (int)bodyHitbox.y / 32);
         TiledMapTileLayer.Cell bottomLeft = player.colLayer.getCell((int) (bodyHitbox.x + 33) / 32, (int) bodyHitbox.y / 32);
-        TiledMapTileLayer.Cell bottomRight = player.colLayer.getCell((int) ((bodyHitbox.x + bodyHitbox.width) - 33) / 31, (int) bodyHitbox.y / 32);
+        TiledMapTileLayer.Cell bottomRight = player.colLayer.getCell((int) ((bodyHitbox.x + bodyHitbox.width) - 33) / 32, (int) bodyHitbox.y / 32);
         TiledMapTileLayer.Cell left = player.colLayer.getCell((int) (bodyHitbox.x - 10) / 31, (int) (bodyHitbox.y + (bodyHitbox.height / 2)) / 32);
         TiledMapTileLayer.Cell right = player.colLayer.getCell((int) (bodyHitbox.x + bodyHitbox.width + 10) / 33, (int) (bodyHitbox.y + (bodyHitbox.height / 2)) / 32);
 
@@ -108,10 +108,10 @@ public class Collider {
             } else {
                 state.playerIsGrounded = false;
             }
-            if (bottomLeft != null) {
+            if (bottomLeft != null && left == null) {
                 state.playerIsGrounded = true;
             }
-            if (bottomRight != null) {
+            if (bottomRight != null && right == null) {
                 state.playerIsGrounded = true;
             }
         }
