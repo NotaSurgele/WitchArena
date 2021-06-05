@@ -19,6 +19,7 @@ public class Slime {
     public Texture run_img;
     public Animation<TextureRegion> run;
     public TextureRegion currentFrame;
+    public TextureRegion[] test = new TextureRegion[18];
 
     Vector2 velocity;
 
@@ -26,6 +27,7 @@ public class Slime {
     float stateTime = 0;
     float deltaTime = 0;
     float coolDown = 0;
+    int i = 0; float save = 0;
 
     final String SLIME = "Slime/";
 
@@ -76,9 +78,24 @@ public class Slime {
     public void update(OrthographicCamera camera, StateMachine state, TiledMapTileLayer collisionLayer)
     {
         coolDown += Gdx.graphics.getDeltaTime();
-        deltaTime += Gdx.graphics.getDeltaTime();
+        deltaTime = Gdx.graphics.getDeltaTime();
         stateTime += Gdx.graphics.getDeltaTime();
-        currentFrame = run.getKeyFrame(stateTime, true);
+        //currentFrame = run.getKeyFrame(stateTime, true);
+        test = run.getKeyFrames();
+        /*if (i != 17) {
+            if (i == 8) {
+                if ((deltaTime) >= 4) {
+                    System.out.println("salit");
+                    i++;
+                    deltaTime = 0f;
+                }
+            } else {
+                i++;
+            }
+            currentFrame = test[i];
+        } else {
+            i = 0;
+        }*/
         render(camera);
         sprite.setPosition(velocity.x, velocity.y);
         collider.getSlimeWorldCollision(this, state, collisionLayer);

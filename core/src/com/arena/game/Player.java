@@ -33,8 +33,8 @@ public class Player {
     //value
     public Vector2 velocity;
     public Vector2 moveV;
-    public final float moveSpeed = 2 * 2;
-    public final double gravity = 3.4 * 1.8f;
+    public final float moveSpeed = 300f;
+    public final double gravity = 300 * 1.8f;
     static final int changeX = 250;
     static final int changeY = 100;
     static final int staticX = 80;
@@ -120,7 +120,7 @@ public class Player {
     private void gravity(StateMachine state)
     {
         if (!state.playerIsGrounded) {
-            moveV.y = -(float)gravity * deltaTime - this.jumping;
+            moveV.y = -(float)gravity * Gdx.graphics.getDeltaTime() - this.jumping;
             velocity.y += moveV.y;
         } else {
             deltaTime = 1.3f;
@@ -154,10 +154,11 @@ public class Player {
         if (this.jumping <= 0) {
             state.playerIsJumping = false;
         } if (state.playerIsJumping) {
-            velocity.y += (float)(-0.5f * -gravity * power(deltaTime, 3.8f) * 2) - this.jumping;
+                velocity.y += (float)((-0.5f * -gravity) * power(Gdx.graphics.getDeltaTime(), 2) * 2) * 125;
             if (velocity.y >= (oldY + 80)) {
                 this.jumping -= 0.06f;
-                this.deltaTime = 1.3f;
+                velocity.y -= this.jumping;
+                //this.deltaTime = 0f;
             }
         }
         return oldY;
@@ -186,7 +187,7 @@ public class Player {
     {
         if (state.isPlaying) {
             stateTime += Gdx.graphics.getDeltaTime();
-            deltaTime += Gdx.graphics.getDeltaTime();
+            deltaTime = Gdx.graphics.getDeltaTime();
             currentFrame = animator.setPlayerCurrentFrame(this, state);
             collider.getPlayerWorldCollision(this, state);
             move(state);

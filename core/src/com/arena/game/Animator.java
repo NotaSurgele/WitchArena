@@ -70,7 +70,7 @@ public class Animator {
     public Slime initializeSlimeAnimation(Slime slime)
     {
         slime.run_img = new Texture( "enemys/slime.png");
-        slime.run = this.getAnimation(slime.run_img, slime.run, 0.15f, 18, 1);
+        slime.run = this.getAnimation(slime.run_img, slime.run, 0.1f, 18, 1);
         return slime;
     }
 

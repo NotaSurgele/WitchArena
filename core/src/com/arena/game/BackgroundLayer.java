@@ -44,15 +44,15 @@ public class BackgroundLayer {
         batch.begin();
         if ((state.playerisMoving && !state.playerCollideLeft) || (state.playerisMoving && !state.playerCollideRight)) {
             if (state.playerisRotating) {
-                movingX1 -= 0.3f;
-                movingX2 -= 0.5f ;
-                movingX3 -= 0.7f ;
-                movingX4 -= 1.0f ;
+                movingX1 -= 10f * Gdx.graphics.getDeltaTime();
+                movingX2 -= 15f * Gdx.graphics.getDeltaTime();
+                movingX3 -= 20f * Gdx.graphics.getDeltaTime();
+                movingX4 -= 25f * Gdx.graphics.getDeltaTime();
             } else {
-                movingX1 += 0.3f ;
-                movingX2 += 0.5f ;
-                movingX3 += 0.7f ;
-                movingX4 += 1.0f;
+                movingX1 += 10f * Gdx.graphics.getDeltaTime();
+                movingX2 += 15f * Gdx.graphics.getDeltaTime();
+                movingX3 += 20f * Gdx.graphics.getDeltaTime();
+                movingX4 += 25f * Gdx.graphics.getDeltaTime();
             }
         }
         this.parrallaxDrawing(batch, player, bgLayer, camera);
