@@ -43,7 +43,11 @@ public class StateMachine {
                 this.playerisRotating = !left;
                 this.playerisAttacking = false;
                 this.playerisMoving = true;
-            } else if (Gdx.input.isButtonPressed(LEFT)) {
+            } else if (Gdx.input.isButtonPressed(LEFT) && !this.playerIsJumping) {
+                if (this.playerisMoving) {
+                    this.playerIsCharging = false;
+                    cd = 0;
+                }
                 this.playerIsCharging = true;
                 if (this.playerIsCharging && !this.playerisAttacking) {
                     this.cd += Gdx.graphics.getDeltaTime();
@@ -55,6 +59,7 @@ public class StateMachine {
                 }
                 if (player.attackRight.isAnimationFinished(player.attackTime) && this.playerisAttacking) {
                     this.playerisAttacking = false;
+                    cd = 0;
                 }
             } else {
                 cd = 0;

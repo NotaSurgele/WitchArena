@@ -125,19 +125,22 @@ public class Player {
         }
     }
 
-    public void move(StateMachine state)
+    public StateMachine move(StateMachine state)
     {
         if (!state.playerCollideRight && Gdx.input.isKeyPressed(D)) {
             moveV.x = moveSpeed * deltaTime;
             this.velocity.x += moveV.x;
+            state.playerisMoving = true;
         }
         if (!state.playerCollideLeft && Gdx.input.isKeyPressed(Q)) {
             moveV.x = moveSpeed * deltaTime;
             this.velocity.x -= moveV.x;
+            state.playerisMoving = true;
         }
+        return state;
     }
 
-    private void jumping(StateMachine state, Vector2 velocity) {
+    private void jumping(StateMachine state, Vector2 velocity, Sprite sprite) {
         if (state.playerisAttacking || state.playerIsCharging)
             return;
         state.playerIsFlying = !state.playerIsGrounded;
@@ -145,11 +148,10 @@ public class Player {
             state.playerIsJumping = true;
             state.playerIsGrounded = false;
         }
-        if (state.playerIsJumping && !state.playerIsGrounded) {
+        if (state.playerIsJumping && !state.playerIsGrounded || state.playerIsJumping && jumpForce >= 0) {
             velocity.y += jumpForce * deltaTime * 4;
             jumpForce += -(800f * deltaTime);
-        }
-        if (state.playerIsGrounded) {
+        } else {
             jumpForce = 300f;
             state.playerIsJumping = false;
         }
@@ -181,9 +183,9 @@ public class Player {
             deltaTime = Gdx.graphics.getDeltaTime();
             currentFrame = animator.setPlayerCurrentFrame(this, state);
             collider.getPlayerWorldCollision(this, state);
-            move(state);
+            state = move(state);
             gravity(state);
-            jumping(state, this.velocity);
+            jumping(state, this.velocity, this.sprite);
             sprite.setRegion(currentFrame);
             render(state, batch);
         }

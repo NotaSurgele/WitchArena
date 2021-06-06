@@ -113,7 +113,7 @@ public class Animator {
 
     public Sprite updatePlayerSprite(Player player, StateMachine state, SpriteBatch batch)
     {
-        if (state.playerIsCharging) {
+        if (state.playerIsCharging && state.playerIsGrounded && !state.playerisMoving) {
             player.sprite.setBounds(player.velocity.x, player.velocity.y, player.staticX + 30, player.staticY + 40);
             player.camera.position.set(player.sprite.getX() - player.sprite.getWidth() / 2, player.sprite.getY(), 0);
             player.sprite.draw(batch);
