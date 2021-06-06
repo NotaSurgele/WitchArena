@@ -130,7 +130,6 @@ public class Player {
         if (!state.playerCollideRight && Gdx.input.isKeyPressed(D)) {
             moveV.x = moveSpeed * deltaTime;
             this.velocity.x += moveV.x;
-            state.playerisMoving = true;
         }
         if (!state.playerCollideLeft && Gdx.input.isKeyPressed(Q)) {
             moveV.x = moveSpeed * deltaTime;

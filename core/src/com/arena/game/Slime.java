@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 
+import javax.swing.plaf.nimbus.State;
+
 import static com.sun.org.apache.xalan.internal.lib.ExsltMath.power;
 
 public class Slime {
@@ -17,6 +19,7 @@ public class Slime {
     SpriteBatch batch;
     Sprite sprite;
     Collider collider;
+    StateMachine state;
 
     public Texture run_img;
     public Animation<TextureRegion> run;
@@ -29,7 +32,7 @@ public class Slime {
     float stateTime = 0;
     float deltaTime = 0;
     float coolDown = 0;
-    float jumpForce = 900f;
+    float jumpForce = 500f;
     int i = 0;
 
     final String SLIME = "Slime/";
@@ -46,6 +49,7 @@ public class Slime {
         velocity = new Vector2().add(200, 1000);
         sprite.setPosition(velocity.x, velocity.y);
         collider = new Collider();
+        state = new StateMachine();
     }
 
     public void render(OrthographicCamera camera)
@@ -60,22 +64,21 @@ public class Slime {
 
     private void gravity(float deltaTime, StateMachine state)
     {
-        if (!state.slimeIsGrounded)
+        if (!state.slimeIsGrounded) {
             velocity.y += -gravity * deltaTime;
+        }
         return;
     }
 
-    private void move(Vector2 velocity, float deltaTime, StateMachine state)
+    private float move(Vector2 velocity, float deltaTime, StateMachine state, float coolDown)
     {
-        if (!state.slimeIsGrounded) {
-            velocity.y += jumpForce * deltaTime;
-            jumpForce += -(300f * deltaTime);
-        } else {
-            jumpForce = 10f;
-        }
+        velocity.x += 50f * deltaTime;
+        velocity.y += jumpForce * deltaTime;
+        jumpForce += -(800f * deltaTime);
+        return coolDown;
     }
 
-    public void update(OrthographicCamera camera, StateMachine state, TiledMapTileLayer collisionLayer)
+    public void update(OrthographicCamera camera, TiledMapTileLayer collisionLayer)
     {
         coolDown += Gdx.graphics.getDeltaTime();
         deltaTime = Gdx.graphics.getDeltaTime();
@@ -98,8 +101,7 @@ public class Slime {
         render(camera);
         sprite.setPosition(velocity.x, velocity.y);
         state = collider.getSlimeWorldCollision(this, state, collisionLayer);
-        move(this.velocity, deltaTime, state);
-        //gravity(deltaTime, state);
+        this.coolDown = move(this.velocity, deltaTime, this.state, this.coolDown);
     }
 
     public void dispose()

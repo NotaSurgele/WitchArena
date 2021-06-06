@@ -25,7 +25,7 @@ public class StateMachine {
 
     //Slime
     public boolean slimeIsGrounded = false;
-
+    public boolean slimeIsMoving = false;
     //Others
 
     public StateMachine() {}

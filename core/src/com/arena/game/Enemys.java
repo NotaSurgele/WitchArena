@@ -14,7 +14,7 @@ public class Enemys {
     }
 
     public void update(OrthographicCamera camera, StateMachine state, TiledMapTileLayer colLayer) {
-        slime.update(camera, state, colLayer);
+        slime.update(camera, colLayer);
     }
 
     public void dispose()
