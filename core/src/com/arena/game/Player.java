@@ -35,7 +35,7 @@ public class Player {
     public Vector2 moveV;
     public final float moveSpeed = 300f;
     public final double gravity = 60 * 9.8f;
-    public float jumpForce = 130f;
+    public float jumpForce = 300f;
     static final int changeX = 250;
     static final int changeY = 100;
     static final int staticX = 80;
@@ -44,7 +44,6 @@ public class Player {
     static final int cameraX = Gdx.graphics.getWidth();
     static final int cameraY = Gdx.graphics.getHeight();
     static final float JUMPING_VALUE = 1f;
-    private float oldY = 0;
     private float jumping = JUMPING_VALUE;
 
     //animation
@@ -120,7 +119,7 @@ public class Player {
 
     private void gravity(StateMachine state)
     {
-        if (!state.playerIsGrounded) {
+        if (!state.playerIsGrounded && !state.playerIsJumping) {
             moveV.y = -(float)gravity * Gdx.graphics.getDeltaTime() - this.jumping;
             velocity.y += moveV.y;
         }
@@ -138,28 +137,22 @@ public class Player {
         }
     }
 
-    private float jumping(float oldY, StateMachine state) {
-        if (state.playerisAttacking)
-            return oldY;
+    private void jumping(StateMachine state, Vector2 velocity) {
+        if (state.playerisAttacking || state.playerIsCharging)
+            return;
         state.playerIsFlying = !state.playerIsGrounded;
         if (state.playerIsGrounded && Gdx.input.isKeyJustPressed(SPACE)) {
-            this.jumping = JUMPING_VALUE;
-            oldY = this.velocity.y;
             state.playerIsJumping = true;
             state.playerIsGrounded = false;
         }
-        if (this.jumping <= 0) {
-            state.playerIsJumping = false;
-        } if (state.playerIsJumping) {
-            float jump = (float)((-0.5f * -gravity) * power(Gdx.graphics.getDeltaTime(), 2) * 2) * jumpForce;
-            velocity.y += jump;
-            if (velocity.y >= (oldY + 80)) {
-                System.out.println();
-                this.jumping -= 0.06f;
-                velocity.y -= this.jumping * deltaTime;
-            }
+        if (state.playerIsJumping && !state.playerIsGrounded) {
+            velocity.y += jumpForce * deltaTime * 4;
+            jumpForce += -(800f * deltaTime);
         }
-        return oldY;
+        if (state.playerIsGrounded) {
+            jumpForce = 300f;
+            state.playerIsJumping = false;
+        }
     }
 
     private OrthographicCamera setCameraPositionRelativeToPlayer(StateMachine state)
@@ -190,7 +183,7 @@ public class Player {
             collider.getPlayerWorldCollision(this, state);
             move(state);
             gravity(state);
-            oldY = jumping(oldY, state);
+            jumping(state, this.velocity);
             sprite.setRegion(currentFrame);
             render(state, batch);
         }
