@@ -154,8 +154,9 @@ public class Player {
             float jump = (float)((-0.5f * -gravity) * power(Gdx.graphics.getDeltaTime(), 2) * 2) * jumpForce;
             velocity.y += jump;
             if (velocity.y >= (oldY + 80)) {
+                System.out.println();
                 this.jumping -= 0.06f;
-                velocity.y -= this.jumping;
+                velocity.y -= this.jumping * deltaTime;
             }
         }
         return oldY;
@@ -204,5 +205,4 @@ public class Player {
         attackLeft_img.dispose();
         attackRight_img.dispose();
     }
-
 }

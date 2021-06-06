@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 
+import static com.sun.org.apache.xalan.internal.lib.ExsltMath.power;
+
 public class Slime {
     Animator animator;
     SpriteBatch batch;
@@ -23,11 +25,12 @@ public class Slime {
 
     Vector2 velocity;
 
-    float gravity = 6 * 1.8f;
+    float gravity = 50 * 9.81f;
     float stateTime = 0;
     float deltaTime = 0;
     float coolDown = 0;
-    int i = 0; float save = 0;
+    float jumpForce = 900f;
+    int i = 0;
 
     final String SLIME = "Slime/";
 
@@ -38,7 +41,7 @@ public class Slime {
         currentFrame = run.getKeyFrame(stateTime);
         batch = new SpriteBatch();
         sprite = new Sprite();
-        sprite.setBounds(0, 0, 200, 200);
+        sprite.setBounds(0, 0, 130, 130);
         sprite.setRegion(currentFrame);
         velocity = new Vector2().add(200, 1000);
         sprite.setPosition(velocity.x, velocity.y);
@@ -58,36 +61,32 @@ public class Slime {
     private void gravity(float deltaTime, StateMachine state)
     {
         if (!state.slimeIsGrounded)
-            velocity.y -= gravity * deltaTime;
+            velocity.y += -gravity * deltaTime;
+        return;
     }
 
-    private float move(float coolDown,  StateMachine state)
+    private void move(Vector2 velocity, float deltaTime, StateMachine state)
     {
-        if (!state.slimeIsMoving) {
-            if (coolDown >= 1 && coolDown <= 1.4) {
-                velocity.x += 3 * deltaTime;
-            } else if (coolDown >= 1.4f) {
-                state.slimeIsMoving = false;
-                coolDown = 0f;
-                deltaTime = 0f;
-            }
+        if (!state.slimeIsGrounded) {
+            velocity.y += jumpForce * deltaTime;
+            jumpForce += -(300f * deltaTime);
+        } else {
+            jumpForce = 10f;
         }
-        return coolDown;
     }
 
     public void update(OrthographicCamera camera, StateMachine state, TiledMapTileLayer collisionLayer)
     {
         coolDown += Gdx.graphics.getDeltaTime();
         deltaTime = Gdx.graphics.getDeltaTime();
-        stateTime = Gdx.graphics.getDeltaTime();
+        stateTime += Gdx.graphics.getDeltaTime();
         //currentFrame = run.getKeyFrame(stateTime, true);
         test = run.getKeyFrames();
         /*if (i != 17) {
             if (i == 8) {
-                if ((deltaTime) >= 4) {
-                    System.out.println("salit");
+                if ((stateTime) >= 4) {
                     i++;
-                    deltaTime = 0f;
+                    stateTime = 0f;
                 }
             } else {
                 i++;
@@ -98,9 +97,9 @@ public class Slime {
         }*/
         render(camera);
         sprite.setPosition(velocity.x, velocity.y);
-        collider.getSlimeWorldCollision(this, state, collisionLayer);
-        gravity(deltaTime, state);
-        //coolDown = move(coolDown, state);
+        state = collider.getSlimeWorldCollision(this, state, collisionLayer);
+        move(this.velocity, deltaTime, state);
+        //gravity(deltaTime, state);
     }
 
     public void dispose()
