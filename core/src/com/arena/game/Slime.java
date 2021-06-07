@@ -94,6 +94,15 @@ public class Slime {
         return coolDown;
     }
 
+    private int isAnimationFinished(int frame, float frameSpeed)
+    {
+        if (this.stateTime >= frameSpeed) {
+            frame++;
+            this.stateTime = 0;
+        }
+        return frame;
+    }
+
     private int slimeAnimation(int frame, float frameSpeed, TextureRegion[] frames, StateMachine state)
     {
         if (state.slimeISJumping) {
@@ -107,12 +116,8 @@ public class Slime {
                     }
                 }
             }
-        } else if (frame > 0 && frame != SLIMEFRAME && !state.slimeISJumping) {
-            if (this.stateTime >= frameSpeed) {
-                frame++;
-                this.stateTime = 0;
-            }
-        }
+        } else if (frame > 0 && frame != SLIMEFRAME && !state.slimeISJumping)
+            frame = isAnimationFinished(frame, frameSpeed);
         this.currentFrame = frames[frame];
         return frame;
     }
