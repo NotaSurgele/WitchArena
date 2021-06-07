@@ -30,6 +30,7 @@ public class StateMachine {
     public boolean slimeGoLeft = false;
     public boolean slimeGoRight = true;
     public boolean slimeISJumping = true;
+    public boolean slimeAggro = false;
     //Others
 
     public StateMachine() {}

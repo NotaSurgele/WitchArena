@@ -10,23 +10,18 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import org.w3c.dom.Text;
 
 public class Arena extends ApplicationAdapter {
-	Player player;
+	Entity entity;
 	Debug debug;
 	StateMachine state;
-	Enemys enemy;
 	SpriteBatch batch;
-	Maps map;
 
 	@Override
 	public void create ()
 	{
 		batch = new SpriteBatch();
-		player = new Player(200,1000);
 		debug = new Debug();
 		state = new StateMachine();
-		map = new Maps(player.camera, batch);
-		player.getCollLayer(map.collisionLayer);
-		enemy = new Enemys();
+		entity = new Entity(batch);
 	}
 
 	@Override
@@ -35,11 +30,7 @@ public class Arena extends ApplicationAdapter {
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
-		player.getCollisionLayer(map.map.getLayers().get(0));
-		map.render(player, state);
-		state.update(player);
-		player.update(state, batch);
-		enemy.update(player.camera, state, player.colLayer);
+		entity.update(batch, state);
 		debug.render();
 		batch.end();
 	}
@@ -48,8 +39,6 @@ public class Arena extends ApplicationAdapter {
 	public void dispose ()
 	{
 		batch.dispose();
-		player.dispose();
 		debug.dispose();
-		enemy.dispose();
 	}
 }

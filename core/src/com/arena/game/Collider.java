@@ -9,9 +9,11 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.utils.Array;
 
@@ -126,7 +128,7 @@ public class Collider {
     public StateMachine getSlimeWorldCollision(Slime slime, StateMachine state, TiledMapTileLayer collisionLayer)
     {
         Rectangle hitbox = getEntityHitbox(slime.sprite);
-        TiledMapTileLayer.Cell bottom = collisionLayer.getCell((int)((hitbox.x + (hitbox.width / 2)) / 32), (int)(hitbox.y - 5) / 32);
+        TiledMapTileLayer.Cell bottom = collisionLayer.getCell((int)((hitbox.x + (hitbox.width / 2)) / 32), (int)(hitbox.y - 4) / 32);
         TiledMapTileLayer.Cell left = collisionLayer.getCell((int) (hitbox.x - 32) / 31, (int) (hitbox.y + (hitbox.height / 2)) / 32);
         TiledMapTileLayer.Cell right = collisionLayer.getCell((int) (hitbox.x + hitbox.width + 32) / 33, (int) (hitbox.y + (hitbox.height / 2)) / 32);
 
@@ -146,5 +148,14 @@ public class Collider {
             state.slimeIsGrounded = false;
         }
         return state;
+    }
+
+    public Circle createCircle(float radius, Vector2 position)
+    {
+        Circle circle = new Circle();
+
+        circle.setRadius(radius);
+        circle.setPosition(position);
+        return circle;
     }
 }

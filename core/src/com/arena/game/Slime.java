@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 
 import javax.swing.plaf.nimbus.State;
@@ -20,6 +21,7 @@ public class Slime {
     Sprite sprite;
     Collider collider;
     StateMachine state;
+    Circle agroZone;
 
     public Texture run_img;
     public Animation<TextureRegion> run;
@@ -57,6 +59,7 @@ public class Slime {
         collider = new Collider();
         state = new StateMachine();
         frames = run.getKeyFrames();
+        agroZone = collider.createCircle(10f, velocity);
     }
 
     private void gravity(float deltaTime, StateMachine state)
@@ -107,19 +110,20 @@ public class Slime {
     {
         if (state.slimeISJumping) {
             if (frame != SLIMEFRAME) {
-                if (this.jumpForce >= 250 && this.jumpForce <= 200) {
-                    frame = 8;
-                } else {
-                    if (this.stateTime >= frameSpeed) {
-                        frame++;
-                        this.stateTime = 0;
-                    }
+                if (this.stateTime >= frameSpeed) {
+                    frame++;
+                    this.stateTime = 0;
                 }
             }
         } else if (frame > 0 && frame != SLIMEFRAME && !state.slimeISJumping)
             frame = isAnimationFinished(frame, frameSpeed);
         this.currentFrame = frames[frame];
         return frame;
+    }
+
+    private int loopAnimation(int frame)
+    {
+        return (frame == SLIMEFRAME) ? 0: frame;
     }
 
     private float move(Vector2 velocity, float deltaTime, StateMachine state, float coolDown)
@@ -141,10 +145,8 @@ public class Slime {
     public void render(OrthographicCamera camera, float animCoolDown, StateMachine state)
     {
         batch.begin();
-        this.frame = slimeAnimation(this.frame, 0.1f, frames, state);
-        if (this.frame == SLIMEFRAME) {
-            this.frame = 0;
-        }
+        this.frame = slimeAnimation(this.frame, 0.11f, frames, state);
+        this.frame = loopAnimation(this.frame);
         sprite.setRegion(currentFrame);
         sprite.draw(batch);
         batch.setProjectionMatrix(camera.combined);
@@ -158,8 +160,7 @@ public class Slime {
         deltaTime = Gdx.graphics.getDeltaTime();
         stateTime += Gdx.graphics.getDeltaTime();
         animCoolDown += Gdx.graphics.getDeltaTime();
-
-        //currentFrame = run.getKeyFrame(stateTime, true);
+        agroZone.setPosition(velocity);
         render(camera, animCoolDown, this.state);
         sprite.setPosition(velocity.x, velocity.y);
         state = collider.getSlimeWorldCollision(this, state, collisionLayer);
