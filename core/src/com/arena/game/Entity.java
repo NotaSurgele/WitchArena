@@ -21,7 +21,7 @@ public class Entity {
     {
         map.render(player, state);
         state.update(player);
-        enemys.update(player.camera, state, player.colLayer);
+        enemys.update(player.camera, player.colLayer, player);
         player.update(state, batch);
     }
 

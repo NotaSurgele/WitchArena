@@ -158,4 +158,19 @@ public class Collider {
         circle.setPosition(position);
         return circle;
     }
+
+    public StateMachine checkSlimeAggroZone(Circle circle, float x, float y, StateMachine state)
+    {
+        if (circle.contains(x, y)) {
+            System.out.println(x - circle.x);
+            if (x - circle.x > 0) {
+                state.slimeGoLeft = false;
+                state.slimeGoRight = true;
+            } else if (x - circle.x < 0) {
+                state.slimeGoRight = false;
+                state.slimeGoLeft = true;
+            }
+        }
+        return state;
+    }
 }

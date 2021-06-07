@@ -13,8 +13,8 @@ public class Enemys {
         slime = new Slime();
     }
 
-    public void update(OrthographicCamera camera, StateMachine state, TiledMapTileLayer colLayer) {
-        slime.update(camera, colLayer);
+    public void update(OrthographicCamera camera, TiledMapTileLayer colLayer, Player player) {
+        slime.update(camera, colLayer, player);
     }
 
     public void dispose()

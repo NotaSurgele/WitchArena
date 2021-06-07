@@ -59,7 +59,7 @@ public class Slime {
         collider = new Collider();
         state = new StateMachine();
         frames = run.getKeyFrames();
-        agroZone = collider.createCircle(10f, velocity);
+        agroZone = collider.createCircle(150f, velocity);
     }
 
     private void gravity(float deltaTime, StateMachine state)
@@ -154,13 +154,14 @@ public class Slime {
         batch.end();
     }
 
-    public void update(OrthographicCamera camera, TiledMapTileLayer collisionLayer)
+    public void update(OrthographicCamera camera, TiledMapTileLayer collisionLayer, Player player)
     {
         coolDown += Gdx.graphics.getDeltaTime();
         deltaTime = Gdx.graphics.getDeltaTime();
         stateTime += Gdx.graphics.getDeltaTime();
         animCoolDown += Gdx.graphics.getDeltaTime();
         agroZone.setPosition(velocity);
+        state = collider.checkSlimeAggroZone(this.agroZone, player.sprite.getX(), player.sprite.getY(), state);
         render(camera, animCoolDown, this.state);
         sprite.setPosition(velocity.x, velocity.y);
         state = collider.getSlimeWorldCollision(this, state, collisionLayer);
