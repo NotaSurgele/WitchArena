@@ -10,9 +10,8 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import org.w3c.dom.Text;
 
 public class Arena extends ApplicationAdapter {
-	Entity entity;
+	SceneManager scene;
 	Debug debug;
-	StateMachine state;
 	SpriteBatch batch;
 
 	@Override
@@ -20,8 +19,7 @@ public class Arena extends ApplicationAdapter {
 	{
 		batch = new SpriteBatch();
 		debug = new Debug();
-		state = new StateMachine();
-		entity = new Entity(batch);
+		scene = new SceneManager(batch);
 	}
 
 	@Override
@@ -30,7 +28,7 @@ public class Arena extends ApplicationAdapter {
 		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
-		entity.update(batch, state);
+		scene.drawScene(batch);
 		debug.render();
 		batch.end();
 	}
