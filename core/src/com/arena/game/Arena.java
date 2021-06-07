@@ -37,6 +37,7 @@ public class Arena extends ApplicationAdapter {
 	public void dispose ()
 	{
 		batch.dispose();
+		scene.dispose();
 		debug.dispose();
 	}
 }

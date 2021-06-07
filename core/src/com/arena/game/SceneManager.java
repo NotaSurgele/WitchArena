@@ -11,6 +11,8 @@ public class SceneManager {
         PAUSE
     }
 
+    private static SCENE scene = SCENE.GAME;
+
     public SceneManager(SpriteBatch batch)
     {
         entity = new Entity(batch);
@@ -21,12 +23,29 @@ public class SceneManager {
         this.entity.update(batch);
     }
 
+    public void disposePause()
+    {
+        return;
+    }
+
+    public void disposeGame()
+    {
+        this.entity.dispose();
+    }
+
     public void drawScene(SpriteBatch batch)
     {
-        SCENE scene = SCENE.GAME;
-        switch (scene) {
+        switch (this.scene) {
             case GAME: drawGame(batch); break;
-            case PAUSE: System.out.println("salut"); break;
+            case PAUSE: System.out.println("PAUSE"); break;
+            default: break;
+        }
+    }
+
+    public void dispose()
+    {
+        switch(scene) {
+            case GAME: disposeGame();
             default: break;
         }
     }
