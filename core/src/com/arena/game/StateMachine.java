@@ -29,7 +29,7 @@ public class StateMachine {
     public boolean slimeCollideRight = false;
     public boolean slimeGoLeft = false;
     public boolean slimeGoRight = true;
-
+    public boolean slimeISJumping = true;
     //Others
 
     public StateMachine() {}

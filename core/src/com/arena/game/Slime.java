@@ -24,12 +24,14 @@ public class Slime {
     public Texture run_img;
     public Animation<TextureRegion> run;
     public TextureRegion currentFrame;
-    public TextureRegion[] test = new TextureRegion[18];
+    public TextureRegion[] frames;
+    int frame = 0;
 
     Vector2 velocity;
 
     final static float JUMPFORCE = 500f;
     final static float MOVEX = 50f;
+    final static int SLIMEFRAME = 17;
 
     float gravity = 50 * 9.81f;
     float stateTime = 0;
@@ -37,7 +39,7 @@ public class Slime {
     float coolDown = 0;
     float jumpForce = 500f;
     float moveX = 50f;
-    int i = 0;
+    float animCoolDown = 0f;
 
     final String SLIME = "Slime/";
 
@@ -54,16 +56,7 @@ public class Slime {
         sprite.setPosition(velocity.x, velocity.y);
         collider = new Collider();
         state = new StateMachine();
-    }
-
-    public void render(OrthographicCamera camera)
-    {
-        batch.begin();
-        sprite.setRegion(currentFrame);
-        sprite.draw(batch);
-        batch.setProjectionMatrix(camera.combined);
-        camera.update();
-        batch.end();
+        frames = run.getKeyFrames();
     }
 
     private void gravity(float deltaTime, StateMachine state)
@@ -96,8 +89,32 @@ public class Slime {
                     this.moveX = MOVEX;
                 }
             }
+            state.slimeISJumping = true;
         }
         return coolDown;
+    }
+
+    private int slimeAnimation(int frame, float frameSpeed, TextureRegion[] frames, StateMachine state)
+    {
+        if (state.slimeISJumping) {
+            if (frame != SLIMEFRAME) {
+                if (this.jumpForce >= 250 && this.jumpForce <= 200) {
+                    frame = 8;
+                } else {
+                    if (this.stateTime >= frameSpeed) {
+                        frame++;
+                        this.stateTime = 0;
+                    }
+                }
+            }
+        } else if (frame > 0 && frame != SLIMEFRAME && !state.slimeISJumping) {
+            if (this.stateTime >= frameSpeed) {
+                frame++;
+                this.stateTime = 0;
+            }
+        }
+        this.currentFrame = frames[frame];
+        return frame;
     }
 
     private float move(Vector2 velocity, float deltaTime, StateMachine state, float coolDown)
@@ -105,6 +122,7 @@ public class Slime {
         if (state.slimeIsGrounded && jumpForce <= 0) {
             jumpForce = 0;
             moveX = 0;
+            state.slimeISJumping = false;
         }
         coolDown = checkCoolDown(coolDown, state);
         velocity.x += moveX * deltaTime;
@@ -115,27 +133,29 @@ public class Slime {
         return coolDown;
     }
 
+    public void render(OrthographicCamera camera, float animCoolDown, StateMachine state)
+    {
+        batch.begin();
+        this.frame = slimeAnimation(this.frame, 0.1f, frames, state);
+        if (this.frame == SLIMEFRAME) {
+            this.frame = 0;
+        }
+        sprite.setRegion(currentFrame);
+        sprite.draw(batch);
+        batch.setProjectionMatrix(camera.combined);
+        camera.update();
+        batch.end();
+    }
+
     public void update(OrthographicCamera camera, TiledMapTileLayer collisionLayer)
     {
         coolDown += Gdx.graphics.getDeltaTime();
         deltaTime = Gdx.graphics.getDeltaTime();
         stateTime += Gdx.graphics.getDeltaTime();
+        animCoolDown += Gdx.graphics.getDeltaTime();
+
         //currentFrame = run.getKeyFrame(stateTime, true);
-        test = run.getKeyFrames();
-        /*if (i != 17) {
-            if (i == 8) {
-                if ((stateTime) >= 4) {
-                    i++;
-                    stateTime = 0f;
-                }
-            } else {
-                i++;
-            }
-            currentFrame = test[i];
-        } else {
-            i = 0;
-        }*/
-        render(camera);
+        render(camera, animCoolDown, this.state);
         sprite.setPosition(velocity.x, velocity.y);
         state = collider.getSlimeWorldCollision(this, state, collisionLayer);
         this.coolDown = move(this.velocity, deltaTime, this.state, this.coolDown);
