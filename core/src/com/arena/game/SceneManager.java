@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class SceneManager {
-    Entity entity;
+    Game game;
 
     enum SCENE {
         GAME,
@@ -15,12 +15,12 @@ public class SceneManager {
 
     public SceneManager(SpriteBatch batch)
     {
-        entity = new Entity(batch);
+        game = new Game(batch);
     }
 
     public void drawGame(SpriteBatch batch)
     {
-        this.entity.update(batch);
+        this.game.drawGame(batch);
     }
 
     public void disposePause()
@@ -30,7 +30,7 @@ public class SceneManager {
 
     public void disposeGame()
     {
-        this.entity.dispose();
+        this.game.dipose();
     }
 
     public void drawScene(SpriteBatch batch)
