@@ -126,8 +126,20 @@ public class Collider {
     public StateMachine getSlimeWorldCollision(Slime slime, StateMachine state, TiledMapTileLayer collisionLayer)
     {
         Rectangle hitbox = getEntityHitbox(slime.sprite);
-        TiledMapTileLayer.Cell bottom = collisionLayer.getCell((int)((hitbox.x + (hitbox.width / 2)) / 32), (int)(hitbox.y - 16) / 32);
+        TiledMapTileLayer.Cell bottom = collisionLayer.getCell((int)((hitbox.x + (hitbox.width / 2)) / 32), (int)(hitbox.y - 5) / 32);
+        TiledMapTileLayer.Cell left = collisionLayer.getCell((int) (hitbox.x - 32) / 31, (int) (hitbox.y + (hitbox.height / 2)) / 32);
+        TiledMapTileLayer.Cell right = collisionLayer.getCell((int) (hitbox.x + hitbox.width + 32) / 33, (int) (hitbox.y + (hitbox.height / 2)) / 32);
 
+        if (right != null) {
+            state.slimeCollideRight = true;
+        } else {
+            state.slimeCollideRight = false;
+        }
+        if (left != null) {
+            state.slimeCollideLeft = true;
+        } else {
+            state.slimeCollideLeft = false;
+        }
         if (bottom != null) {
             state.slimeIsGrounded = true;
         } else {

@@ -28,11 +28,15 @@ public class Slime {
 
     Vector2 velocity;
 
+    final static float JUMPFORCE = 500f;
+    final static float MOVEX = 50f;
+
     float gravity = 50 * 9.81f;
     float stateTime = 0;
     float deltaTime = 0;
     float coolDown = 0;
     float jumpForce = 500f;
+    float moveX = 50f;
     int i = 0;
 
     final String SLIME = "Slime/";
@@ -70,11 +74,44 @@ public class Slime {
         return;
     }
 
+    private float checkCoolDown(float coolDown, StateMachine state)
+    {
+        if (coolDown >= 3f) {
+            if (state.slimeCollideLeft) {
+                this.jumpForce = JUMPFORCE;
+                this.moveX = MOVEX;
+                state.slimeGoRight = true;
+                state.slimeGoLeft = false;
+            } else if (state.slimeCollideRight) {
+                this.jumpForce = JUMPFORCE;
+                this.moveX = -MOVEX;
+                state.slimeGoLeft = true;
+                state.slimeGoRight = false;
+            } else {
+                this.jumpForce = JUMPFORCE;
+                this.moveX = 0;
+                if (state.slimeGoLeft) {
+                    this.moveX = -MOVEX;
+                } else {
+                    this.moveX = MOVEX;
+                }
+            }
+        }
+        return coolDown;
+    }
+
     private float move(Vector2 velocity, float deltaTime, StateMachine state, float coolDown)
     {
-        velocity.x += 50f * deltaTime;
+        if (state.slimeIsGrounded && jumpForce <= 0) {
+            jumpForce = 0;
+            moveX = 0;
+        }
+        coolDown = checkCoolDown(coolDown, state);
+        velocity.x += moveX * deltaTime;
         velocity.y += jumpForce * deltaTime;
-        jumpForce += -(800f * deltaTime);
+        jumpForce += -(1000f * deltaTime);
+        if (coolDown >= 3f)
+            coolDown = 0;
         return coolDown;
     }
 

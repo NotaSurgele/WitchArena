@@ -25,7 +25,11 @@ public class StateMachine {
 
     //Slime
     public boolean slimeIsGrounded = false;
-    public boolean slimeIsMoving = false;
+    public boolean slimeCollideLeft = false;
+    public boolean slimeCollideRight = false;
+    public boolean slimeGoLeft = false;
+    public boolean slimeGoRight = true;
+
     //Others
 
     public StateMachine() {}
