@@ -41,33 +41,24 @@ public class Slime {
     float coolDown = 0;
     float jumpForce = 500f;
     float moveX = 50f;
-    float animCoolDown = 0f;
 
     final String SLIME = "Slime/";
 
-    public Slime()
+    public Slime(float posx, float posy, float width, float height)
     {
         animator = new Animator();
         animator.initializeSlimeAnimation(this);
         currentFrame = run.getKeyFrame(stateTime);
         batch = new SpriteBatch();
         sprite = new Sprite();
-        sprite.setBounds(0, 0, 130, 130);
+        sprite.setBounds(0, 0, width, height);
         sprite.setRegion(currentFrame);
-        velocity = new Vector2().add(200, 1000);
+        velocity = new Vector2().add(posx, posy);
         sprite.setPosition(velocity.x, velocity.y);
         collider = new Collider();
         state = new StateMachine();
         frames = run.getKeyFrames();
         agroZone = collider.createCircle(150f, velocity);
-    }
-
-    private void gravity(float deltaTime, StateMachine state)
-    {
-        if (!state.slimeIsGrounded) {
-            velocity.y += -gravity * deltaTime;
-        }
-        return;
     }
 
     private float checkCoolDown(float coolDown, StateMachine state)
@@ -160,7 +151,7 @@ public class Slime {
         deltaTime = Gdx.graphics.getDeltaTime();
         stateTime += Gdx.graphics.getDeltaTime();
         agroZone.setPosition(velocity);
-        collider.slimeHitPlayer(player, this);
+        //collider.slimeHitPlayer(player, this);
         state = collider.checkSlimeAggroZone(this.agroZone, player.sprite.getX(), player.sprite.getY(), state);
         render(camera, this.state);
         sprite.setPosition(velocity.x, velocity.y);

@@ -7,6 +7,7 @@ public class Entity {
     Enemys enemys;
     Maps map;
     StateMachine state;
+    Collider collider;
 
     public Entity(SpriteBatch batch)
     {
@@ -15,11 +16,13 @@ public class Entity {
         map = new Maps(player.camera, batch);
         player.getCollLayer(map.collisionLayer);
         state = new StateMachine();
+        collider = new Collider();
     }
 
     public void update(SpriteBatch batch)
     {
         map.render(player, state);
+        collider.playerHitByEntity(this);
         state.update(player);
         enemys.update(player.camera, player.colLayer, player);
         player.update(state, batch);

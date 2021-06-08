@@ -190,4 +190,20 @@ public class Collider {
             player.health -= 0.1f;
         }
     }
+
+    public void playerHitByEntity(Entity entity)
+    {
+        Rectangle test = getSlimeHitbox(entity.enemys.slime[0]);
+        Rectangle test2 = getSlimeHitbox(entity.enemys.slime[1]);
+        Rectangle hitbox = getBodyHitbox(entity.player);
+
+        if (test.overlaps(hitbox)) {
+            System.out.println("Hit by entity1");
+            entity.player.health -= 0.1f;
+        }
+        if (test2.overlaps(hitbox)) {
+            System.out.println("Hit by entity2");
+            entity.player.health -= 0.1f;
+        }
+    }
 }
