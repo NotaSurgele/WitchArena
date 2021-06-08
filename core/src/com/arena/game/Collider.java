@@ -193,17 +193,16 @@ public class Collider {
 
     public void playerHitByEntity(Entity entity)
     {
-        Rectangle test = getSlimeHitbox(entity.enemys.slime[0]);
-        Rectangle test2 = getSlimeHitbox(entity.enemys.slime[1]);
-        Rectangle hitbox = getBodyHitbox(entity.player);
+        Rectangle playerHitbox = getBodyHitbox(entity.player);
+        int numb = 0;
 
-        if (test.overlaps(hitbox)) {
-            System.out.println("Hit by entity1");
-            entity.player.health -= 0.1f;
-        }
-        if (test2.overlaps(hitbox)) {
-            System.out.println("Hit by entity2");
-            entity.player.health -= 0.1f;
+        for (Slime sl : entity.enemys.slime) {
+            Rectangle slimeHitbox = getSlimeHitbox(sl);
+            if (slimeHitbox.overlaps(playerHitbox)) {
+                System.out.println("Hit by entity: " + numb);
+                entity.player.health -= 0.1f;
+            }
+            numb++;
         }
     }
 }
