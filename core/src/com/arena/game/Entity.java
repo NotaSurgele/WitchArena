@@ -10,7 +10,7 @@ public class Entity {
 
     public Entity(SpriteBatch batch)
     {
-        player = new Player(200, 1000);
+        player = new Player(500, 1000);
         enemys = new Enemys();
         map = new Maps(player.camera, batch);
         player.getCollLayer(map.collisionLayer);

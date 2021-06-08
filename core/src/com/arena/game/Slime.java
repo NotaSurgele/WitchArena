@@ -100,8 +100,8 @@ public class Slime {
     private int isAnimationFinished(int frame, float frameSpeed)
     {
         if (this.stateTime >= frameSpeed) {
-            frame++;
             this.stateTime = 0;
+            frame++;
         }
         return frame;
     }
@@ -115,7 +115,7 @@ public class Slime {
                     this.stateTime = 0;
                 }
             }
-        } else if (frame > 0 && frame != SLIMEFRAME && !state.slimeISJumping)
+        } if (frame > 0 && frame != SLIMEFRAME)
             frame = isAnimationFinished(frame, frameSpeed);
         this.currentFrame = frames[frame];
         return frame;
@@ -142,10 +142,10 @@ public class Slime {
         return coolDown;
     }
 
-    public void render(OrthographicCamera camera, float animCoolDown, StateMachine state)
+    public void render(OrthographicCamera camera, StateMachine state)
     {
         batch.begin();
-        this.frame = slimeAnimation(this.frame, 0.11f, frames, state);
+        this.frame = slimeAnimation(this.frame, 0.1f, frames, state);
         this.frame = loopAnimation(this.frame);
         sprite.setRegion(currentFrame);
         sprite.draw(batch);
@@ -159,10 +159,10 @@ public class Slime {
         coolDown += Gdx.graphics.getDeltaTime();
         deltaTime = Gdx.graphics.getDeltaTime();
         stateTime += Gdx.graphics.getDeltaTime();
-        animCoolDown += Gdx.graphics.getDeltaTime();
         agroZone.setPosition(velocity);
+        collider.slimeHitPlayer(player, this);
         state = collider.checkSlimeAggroZone(this.agroZone, player.sprite.getX(), player.sprite.getY(), state);
-        render(camera, animCoolDown, this.state);
+        render(camera, this.state);
         sprite.setPosition(velocity.x, velocity.y);
         state = collider.getSlimeWorldCollision(this, state, collisionLayer);
         this.coolDown = move(this.velocity, deltaTime, this.state, this.coolDown);

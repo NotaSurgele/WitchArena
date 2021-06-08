@@ -44,6 +44,7 @@ public class Player {
     static final int cameraX = Gdx.graphics.getWidth();
     static final int cameraY = Gdx.graphics.getHeight();
     static final float JUMPING_VALUE = 1f;
+    float health = 100f;
     private float jumping = JUMPING_VALUE;
 
     //animation
@@ -90,6 +91,12 @@ public class Player {
         camera.update();
         moveV = new Vector2();
         collider = new Collider();
+    }
+
+    private void checkHealth(float health)
+    {
+        if (health <= 0)
+            System.out.println("Dead");
     }
 
     private float getCenteredCameraPosX(Sprite sprite)
@@ -178,6 +185,7 @@ public class Player {
     public void update(StateMachine state, SpriteBatch batch)
     {
         if (state.isPlaying) {
+            checkHealth(this.health);
             stateTime += Gdx.graphics.getDeltaTime();
             deltaTime = Gdx.graphics.getDeltaTime();
             currentFrame = animator.setPlayerCurrentFrame(this, state);

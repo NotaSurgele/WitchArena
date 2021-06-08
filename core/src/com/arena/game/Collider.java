@@ -1,5 +1,6 @@
 package com.arena.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapLayer;
@@ -30,6 +31,12 @@ public class Collider {
         feetHitbox.x = player.sprite.getX();
         feetHitbox.y = (player.sprite.getY() - ((player.sprite.getHeight() / 2) - player.sprite.getHeight() + 32));
         return feetHitbox;
+    }
+
+    private Rectangle getSlimeHitbox(Slime slime)
+    {
+        Rectangle hitbox = new Rectangle().set(slime.sprite.getX(), slime.sprite.getY(), slime.sprite.getWidth() - 32, slime.sprite.getHeight() - 32);
+        return hitbox;
     }
 
     private Rectangle getBodyHitbox(Player player)
@@ -162,7 +169,6 @@ public class Collider {
     public StateMachine checkSlimeAggroZone(Circle circle, float x, float y, StateMachine state)
     {
         if (circle.contains(x, y)) {
-            System.out.println(x - circle.x);
             if (x - circle.x > 0) {
                 state.slimeGoLeft = false;
                 state.slimeGoRight = true;
@@ -172,5 +178,16 @@ public class Collider {
             }
         }
         return state;
+    }
+
+    public void slimeHitPlayer(Player player, Slime slime)
+    {
+        Rectangle pHitbox = getBodyHitbox(player);
+        Rectangle sHitbox = getSlimeHitbox(slime);
+
+        if (sHitbox.overlaps(pHitbox)) {
+            System.out.println("Hit");
+            player.health -= 0.1f;
+        }
     }
 }
