@@ -37,7 +37,7 @@ public class Slime {
     final static int SLIMEFRAME = 17;
     final static int MAXCOOLDOWN = 5;
     final static int MINCOOLDOWN = 3;
-    final int theCoolDown = (int) (MINCOOLDOWN + (Math.random() * ((MAXCOOLDOWN - MINCOOLDOWN) + 1)));
+    int theCoolDown = 0;
 
     float gravity = 50 * 9.81f;
     float stateTime = 0;
@@ -63,6 +63,7 @@ public class Slime {
         state = new StateMachine();
         frames = run.getKeyFrames();
         agroZone = collider.createCircle(150f, velocity);
+        theCoolDown = (int)(MINCOOLDOWN + (Math.random() * ((MAXCOOLDOWN - MINCOOLDOWN) + 1)));
     }
 
     private float checkCoolDown(float coolDown, StateMachine state, float theCoolDown)
@@ -128,7 +129,6 @@ public class Slime {
             moveX = 0;
             state.slimeISJumping = false;
         }
-        System.out.println(this.theCoolDown);
         coolDown = checkCoolDown(coolDown, state, this.theCoolDown);
         velocity.x += moveX * deltaTime;
         velocity.y += jumpForce * deltaTime;
@@ -156,7 +156,6 @@ public class Slime {
         deltaTime = Gdx.graphics.getDeltaTime();
         stateTime += Gdx.graphics.getDeltaTime();
         agroZone.setPosition(velocity);
-        //collider.slimeHitPlayer(player, this);
         state = collider.checkSlimeAggroZone(this.agroZone, player.sprite.getX(), player.sprite.getY(), state);
         render(camera, this.state);
         sprite.setPosition(velocity.x, velocity.y);

@@ -57,6 +57,7 @@ public class Animator {
         player.attackRight_img = new Texture(PLAYER_PATH + "B_witch_attack.png");
         player.attackLeft_img = new Texture(PLAYER_PATH + "attack_left.png");
         player.chargeRight_img = new Texture(PLAYER_PATH + "B_witch_charge.png");
+        player.chargeLeft_img = new Texture(PLAYER_PATH + "charge_left.png");
         player.idleRight = player.animator.getAnimation(player.idleRight_img, player.idleRight, 0.1f, 1, 6);
         player.idleLeft = player.animator.getAnimation(player.idleLeft_img, player.idleLeft, 0.1f, 1, 6);
         player.attackLeft = player.animator.getAnimation(player.attackLeft_img, player.attackLeft, 0.1f, 1, 9);
@@ -64,6 +65,7 @@ public class Animator {
         player.moveRight = player.animator.getAnimation(player.moveRight_img, player.moveRight, 0.1f, 1, 8);
         player.moveLeft = player.animator.getAnimation(player.moveLeft_img, player.moveLeft, 0.1f, 1, 8);
         player.chargeRight = player.animator.getAnimation(player.chargeRight_img, player.chargeRight, 0.1f, 1, 5);
+        player.chargeLeft = player.animator.getAnimation(player.chargeLeft_img, player.chargeLeft, 0.1f, 1, 5);
         return player;
     }
 
@@ -83,7 +85,11 @@ public class Animator {
                     player.currentFrame = player.moveRight.getKeyFrame(player.stateTime, true);
                 }
             } else if (state.playerIsCharging) {
-                player.currentFrame = player.chargeRight.getKeyFrame(player.stateTime, true);
+                if (state.playerisRotating) {
+                    player.currentFrame = player.chargeLeft.getKeyFrame(player.stateTime, true);
+                } else {
+                    player.currentFrame = player.chargeRight.getKeyFrame(player.stateTime, true);
+                }
             } else if (!state.playerisMoving && !state.playerisAttacking) {
                 if (state.playerisRotating) {
                     player.currentFrame = player.idleLeft.getKeyFrame(player.stateTime, true);
