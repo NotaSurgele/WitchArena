@@ -10,7 +10,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
-
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.Random;
 import javax.swing.plaf.nimbus.State;
 
 import static com.sun.org.apache.xalan.internal.lib.ExsltMath.power;
@@ -34,6 +35,9 @@ public class Slime {
     final static float JUMPFORCE = 500f;
     final static float MOVEX = 50f;
     final static int SLIMEFRAME = 17;
+    final static int MAXCOOLDOWN = 5;
+    final static int MINCOOLDOWN = 3;
+    final int theCoolDown = (int) (MINCOOLDOWN + (Math.random() * ((MAXCOOLDOWN - MINCOOLDOWN) + 1)));
 
     float gravity = 50 * 9.81f;
     float stateTime = 0;
@@ -61,9 +65,9 @@ public class Slime {
         agroZone = collider.createCircle(150f, velocity);
     }
 
-    private float checkCoolDown(float coolDown, StateMachine state)
+    private float checkCoolDown(float coolDown, StateMachine state, float theCoolDown)
     {
-        if (coolDown >= 3f) {
+        if ((int)coolDown >= theCoolDown) {
             if (state.slimeCollideLeft) {
                 this.jumpForce = JUMPFORCE;
                 this.moveX = MOVEX;
@@ -124,11 +128,12 @@ public class Slime {
             moveX = 0;
             state.slimeISJumping = false;
         }
-        coolDown = checkCoolDown(coolDown, state);
+        System.out.println(this.theCoolDown);
+        coolDown = checkCoolDown(coolDown, state, this.theCoolDown);
         velocity.x += moveX * deltaTime;
         velocity.y += jumpForce * deltaTime;
         jumpForce += -(1000f * deltaTime);
-        if (coolDown >= 3f)
+        if ((int)coolDown >= this.theCoolDown)
             coolDown = 0;
         return coolDown;
     }
