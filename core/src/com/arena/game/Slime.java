@@ -36,17 +36,14 @@ public class Slime {
     final static float MOVEX = 50f;
     final static int SLIMEFRAME = 17;
     final static int MAXCOOLDOWN = 5;
-    final static int MINCOOLDOWN = 3;
-    int theCoolDown = 0;
+    final static int MINCOOLDOWN = 2;
+    int theCoolDown;
 
-    float gravity = 50 * 9.81f;
     float stateTime = 0;
     float deltaTime = 0;
     float coolDown = 0;
     float jumpForce = 500f;
     float moveX = 50f;
-
-    final String SLIME = "Slime/";
 
     public Slime(float posx, float posy, float width, float height)
     {
@@ -130,9 +127,9 @@ public class Slime {
             state.slimeISJumping = false;
         }
         coolDown = checkCoolDown(coolDown, state, this.theCoolDown);
-        velocity.x += moveX * deltaTime;
-        velocity.y += jumpForce * deltaTime;
-        jumpForce += -(1000f * deltaTime);
+        velocity.y += jumpForce * Gdx.graphics.getDeltaTime();
+        velocity.x += moveX * Gdx.graphics.getDeltaTime();
+        jumpForce += -(1000f * Gdx.graphics.getDeltaTime());
         if ((int)coolDown >= this.theCoolDown)
             coolDown = 0;
         return coolDown;

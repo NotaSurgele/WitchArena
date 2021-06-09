@@ -97,15 +97,15 @@ public class Collider {
         TiledMapTileLayer.Cell bottomMid = player.colLayer.getCell((int)((bodyHitbox.x + (bodyHitbox.width / 2)) / 32), (int)bodyHitbox.y / 32);
         TiledMapTileLayer.Cell bottomLeft = player.colLayer.getCell((int) (bodyHitbox.x + 33) / 32, (int) bodyHitbox.y / 32);
         TiledMapTileLayer.Cell bottomRight = player.colLayer.getCell((int) ((bodyHitbox.x + bodyHitbox.width) - 33) / 32, (int) bodyHitbox.y / 32);
-        TiledMapTileLayer.Cell left = player.colLayer.getCell((int) (bodyHitbox.x - 10) / 31, (int) (bodyHitbox.y + (bodyHitbox.height / 2)) / 32);
-        TiledMapTileLayer.Cell right = player.colLayer.getCell((int) (bodyHitbox.x + bodyHitbox.width + 10) / 33, (int) (bodyHitbox.y + (bodyHitbox.height / 2)) / 32);
+        TiledMapTileLayer.Cell left = player.colLayer.getCell((int) (bodyHitbox.x + 20) / 32, (int) (bodyHitbox.y + (bodyHitbox.height / 2)) / 32);
+        TiledMapTileLayer.Cell right = player.colLayer.getCell((int) (bodyHitbox.x + 64) / 32, (int) (bodyHitbox.y + (bodyHitbox.height / 2)) / 32);
 
         if (left != null) {
             state.playerCollideLeft = true;
         } else {
             state.playerCollideLeft = false;
         } if (right != null) {
-            state.playerCollideRight = true;
+        state.playerCollideRight = true;
         } else {
             state.playerCollideRight = false;
         }
@@ -178,17 +178,6 @@ public class Collider {
             }
         }
         return state;
-    }
-
-    public void slimeHitPlayer(Player player, Slime slime)
-    {
-        Rectangle pHitbox = getBodyHitbox(player);
-        Rectangle sHitbox = getSlimeHitbox(slime);
-
-        if (sHitbox.overlaps(pHitbox)) {
-            System.out.println("Hit");
-            player.health -= 0.1f;
-        }
     }
 
     public void playerHitByEntity(Entity entity)

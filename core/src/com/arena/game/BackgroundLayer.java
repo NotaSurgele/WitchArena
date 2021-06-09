@@ -31,13 +31,13 @@ public class BackgroundLayer {
 
     public void parrallaxDrawing(SpriteBatch batch, Player player, BackgroundLayer bgLayer, OrthographicCamera camera, StateMachine state)
     {
-        float  padding = 0;
+        float padding = 0;
         if (state.playerisAttacking && state.playerisRotating)
             padding = 170;
-        batch.draw(bgLayer.b1, player.sprite.getX() - 800 + padding, 500, (int)movingX1, 0, 2000, 1500);
-        batch.draw(bgLayer.b2, player.sprite.getX() - 800 + padding, 500, (int)movingX2, 0, 2000, 1000);
-        batch.draw(bgLayer.b3, player.sprite.getX() - 800 + padding, 500, (int)movingX3, 0, 2000, 1000);
-        batch.draw(bgLayer.b4, player.sprite.getX() - 800 + padding, 500, (int)movingX4, 0, 2000, 1000);
+        batch.draw(bgLayer.b1, player.sprite.getX() - 1024 + padding, 400, (int)movingX1, 0, 4000, 1000);
+        batch.draw(bgLayer.b2, player.sprite.getX() - 1024 + padding, 400, (int)movingX2, 0, 4000, 1000);
+        batch.draw(bgLayer.b3, player.sprite.getX() - 1024 + padding, 400, (int)movingX3, 0, 4000, 1000);
+        batch.draw(bgLayer.b4, player.sprite.getX() - 1024 + padding, 400, (int)movingX4, 0, 4000, 1000);
         batch.setProjectionMatrix(camera.combined);
     }
 
