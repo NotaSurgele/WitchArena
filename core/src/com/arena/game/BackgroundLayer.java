@@ -44,7 +44,6 @@ public class BackgroundLayer {
     public BackgroundLayer parallax(BackgroundLayer bgLayer, SpriteBatch batch, OrthographicCamera camera, StateMachine state,
                                                                                                                 Player player)
     {
-        batch.begin();
         if ((state.playerisMoving && !state.playerCollideLeft) || (state.playerisMoving && !state.playerCollideRight)) {
             if (state.playerisRotating) {
                 movingX1 -= 10f * Gdx.graphics.getDeltaTime();
@@ -59,7 +58,6 @@ public class BackgroundLayer {
             }
         }
         this.parrallaxDrawing(batch, player, bgLayer, camera, state);
-        batch.end();
         return bgLayer;
     }
 }

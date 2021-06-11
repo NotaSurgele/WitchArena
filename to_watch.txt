@@ -1,3 +1,4 @@
 https://obviam.net/posts/2013/04.libgdx-collision-detection-tutorial-part4/
 https://github.com/libgdx/libgdx/wiki/Managing-your-assets
 https://gamedev.stackexchange.com/questions/67992/how-would-i-implement-procedurally-generated-tiles-in-libgdx
+youtube.com/watch?v=6-0UaeJBumA&ab_channel=FatahoFataho

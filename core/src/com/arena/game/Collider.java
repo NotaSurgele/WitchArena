@@ -86,7 +86,6 @@ public class Collider {
         return state;
     }
 
-    //heelo here
     /**
      * This is the current used World Collision with the player
      * @param player
@@ -189,7 +188,7 @@ public class Collider {
         for (Slime sl : entity.enemys.slime) {
             Rectangle slimeHitbox = getSlimeHitbox(sl);
             if (slimeHitbox.overlaps(playerHitbox)) {
-                System.out.println("Hit by entity: " + numb);
+                //System.out.println("Hit by entity: " + numb);
                 entity.player.health -= 0.1f;
             }
             numb++;
