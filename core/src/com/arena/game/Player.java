@@ -184,10 +184,11 @@ public class Player {
         batch.setProjectionMatrix(camera.combined);
     }
 
-    public void update(StateMachine state, SpriteBatch batch)
+    public void update(StateMachine state, SpriteBatch batch, TiledMapTileLayer currentLayer)
     {
         if (state.isPlaying) {
             checkHealth(this.health);
+            colLayer = currentLayer;
             stateTime += Gdx.graphics.getDeltaTime();
             deltaTime = Gdx.graphics.getDeltaTime();
             currentFrame = animator.setPlayerCurrentFrame(this, state);

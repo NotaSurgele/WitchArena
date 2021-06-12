@@ -25,7 +25,7 @@ public class Entity {
         collider.playerHitByEntity(this);
         state.update(player);
         enemys.update(player.camera, player.colLayer, player);
-        player.update(state, batch);
+        player.update(state, batch, map.collisionLayer);
     }
 
     public void dispose()
