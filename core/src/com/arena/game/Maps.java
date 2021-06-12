@@ -67,7 +67,7 @@ public class Maps {
     {
         for (int i = 0; i < nCount; i++) {
             float fNoise = 0.0f;
-            float fScale = 1.0f;
+            float fScale = 3.0f; // To change for creating mountain
 
             for (int j = 0; j < nOctaves; j++) {
                 int nPitch = nCount >> j;
@@ -85,7 +85,7 @@ public class Maps {
 
     private boolean OnUserCreate()
     {
-        nOutputSize = Gdx.graphics.getWidth();
+        nOutputSize = /*Gdx.graphics.getWidth()*/3000;
         fNoiseSeed1D = new float[nOutputSize];
         fPerlinNoise1D = new float[nOutputSize];
 
@@ -119,11 +119,12 @@ public class Maps {
         batch.setProjectionMatrix(player.camera.combined);
         bgLayer = bgLayer.parallax(bgLayer, this.batch, this.camera, state, player);
         if (Gdx.input.isKeyJustPressed(Z)) {
-            for (int i = 0; i < nOutputSize; i ++) {
-                fNoiseSeed1D[i] = (float) Math.random() / 1f;
+            for (int e = 0; e < nOutputSize; e += 32) {
+                fNoiseSeed1D[e] = (float) Math.random() / 1f;
                 map.getLayers().remove(collisionLayer);
                 collisionLayer = new TiledMapTileLayer(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), 32, 32);
                 map.getLayers().add(collisionLayer);
+                i = 0;
             }
         }
         perlinNoise1D(nOutputSize, fNoiseSeed1D, nOctaveCount, fPerlinNoise1D);

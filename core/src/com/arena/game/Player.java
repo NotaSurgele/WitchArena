@@ -186,19 +186,17 @@ public class Player {
 
     public void update(StateMachine state, SpriteBatch batch, TiledMapTileLayer currentLayer)
     {
-        if (state.isPlaying) {
-            checkHealth(this.health);
-            colLayer = currentLayer;
-            stateTime += Gdx.graphics.getDeltaTime();
-            deltaTime = Gdx.graphics.getDeltaTime();
-            currentFrame = animator.setPlayerCurrentFrame(this, state);
-            collider.getPlayerWorldCollision(this, state);
-            state = move(state);
-            gravity(state);
-            jumping(state, this.velocity, this.sprite);
-            sprite.setRegion(currentFrame);
-            render(state, batch);
-        }
+        checkHealth(this.health);
+        colLayer = currentLayer;
+        stateTime += Gdx.graphics.getDeltaTime();
+        deltaTime = Gdx.graphics.getDeltaTime();
+        currentFrame = animator.setPlayerCurrentFrame(this, state);
+        collider.getPlayerWorldCollision(this, state);
+        state = move(state);
+        gravity(state);
+        jumping(state, this.velocity, this.sprite);
+        sprite.setRegion(currentFrame);
+        render(state, batch);
     }
 
     public void dispose()

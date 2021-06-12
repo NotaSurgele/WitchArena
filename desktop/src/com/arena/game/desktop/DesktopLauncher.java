@@ -11,9 +11,9 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 1280;
 		config.height = 720;
-		config.foregroundFPS = 60;
-		config.backgroundFPS = 60;
-		config.vSyncEnabled = true;
+		config.foregroundFPS = 200;
+		config.backgroundFPS = 200;
+		config.vSyncEnabled = false;
 		config.title = "WitchArena";
 		new LwjglApplication(new Arena(), config);
 	}
