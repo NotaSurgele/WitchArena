@@ -16,6 +16,7 @@ import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
@@ -173,6 +174,11 @@ public class Player {
             camera.position.set(sprite.getX(), sprite.getY() + 200, 0);
         }
         return camera;
+    }
+
+    public OrthographicCamera getCameraPositionRelativeToPlayer(Player player)
+    {
+        return player.camera;
     }
 
     public void render(StateMachine state, SpriteBatch batch)

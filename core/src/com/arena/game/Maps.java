@@ -26,7 +26,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Maps {
     TiledMap map;
     OrthographicCamera camera;
-    TiledMapRenderer mapRenderer;
+    OrthogonalTiledMapRenderer mapRenderer;
     TiledMapTileLayer collisionLayer;
     SpriteBatch batch;
     BackgroundLayer bgLayer;
@@ -35,22 +35,29 @@ public class Maps {
     TextureRegion dirt;
     TextureRegion grass;
 
+    OrthographicCamera scroll;
+
     final String TESTING_MAP = "maps/testing_map/map.tmx";
 
     //Perlin Noise
     int nOutputSize = 256;
     float[] fNoiseSeed1D;
     float[] fPerlinNoise1D;
-    int nOctaveCount = 11;
+    int nOctaveCount = 6;
     int i = 0;
+
+    float x1 = 0;
+    float x2 = 0;
+    int chunk = 1200;
+    int countChunk = 0;
 
     public Maps(OrthographicCamera camera, SpriteBatch batch)
     {
         this.camera = camera;
         this.batch = new SpriteBatch();
-        camera.update();
+        this.camera.update();
         map = new TiledMap();
-        collisionLayer = new TiledMapTileLayer(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), 32, 32);
+        collisionLayer = new TiledMapTileLayer(3000, Gdx.graphics.getHeight(), 32, 32);
         map.getLayers().add(collisionLayer);
         mapRenderer = new OrthogonalTiledMapRenderer(map);
         bgLayer = new BackgroundLayer();
@@ -60,6 +67,8 @@ public class Maps {
         dirt = new TextureRegion();
         grass.setRegion(grassTexture);
         dirt.setRegion(dirtTexture);
+        mapRenderer.setView(camera);
+
         OnUserCreate();
     }
 
@@ -67,7 +76,7 @@ public class Maps {
     {
         for (int i = 0; i < nCount; i++) {
             float fNoise = 0.0f;
-            float fScale = 3.0f; // To change for creating mountain
+            float fScale = 2.0f; // To change for creating mountain
 
             for (int j = 0; j < nOctaves; j++) {
                 int nPitch = nCount >> j;
@@ -85,7 +94,7 @@ public class Maps {
 
     private boolean OnUserCreate()
     {
-        nOutputSize = /*Gdx.graphics.getWidth()*/3000;
+        nOutputSize = Gdx.graphics.getWidth()/*3000*/;
         fNoiseSeed1D = new float[nOutputSize];
         fPerlinNoise1D = new float[nOutputSize];
 
@@ -95,18 +104,20 @@ public class Maps {
         return true;
     }
 
-    private void drawPerlinNoise1D()
+    private void drawPerlinNoise1D(Player player)
     {
         for (int x = 0; x < nOutputSize; x += 32) {
             int y = (int) ((fPerlinNoise1D[x] * (float) Gdx.graphics.getHeight() / 2) + (float) Gdx.graphics.getHeight() / 2);
             for (int f = -y, i = 0; f < Gdx.graphics.getHeight() / 2; f += 32) {
                 TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
                 if (i == 0) {
-                   cell.setTile(new StaticTiledMapTile(grass));
-                   this.collisionLayer.setCell(x / 32, -f / 32, cell);
+                   // batch.draw(grassTexture, x,-f);
+                    cell.setTile(new StaticTiledMapTile(grass));
+                    this.collisionLayer.setCell((int) (x1 + x) / 32, (int) (x2 + -f) / 32, cell);
                 } else {
-                   cell.setTile(new StaticTiledMapTile(dirt));
-                   this.collisionLayer.setCell(x / 32, -f / 32, cell);
+                  //  batch.draw(dirtTexture,  x,  -f);
+                    cell.setTile(new StaticTiledMapTile(dirt));
+                    this.collisionLayer.setCell(/*(int)(player.sprite.getX() + x) / 32*/ (int)(x1 + x) / 32, (int)(x2 + -f) / 32, cell);
                 }
                 i++;
             }
@@ -115,23 +126,27 @@ public class Maps {
 
     public void render(Player player, StateMachine state)
     {
+        System.out.println(player.sprite.getX());
+        camera.update();
+        mapRenderer.setView(camera);
+        camera.update();
         this.batch.begin();
-        batch.setProjectionMatrix(player.camera.combined);
         bgLayer = bgLayer.parallax(bgLayer, this.batch, this.camera, state, player);
-        if (Gdx.input.isKeyJustPressed(Z)) {
+        if (player.sprite.getX() >= this.chunk) {
             for (int e = 0; e < nOutputSize; e += 32) {
                 fNoiseSeed1D[e] = (float) Math.random() / 1f;
-                map.getLayers().remove(collisionLayer);
-                collisionLayer = new TiledMapTileLayer(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), 32, 32);
+                //map.getLayers().remove(collisionLayer);
+                //collisionLayer = new TiledMapTileLayer(3000, Gdx.graphics.getHeight(), 32, 32);
                 map.getLayers().add(collisionLayer);
-                i = 0;
             }
+            this.chunk += 1200;
+            this.x1 = player.sprite.getX();
+            this.x2 = player.sprite.getHeight();
         }
         perlinNoise1D(nOutputSize, fNoiseSeed1D, nOctaveCount, fPerlinNoise1D);
-        drawPerlinNoise1D();
-        mapRenderer.setView(camera);
-        mapRenderer.render();
+        drawPerlinNoise1D(player);
         this.batch.end();
+        mapRenderer.render();
     }
 
     public void dispose() {
