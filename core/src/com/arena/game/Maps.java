@@ -35,7 +35,6 @@ public class Maps {
     TextureRegion dirt;
     TextureRegion grass;
 
-    OrthographicCamera scroll;
 
     final String TESTING_MAP = "maps/testing_map/map.tmx";
 
@@ -48,7 +47,7 @@ public class Maps {
 
     float x1 = 0;
     float x2 = 0;
-    int chunk = 1200;
+    int chunkSize = 1200;
     int countChunk = 0;
 
     public Maps(OrthographicCamera camera, SpriteBatch batch)
@@ -126,20 +125,26 @@ public class Maps {
 
     public void render(Player player, StateMachine state)
     {
-        System.out.println(player.sprite.getX());
-        camera.update();
         mapRenderer.setView(camera);
-        camera.update();
+        this.camera.update();
         this.batch.begin();
         bgLayer = bgLayer.parallax(bgLayer, this.batch, this.camera, state, player);
-        if (player.sprite.getX() >= this.chunk) {
+        if (Gdx.input.isKeyJustPressed(E))
+            collisionLayer.setVisible(true);
+        if (player.sprite.getX() >= this.chunkSize) {
+            map.getLayers().add(collisionLayer);
+            if (this.countChunk % 2 == 0 && this.countChunk > 0)
+                map.getLayers().get(1).setVisible(false);
             for (int e = 0; e < nOutputSize; e += 32) {
                 fNoiseSeed1D[e] = (float) Math.random() / 1f;
-                //map.getLayers().remove(collisionLayer);
-                //collisionLayer = new TiledMapTileLayer(3000, Gdx.graphics.getHeight(), 32, 32);
-                map.getLayers().add(collisionLayer);
+                /*map.getLayers().remove(collisionLayer);
+                collisionLayer = new TiledMapTileLayer(3000, Gdx.graphics.getHeight(), 32, 32);*/
+
+                System.out.println(map.getLayers().getCount());
+                //System.out.println(this.countChunk);
             }
-            this.chunk += 1200;
+            this.countChunk++;
+            this.chunkSize += 1200;
             this.x1 = player.sprite.getX();
             this.x2 = player.sprite.getHeight();
         }
