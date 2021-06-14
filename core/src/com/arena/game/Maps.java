@@ -65,7 +65,7 @@ public class Maps {
         this.batch = new SpriteBatch();
         this.camera.update();
         map = new TiledMap();
-        collisionLayer = new TiledMapTileLayer(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), 32, 32);
+        collisionLayer = new TiledMapTileLayer(10000, Gdx.graphics.getHeight(), 32, 32);
         map.getLayers().add(collisionLayer);
         mapRenderer = new OrthogonalTiledMapRenderer(map);
         bgLayer = new BackgroundLayer();
@@ -156,19 +156,25 @@ public class Maps {
         return true;
     }
 
+    public void addBlock(TextureRegion block, int x, int y)
+    {
+        TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+        cell.setTile(new StaticTiledMapTile(block));
+        this.collisionLayer.setCell(x / 32, y / 32, cell);
+    }
+
     public void render(Player player, StateMachine state)
     {
-        if (player != null) {
-            mapRenderer.setView(camera);
-            this.camera.update();
-            this.batch.begin();
-            bgLayer = bgLayer.parallax(this.bgLayer, this.batch, this.camera, state, player);
-            chunkLoadingSystem(player, state);
-            perlinNoise1D(nOutputSize, fNoiseSeed1D, nOctaveCount, fPerlinNoise1D);
-            drawPerlinNoise1D();
-            mapRenderer.render();
-            this.batch.end();
-        }
+        this.camera.update();
+        this.batch.begin();
+        bgLayer = bgLayer.parallax(this.bgLayer, this.batch, this.camera, state, player);
+        chunkLoadingSystem(player, state);
+        perlinNoise1D(nOutputSize, fNoiseSeed1D, nOctaveCount, fPerlinNoise1D);
+        drawPerlinNoise1D();
+        this.camera.update();
+        mapRenderer.setView(camera);
+        mapRenderer.render();
+        this.batch.end();
     }
 
     public void dispose() {

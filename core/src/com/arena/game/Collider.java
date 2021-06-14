@@ -99,6 +99,7 @@ public class Collider {
         TiledMapTileLayer.Cell bottomRight = player.colLayer.getCell((int) ((bodyHitbox.x + bodyHitbox.width) - 33) / 32, (int) bodyHitbox.y / 32);
         TiledMapTileLayer.Cell left = player.colLayer.getCell((int) (bodyHitbox.x + 20) / 32, (int) (bodyHitbox.y + (bodyHitbox.height / 2)) / 32);
         TiledMapTileLayer.Cell right = player.colLayer.getCell((int) (bodyHitbox.x + 64) / 32, (int) (bodyHitbox.y + (bodyHitbox.height / 2)) / 32);
+        //TiledMapTileLayer.Cell rightBottom = player.colLayer.getCell((int) (bodyHitbox.x ));
 
         if (left != null) {
             state.playerCollideLeft = true;
@@ -183,7 +184,6 @@ public class Collider {
     public void playerHitByEntity(Entity entity)
     {
         Rectangle playerHitbox = getBodyHitbox(entity.player);
-        int numb = 0;
 
         for (Slime sl : entity.enemys.slime) {
             Rectangle slimeHitbox = getSlimeHitbox(sl);
@@ -191,7 +191,6 @@ public class Collider {
                 //System.out.println("Hit by entity: " + numb);
                 entity.player.health -= 0.1f;
             }
-            numb++;
         }
     }
 }
