@@ -9,11 +9,13 @@ public class Entity {
     StateMachine state;
     Collider collider;
 
+    boolean isDraw = false;
+
     public Entity(SpriteBatch batch)
     {
-        player = new Player(500, 1000);
-        enemys = new Enemys();
+        player = new Player(30000, 3000);
         map = new Maps(player.camera, batch);
+        enemys = new Enemys();
         player.getCollLayer(map.collisionLayer);
         state = new StateMachine();
         collider = new Collider();
@@ -30,6 +32,7 @@ public class Entity {
 
     public void dispose()
     {
+        map.dispose();
         player.dispose();
         enemys.dispose();
     }

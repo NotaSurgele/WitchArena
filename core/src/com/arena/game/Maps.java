@@ -3,6 +3,11 @@ package com.arena.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetDescriptor;
+import com.badlogic.gdx.assets.AssetLoaderParameters;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.AssetLoader;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -15,6 +20,7 @@ import com.badlogic.gdx.maps.tiled.*;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 
 import static com.badlogic.gdx.Input.Keys.*;
 
@@ -26,7 +32,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Maps {
     TiledMap map;
     OrthographicCamera camera;
-    OrthogonalTiledMapRenderer mapRenderer;
+    TiledMapRenderer mapRenderer;
     TiledMapTileLayer collisionLayer;
     SpriteBatch batch;
     BackgroundLayer bgLayer;
@@ -34,7 +40,7 @@ public class Maps {
     Texture dirtTexture;
     TextureRegion dirt;
     TextureRegion grass;
-
+    AssetManager manager;
 
     final String TESTING_MAP = "maps/testing_map/map.tmx";
 
@@ -48,8 +54,9 @@ public class Maps {
     float x1 = 0;
     float x2 = 0;
     final int CHUNKSIZE = Gdx.graphics.getWidth();
-    double chunkEntireSize = Gdx.graphics.getWidth();
-    double chunkLoading = 640;
+
+    double chunkEntireSizeRight = Gdx.graphics.getWidth();
+    double chunkLoadingRight = 640;
     double countChunk = 0;
 
     public Maps(OrthographicCamera camera, SpriteBatch batch)
@@ -68,12 +75,10 @@ public class Maps {
         dirt = new TextureRegion();
         grass.setRegion(grassTexture);
         dirt.setRegion(dirtTexture);
-        mapRenderer.setView(camera);
-
         OnUserCreate();
     }
 
-    private void perlinNoise1D(int nCount, float[] fSeed, int nOctaves, float[] fOutput)
+    private boolean perlinNoise1D(int nCount, float[] fSeed, int nOctaves, float[] fOutput)
     {
         for (int i = 0; i < nCount; i++) {
             float fNoise = 0.0f;
@@ -91,6 +96,17 @@ public class Maps {
             }
             fOutput[i] = fNoise;
         }
+        return true;
+    }
+
+    private void updateSeed(float[] fNoiseSeed1D)
+    {
+        for (int e = 0; e < nOutputSize; e += 32) {
+            fNoiseSeed1D[e] = (float) Math.random() / 1f;
+                /*map.getLayers().remove(collisionLayer);
+                collisionLayer = new TiledMapTileLayer(3000, Gdx.graphics.getHeight(), 32, 32);*/
+            //System.out.println(this.countChunk);
+        }
     }
 
     private boolean OnUserCreate()
@@ -105,54 +121,54 @@ public class Maps {
         return true;
     }
 
-    private void drawPerlinNoise1D(Player player)
+    private void chunkLoadingSystem(Player player, StateMachine state)
+    {
+        if (!state.playerisRotating) {
+            if (player.sprite.getX() >= this.chunkLoadingRight) {
+                this.x1 = (float) (player.sprite.getX() + (this.chunkEntireSizeRight - player.sprite.getX()));
+                this.chunkLoadingRight += this.CHUNKSIZE;
+                this.chunkEntireSizeRight += this.CHUNKSIZE;
+                map.getLayers().add(collisionLayer);
+                updateSeed(this.fNoiseSeed1D);
+                this.countChunk++;
+                this.x2 = player.sprite.getHeight();
+            }
+        }
+    }
+
+    public boolean drawPerlinNoise1D()
     {
         for (int x = 0; x < nOutputSize; x += 32) {
             int y = (int) ((fPerlinNoise1D[x] * (float) Gdx.graphics.getHeight() / 2) + (float) Gdx.graphics.getHeight() / 2);
             for (int f = -y, i = 0; f < Gdx.graphics.getHeight() / 2; f += 32) {
                 TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+                cell.setTile(new StaticTiledMapTile(grass));
                 if (i == 0) {
-                   // batch.draw(grassTexture, x,-f);
                     cell.setTile(new StaticTiledMapTile(grass));
                     this.collisionLayer.setCell((int) (x1 + x) / 32, (int) (x2 + -f) / 32, cell);
                 } else {
-                  //  batch.draw(dirtTexture,  x,  -f);
                     cell.setTile(new StaticTiledMapTile(dirt));
-                    this.collisionLayer.setCell(/*(int)(player.sprite.getX() + x) / 32*/ (int)(x1 + x) / 32, (int)(x2 + -f) / 32, cell);
+                    this.collisionLayer.setCell((int)(x1 + x) / 32, (int)(x2 + -f) / 32, cell);
                 }
                 i++;
             }
         }
+        return true;
     }
 
     public void render(Player player, StateMachine state)
     {
-        mapRenderer.setView(camera);
-        this.camera.update();
-        this.batch.begin();
-        bgLayer = bgLayer.parallax(bgLayer, this.batch, this.camera, state, player);
-        if (Gdx.input.isKeyJustPressed(E))
-            collisionLayer.setVisible(false);
-        if (player.sprite.getX() >= this.chunkLoading) {
-            map.getLayers().add(collisionLayer);
-            /*if (this.countChunk % 2 == 0 && this.countChunk > 0)
-                map.getLayers().get(1).setVisible(false);*/
-            for (int e = 0; e < nOutputSize; e += 32) {
-                fNoiseSeed1D[e] = (float) Math.random() / 1f;
-                /*map.getLayers().remove(collisionLayer);
-                collisionLayer = new TiledMapTileLayer(3000, Gdx.graphics.getHeight(), 32, 32);*/
-                //System.out.println(this.countChunk);
-            }
-            this.countChunk++;
-            this.x1 = (float) (player.sprite.getX() + (this.chunkEntireSize - player.sprite.getX()));
-            this.x2 = player.sprite.getHeight();
-            this.chunkLoading += this.CHUNKSIZE;
-            this.chunkEntireSize += this.CHUNKSIZE;
+        if (player != null) {
+            mapRenderer.setView(camera);
+            this.camera.update();
+            this.batch.begin();
+            bgLayer = bgLayer.parallax(this.bgLayer, this.batch, this.camera, state, player);
+            chunkLoadingSystem(player, state);
+            perlinNoise1D(nOutputSize, fNoiseSeed1D, nOctaveCount, fPerlinNoise1D);
+            drawPerlinNoise1D();
+            mapRenderer.render();
+            this.batch.end();
         }
-        perlinNoise1D(nOutputSize, fNoiseSeed1D, nOctaveCount, fPerlinNoise1D);
-        drawPerlinNoise1D(player);
-        this.batch.end();
-        mapRenderer.render();
     }
 
     public void dispose() {
