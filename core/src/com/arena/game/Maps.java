@@ -42,13 +42,15 @@ public class Maps {
     int nOutputSize = 256;
     float[] fNoiseSeed1D;
     float[] fPerlinNoise1D;
-    int nOctaveCount = 6;
+    int nOctaveCount = 11;
     int i = 0;
 
     float x1 = 0;
     float x2 = 0;
-    int chunkSize = 1200;
-    int countChunk = 0;
+    final int CHUNKSIZE = Gdx.graphics.getWidth();
+    double chunkEntireSize = Gdx.graphics.getWidth();
+    double chunkLoading = 640;
+    double countChunk = 0;
 
     public Maps(OrthographicCamera camera, SpriteBatch batch)
     {
@@ -56,7 +58,7 @@ public class Maps {
         this.batch = new SpriteBatch();
         this.camera.update();
         map = new TiledMap();
-        collisionLayer = new TiledMapTileLayer(3000, Gdx.graphics.getHeight(), 32, 32);
+        collisionLayer = new TiledMapTileLayer(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), 32, 32);
         map.getLayers().add(collisionLayer);
         mapRenderer = new OrthogonalTiledMapRenderer(map);
         bgLayer = new BackgroundLayer();
@@ -130,23 +132,22 @@ public class Maps {
         this.batch.begin();
         bgLayer = bgLayer.parallax(bgLayer, this.batch, this.camera, state, player);
         if (Gdx.input.isKeyJustPressed(E))
-            collisionLayer.setVisible(true);
-        if (player.sprite.getX() >= this.chunkSize) {
+            collisionLayer.setVisible(false);
+        if (player.sprite.getX() >= this.chunkLoading) {
             map.getLayers().add(collisionLayer);
-            if (this.countChunk % 2 == 0 && this.countChunk > 0)
-                map.getLayers().get(1).setVisible(false);
+            /*if (this.countChunk % 2 == 0 && this.countChunk > 0)
+                map.getLayers().get(1).setVisible(false);*/
             for (int e = 0; e < nOutputSize; e += 32) {
                 fNoiseSeed1D[e] = (float) Math.random() / 1f;
                 /*map.getLayers().remove(collisionLayer);
                 collisionLayer = new TiledMapTileLayer(3000, Gdx.graphics.getHeight(), 32, 32);*/
-
-                System.out.println(map.getLayers().getCount());
                 //System.out.println(this.countChunk);
             }
             this.countChunk++;
-            this.chunkSize += 1200;
-            this.x1 = player.sprite.getX();
+            this.x1 = (float) (player.sprite.getX() + (this.chunkEntireSize - player.sprite.getX()));
             this.x2 = player.sprite.getHeight();
+            this.chunkLoading += this.CHUNKSIZE;
+            this.chunkEntireSize += this.CHUNKSIZE;
         }
         perlinNoise1D(nOutputSize, fNoiseSeed1D, nOctaveCount, fPerlinNoise1D);
         drawPerlinNoise1D(player);
