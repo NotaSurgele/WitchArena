@@ -15,6 +15,9 @@ public class DesktopLauncher {
 		config.backgroundFPS = 200;
 		config.vSyncEnabled = false;
 		config.title = "WitchArena";
+		config.pauseWhenBackground = false;
+		config.pauseWhenMinimized = false;
+		config.forceExit = true;
 		new LwjglApplication(new Arena(), config);
 	}
 }

@@ -2,6 +2,7 @@ package com.arena.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import static com.badlogic.gdx.Input.Keys.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -10,7 +11,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class Debug {
     SpriteBatch batch;
     BitmapFont fps;
-    Input.TextInputListener input;
+
+    final float FPS_X = Gdx.graphics.getWidth() - 70;
+    final float FPS_Y = Gdx.graphics.getHeight() - 30;
 
     public Debug()
     {
@@ -21,7 +24,20 @@ public class Debug {
     private void drawFPS()
     {
         fps.setColor(Color.RED);
-        fps.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), 1220, 700);
+        fps.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), FPS_X, FPS_Y);
+    }
+
+    private void closeWindow()
+    {
+        if (Gdx.input.isKeyJustPressed(ESCAPE)) {
+            Gdx.app.exit();
+        }
+    }
+
+    public void update()
+    {
+        closeWindow();
+        render();
     }
 
     public void render()

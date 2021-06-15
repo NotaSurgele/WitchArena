@@ -29,7 +29,7 @@ public class Arena extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
 		scene.drawScene(batch);
-		debug.render();
+		debug.update();
 		batch.end();
 	}
 
