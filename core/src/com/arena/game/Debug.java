@@ -43,7 +43,7 @@ public class Debug {
     public void render()
     {
         batch.begin();
-        drawFPS();
+        this.drawFPS();
         batch.end();
     }
 

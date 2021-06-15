@@ -25,7 +25,7 @@ public class BuildSystem {
         entity.player.camera.unproject(mousePosition);
         if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {
             System.out.println(this.mousePosition);
-            entity.map.addBlock(entity.map.dirt, (int)this.mousePosition.x, (int)this.mousePosition.y);
+            entity.map.addBlock(entity.map.tiles.DIRT, (int)this.mousePosition.x, (int)this.mousePosition.y);
         }
     }
 

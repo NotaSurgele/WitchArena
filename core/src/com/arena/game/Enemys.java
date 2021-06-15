@@ -11,9 +11,9 @@ public class Enemys {
 
     public Enemys() {
         slime = new Slime[3];
-        slime[0] = new Slime(200, 1000, 130, 130);
-        slime[1] = new Slime(800, 700, 130, 130);
-        slime[2] = new Slime(500, 700, 130, 130);
+        slime[0] = new Slime(200, 2000, 130, 130);
+        slime[1] = new Slime(800, 2000, 130, 130);
+        slime[2] = new Slime(500, 2000, 130, 130);
     }
 
     public void update(OrthographicCamera camera, TiledMapTileLayer colLayer, Player player) {

@@ -192,7 +192,7 @@ public class Player {
 
     public void update(StateMachine state, SpriteBatch batch, TiledMapTileLayer currentLayer)
     {
-        checkHealth(this.health);
+        //checkHealth(this.health);
         colLayer = currentLayer;
         stateTime += Gdx.graphics.getDeltaTime();
         deltaTime = Gdx.graphics.getDeltaTime();

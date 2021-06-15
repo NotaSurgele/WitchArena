@@ -36,11 +36,9 @@ public class Maps {
     TiledMapTileLayer collisionLayer;
     SpriteBatch batch;
     BackgroundLayer bgLayer;
-    Texture grassTexture;
-    Texture dirtTexture;
-    TextureRegion dirt;
-    TextureRegion grass;
-    AssetManager manager;
+
+    Tiles tiles;
+
 
     final String TESTING_MAP = "maps/testing_map/map.tmx";
 
@@ -69,12 +67,7 @@ public class Maps {
         map.getLayers().add(collisionLayer);
         mapRenderer = new OrthogonalTiledMapRenderer(map);
         bgLayer = new BackgroundLayer();
-        grassTexture = new Texture("maps/1 Tiles/Tile_02.png");
-        dirtTexture = new Texture("maps/1 Tiles/Tile_12.png");
-        grass = new TextureRegion();
-        dirt = new TextureRegion();
-        grass.setRegion(grassTexture);
-        dirt.setRegion(dirtTexture);
+        tiles = new Tiles();
         OnUserCreate();
     }
 
@@ -142,12 +135,11 @@ public class Maps {
             int y = (int) ((fPerlinNoise1D[x] * (float) Gdx.graphics.getHeight() / 2) + (float) Gdx.graphics.getHeight() / 2);
             for (int f = -y, i = 0; f < Gdx.graphics.getHeight() / 2; f += 32) {
                 TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
-                cell.setTile(new StaticTiledMapTile(grass));
                 if (i == 0) {
-                    cell.setTile(new StaticTiledMapTile(grass));
+                    cell.setTile(new StaticTiledMapTile(tiles.DIRTGRASS));
                     this.collisionLayer.setCell((int) (x1 + x) / 32, (int) (x2 + -f) / 32, cell);
                 } else {
-                    cell.setTile(new StaticTiledMapTile(dirt));
+                    cell.setTile(new StaticTiledMapTile(tiles.DIRT));
                     this.collisionLayer.setCell((int)(x1 + x) / 32, (int)(x2 + -f) / 32, cell);
                 }
                 i++;
