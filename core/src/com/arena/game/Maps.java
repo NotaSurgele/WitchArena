@@ -38,7 +38,7 @@ public class Maps {
     BackgroundLayer bgLayer;
 
     Tiles tiles;
-
+    Tiles.TilesId id;
 
     final String TESTING_MAP = "maps/testing_map/map.tmx";
 
@@ -68,6 +68,7 @@ public class Maps {
         mapRenderer = new OrthogonalTiledMapRenderer(map);
         bgLayer = new BackgroundLayer();
         tiles = new Tiles();
+        id = new Tiles.TilesId();
         OnUserCreate();
     }
 
@@ -137,10 +138,12 @@ public class Maps {
                 TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
                 if (i == 0) {
                     cell.setTile(new StaticTiledMapTile(tiles.DIRTGRASS));
+                    cell.getTile().setId(id.DIRTGRASS_ID);
                     this.collisionLayer.setCell((int) (x1 + x) / 32, (int) (x2 + -f) / 32, cell);
                 } else {
                     cell.setTile(new StaticTiledMapTile(tiles.DIRT));
-                    this.collisionLayer.setCell((int)(x1 + x) / 32, (int)(x2 + -f) / 32, cell);
+                    cell.getTile().setId(id.DIRT_ID);
+                    this.collisionLayer.setCell((int) (x1 + x) / 32, (int) (x2 + -f) / 32, cell);
                 }
                 i++;
             }
@@ -153,6 +156,11 @@ public class Maps {
         TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
         cell.setTile(new StaticTiledMapTile(block));
         this.collisionLayer.setCell(x / 32, y / 32, cell);
+    }
+
+    public void getBlockId(int x, int y)
+    {
+        System.out.println(this.collisionLayer.getCell(x / 32, y / 32).getTile().getId());
     }
 
     public void render(Player player, StateMachine state)

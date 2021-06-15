@@ -30,6 +30,8 @@ public class Player {
     //basic
     OrthographicCamera camera;
     Sprite sprite;
+    InventorySystem inventory;
+
 
     //value
     public Vector2 velocity;

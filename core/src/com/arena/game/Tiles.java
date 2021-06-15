@@ -10,5 +10,13 @@ public class Tiles {
     final TextureRegion DIRTGRASS = new TextureRegion(new Texture(TILEPATH + "Tile_02.png"));
     final TextureRegion DIRT = new TextureRegion(new Texture(TILEPATH + "Tile_12.png"));
 
-    public Tiles() {}
+    public Tiles() { }
+
+    public static class TilesId {
+
+        public final int DIRTGRASS_ID = 1;
+        public final int DIRT_ID = 2;
+
+        public TilesId() {}
+    }
 }

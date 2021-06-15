@@ -17,21 +17,23 @@ public class BuildSystem {
 
     public void getMousePosition()
     {
-        this.mousePosition.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+        this.mousePosition.set(Gdx.input.getX(), Gdx.input.getY(),0);
     }
 
     public void constructBlock(Entity entity)
     {
         entity.player.camera.unproject(mousePosition);
         if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {
-            System.out.println(this.mousePosition);
             entity.map.addBlock(entity.map.tiles.DIRT, (int)this.mousePosition.x, (int)this.mousePosition.y);
+        }
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.MIDDLE)) {
+            entity.map.getBlockId((int) this.mousePosition.x, (int) this.mousePosition.y);
         }
     }
 
     public void update(Entity entity)
     {
-        constructBlock(entity);
         getMousePosition();
+        constructBlock(entity);
     }
 }
