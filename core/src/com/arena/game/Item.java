@@ -1,19 +1,19 @@
 package com.arena.game;
 
-import java.util.ArrayList;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Item {
 
-    public Item() {}
+    public final TextureRegion TEXTUREITEM;
+    public final String ITEMNAME;
+    public final int ID;
+    public final int HOWMANY;
 
-    public static class itemId {
-
-        final Tiles.TilesId tileId = new Tiles.TilesId();
-
-        final int DIRTGRASS_ID = tileId.DIRTGRASS_ID;
-        final int DIRT_ID = tileId.DIRT_ID;
-        
-        public itemId() {}
-
+    public Item(TextureRegion textureItem, String itemName, int id, int howMany) {
+        this.TEXTUREITEM = textureItem;
+        this.ITEMNAME = itemName;
+        this.ID = id;
+        this.HOWMANY = howMany;
     }
 }

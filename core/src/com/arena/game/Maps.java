@@ -105,7 +105,7 @@ public class Maps {
 
     private boolean OnUserCreate()
     {
-        nOutputSize = Gdx.graphics.getWidth()/*3000*/;
+        nOutputSize = Gdx.graphics.getWidth();
         fNoiseSeed1D = new float[nOutputSize];
         fPerlinNoise1D = new float[nOutputSize];
 

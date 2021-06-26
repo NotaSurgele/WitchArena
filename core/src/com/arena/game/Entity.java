@@ -8,6 +8,7 @@ public class Entity {
     Maps map;
     StateMachine state;
     Collider collider;
+    Items items;
 
     public Entity(SpriteBatch batch)
     {
@@ -17,6 +18,7 @@ public class Entity {
         player.getCollLayer(map.collisionLayer);
         state = new StateMachine();
         collider = new Collider();
+        items = new Items();
     }
 
     public void update(SpriteBatch batch)

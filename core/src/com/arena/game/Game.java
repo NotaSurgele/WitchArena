@@ -15,12 +15,12 @@ public class Game {
 
     public void drawGame(SpriteBatch batch)
     {
-        build.update(entity);
-        entity.update(batch);
+        this.build.update(this.entity);
+        this.entity.update(batch);
     }
 
     public void dipose()
     {
-        entity.dispose();
+        this.entity.dispose();
     }
 }
