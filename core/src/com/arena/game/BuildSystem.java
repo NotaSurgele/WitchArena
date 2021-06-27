@@ -34,10 +34,13 @@ public class BuildSystem {
     public void constructBlock(Entity entity)
     {
         entity.player.camera.unproject(mousePosition);
+        if (entity.player.inventory.inventory.size() <= 0 || choose >= entity.player.inventory.inventory.size())
+            return;
         if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {
-            if (entity.player.inventory.getItem(choose) != null && entity.player.inventory.getItem(choose).HOWMANY > 0) {
-                entity.map.addBlock(entity.player.inventory.getItem(choose).TEXTUREITEM, (int) this.mousePosition.x, (int) this.mousePosition.y, entity.player.inventory.getItem(choose).ID);
-                entity.player.inventory.removeOwnedItem(choose);
+            int id = entity.player.inventory.inventory.get(choose).ID;
+            if (entity.player.inventory.getItem(id) != null && entity.player.inventory.getItem(id).HOWMANY > 0) {
+                entity.map.addBlock(entity.player.inventory.getItem(id).TEXTUREITEM, (int) this.mousePosition.x, (int) this.mousePosition.y, entity.player.inventory.getItem(id).ID);
+                entity.player.inventory.removeOwnedItem(id);
             } else
                 return;
         }
