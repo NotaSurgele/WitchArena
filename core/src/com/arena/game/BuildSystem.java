@@ -41,9 +41,17 @@ public class BuildSystem {
         }
     }
 
+    public void destroyBlock(Entity entity)
+    {
+        if (Gdx.input.isKeyJustPressed(F)) {
+            entity.map.removeBlock((int)this.mousePosition.x, (int)this.mousePosition.y);
+        }
+    }
+
     public void update(Entity entity)
     {
         getMousePosition();
         constructBlock(entity);
+        destroyBlock(entity);
     }
 }

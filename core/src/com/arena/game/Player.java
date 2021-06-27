@@ -32,7 +32,6 @@ public class Player {
     Sprite sprite;
     InventorySystem inventory;
 
-
     //value
     public Vector2 velocity;
     public Vector2 moveV;
@@ -96,6 +95,7 @@ public class Player {
         camera.update();
         moveV = new Vector2();
         collider = new Collider();
+        inventory = new InventorySystem();
     }
 
     private void checkHealth(float health)
@@ -192,7 +192,7 @@ public class Player {
         batch.setProjectionMatrix(camera.combined);
     }
 
-    public void update(StateMachine state, SpriteBatch batch, TiledMapTileLayer currentLayer)
+    public void update(StateMachine state, SpriteBatch batch, TiledMapTileLayer currentLayer, Items items)
     {
         //checkHealth(this.health);
         colLayer = currentLayer;

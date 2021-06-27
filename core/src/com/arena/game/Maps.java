@@ -158,6 +158,12 @@ public class Maps {
         this.collisionLayer.setCell(x / 32, y / 32, cell);
     }
 
+    public void removeBlock(int x, int y)
+    {
+        this.collisionLayer.setCell(x / 32, y / 32, null);
+        System.out.println(this.collisionLayer.getCell(x / 32, y / 32));
+    }
+
     public void getBlockId(int x, int y)
     {
         System.out.println(this.collisionLayer.getCell(x / 32, y / 32).getTile().getId());

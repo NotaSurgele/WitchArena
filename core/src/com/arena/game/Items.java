@@ -20,6 +20,7 @@ public class Items {
     private ArrayList<Item> setItems()
     {
         ArrayList<Item> items = new ArrayList<>();
+
         items.add(new Item(new TextureRegion(new Texture(TILES + "Tile_02.png")), "Dirtgrass",0, 0));
         items.add(new Item(new TextureRegion(new Texture(TILES + "Tile_12.png")), "Dirt",1, 0));
         return items;
@@ -32,6 +33,7 @@ public class Items {
                 return item;
             }
         }
+        System.err.println(toGet + ": This item does not exist !");
         return null;
     }
 

@@ -8,7 +8,7 @@ public class Item {
     public final TextureRegion TEXTUREITEM;
     public final String ITEMNAME;
     public final int ID;
-    public final int HOWMANY;
+    public int HOWMANY;
 
     public Item(TextureRegion textureItem, String itemName, int id, int howMany) {
         this.TEXTUREITEM = textureItem;
