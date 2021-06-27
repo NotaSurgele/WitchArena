@@ -192,8 +192,18 @@ public class Player {
         batch.setProjectionMatrix(camera.combined);
     }
 
+    public void checkInventory()
+    {
+        System.out.println("Inventory items size : " + inventory.inventory.size());
+        /*for (Item item : inventory.inventory) {
+            System.out.println("ItemName: " + item.ITEMNAME + "\nStack: " + item.HOWMANY + "\nId: " + item.ID);
+        }
+        */
+    }
+
     public void update(StateMachine state, SpriteBatch batch, TiledMapTileLayer currentLayer, Items items)
     {
+        checkInventory();
         //checkHealth(this.health);
         colLayer = currentLayer;
         stateTime += Gdx.graphics.getDeltaTime();

@@ -151,15 +151,23 @@ public class Maps {
         return true;
     }
 
-    public void addBlock(TextureRegion block, int x, int y)
+    public void addBlock(TextureRegion block, int x, int y, int blockId)
     {
         TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
         cell.setTile(new StaticTiledMapTile(block));
         this.collisionLayer.setCell(x / 32, y / 32, cell);
+        this.collisionLayer.getCell(x / 32, y / 32).getTile().setId(blockId);
     }
 
-    public void removeBlock(int x, int y)
+    public void removeBlock(int x, int y, Entity entity)
     {
+        if (this.collisionLayer.getCell(x / 32, y / 32) != null) {
+            int id = this.collisionLayer.getCell(x / 32, y / 32).getTile().getId();
+            if (!entity.player.inventory.checkItem(id))
+                entity.player.inventory.addItem(id);
+            else
+                entity.player.inventory.incrementOwnedItem(id);
+        }
         this.collisionLayer.setCell(x / 32, y / 32, null);
         System.out.println(this.collisionLayer.getCell(x / 32, y / 32));
     }

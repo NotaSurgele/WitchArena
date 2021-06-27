@@ -10,6 +10,7 @@ import static com.badlogic.gdx.Input.Keys.*;
 public class BuildSystem {
 
     public Vector3 mousePosition;
+    int choose = 0;
 
     public BuildSystem() {
         mousePosition = new Vector3();
@@ -34,7 +35,11 @@ public class BuildSystem {
     {
         entity.player.camera.unproject(mousePosition);
         if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {
-            entity.map.addBlock(entity.map.tiles.DIRT, (int)this.mousePosition.x, (int)this.mousePosition.y);
+            if (entity.player.inventory.getItem(choose) != null && entity.player.inventory.getItem(choose).HOWMANY > 0) {
+                entity.map.addBlock(entity.player.inventory.getItem(choose).TEXTUREITEM, (int) this.mousePosition.x, (int) this.mousePosition.y, entity.player.inventory.getItem(choose).ID);
+                entity.player.inventory.removeOwnedItem(choose);
+            } else
+                return;
         }
         if (Gdx.input.isButtonJustPressed(Input.Buttons.MIDDLE)) {
             entity.map.getBlockId((int) this.mousePosition.x, (int) this.mousePosition.y);
@@ -44,12 +49,18 @@ public class BuildSystem {
     public void destroyBlock(Entity entity)
     {
         if (Gdx.input.isKeyJustPressed(F)) {
-            entity.map.removeBlock((int)this.mousePosition.x, (int)this.mousePosition.y);
+            entity.map.removeBlock((int)this.mousePosition.x, (int)this.mousePosition.y, entity);
         }
     }
 
     public void update(Entity entity)
     {
+        if (Gdx.input.isKeyPressed(NUM_1)) {
+            choose = 0;
+        }
+        if (Gdx.input.isKeyPressed(NUM_2)) {
+            choose = 1;
+        }
         getMousePosition();
         constructBlock(entity);
         destroyBlock(entity);
