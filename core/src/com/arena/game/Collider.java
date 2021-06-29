@@ -127,6 +127,20 @@ public class Collider {
         }
     }
 
+    public StateMachine test(Player player, Sprite[] sprite, StateMachine state)
+    {
+        Rectangle hmm = sprite[(int) player.sprite.getX() / 32].getBoundingRectangle();
+        Rectangle tes = new Rectangle().set(player.sprite.getX(), player.sprite.getY(), 80, 100);
+
+        System.out.println(hmm + " " + tes);
+        if (tes.overlaps(hmm)) {
+            state.playerIsGrounded = true;
+        } else {
+            state.playerIsGrounded = false;
+        }
+        return state;
+    }
+
     private Rectangle getEntityHitbox(Sprite sprite)
     {
         Rectangle hitbox = new Rectangle().set(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());

@@ -37,6 +37,9 @@ public class Maps {
     SpriteBatch batch;
     BackgroundLayer bgLayer;
 
+    Sprite[] sprite;
+    Texture texture;
+
     Tiles tiles;
     Tiles.TilesId id;
 
@@ -46,7 +49,7 @@ public class Maps {
     int nOutputSize = 256;
     float[] fNoiseSeed1D;
     float[] fPerlinNoise1D;
-    int nOctaveCount = 11;
+    int nOctaveCount = 8;
     int i = 0;
 
     float x1 = 0;
@@ -69,7 +72,33 @@ public class Maps {
         bgLayer = new BackgroundLayer();
         tiles = new Tiles();
         id = new Tiles.TilesId();
+        texture = new Texture("maps/1 Tiles/Tile_01.png");
+        sprite = new Sprite[5000000];
+        createSpriteTab();
         OnUserCreate();
+    }
+
+    private void createSpriteTab()
+    {
+        for (int each = 0; each != 5000000; each++) {
+            sprite[each] = new Sprite();
+        }
+    }
+
+    private void drawSpriteTab(Player player)
+    {
+        float x = 0;
+        float y = 1000;
+
+        for (int each = 0; each != 5000000; each++) {
+            if (each <= player.sprite.getX() + 1000) {
+                sprite[each].setRegion(texture);
+                sprite[each].setBounds(0, 0, 32, 32);
+                sprite[each].setPosition(x, y);
+                this.sprite[each].draw(this.batch);
+                x += 32;
+            }
+        }
     }
 
     private boolean perlinNoise1D(int nCount, float[] fSeed, int nOctaves, float[] fOutput)
@@ -105,7 +134,7 @@ public class Maps {
 
     private boolean OnUserCreate()
     {
-        nOutputSize = Gdx.graphics.getWidth();
+        nOutputSize = Gdx.graphics.getWidth() * 3;
         fNoiseSeed1D = new float[nOutputSize];
         fPerlinNoise1D = new float[nOutputSize];
 
@@ -132,21 +161,16 @@ public class Maps {
 
     public boolean drawPerlinNoise1D()
     {
+        int each = 0;
         for (int x = 0; x < nOutputSize; x += 32) {
             int y = (int) ((fPerlinNoise1D[x] * (float) Gdx.graphics.getHeight() / 2) + (float) Gdx.graphics.getHeight() / 2);
             for (int f = -y, i = 0; f < Gdx.graphics.getHeight() / 2; f += 32) {
-                TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
-                if (i == 0) {
-                    cell.setTile(new StaticTiledMapTile(tiles.DIRTGRASS));
-                    cell.getTile().setId(id.DIRTGRASS_ID);
-                    this.collisionLayer.setCell((int) (x1 + x) / 32, (int) (x2 + -f) / 32, cell);
-                } else {
-                    cell.setTile(new StaticTiledMapTile(tiles.DIRT));
-                    cell.getTile().setId(id.DIRT_ID);
-                    this.collisionLayer.setCell((int) (x1 + x) / 32, (int) (x2 + -f) / 32, cell);
-                }
-                i++;
+                sprite[each].setRegion(texture);
+                sprite[each].setBounds(0, 0, 32, 32);
+                sprite[each].setPosition(x, -f);
+                this.sprite[each].draw(this.batch);
             }
+            each++;
         }
         return true;
     }
@@ -169,7 +193,6 @@ public class Maps {
                 entity.player.inventory.incrementOwnedItem(id);
         }
         this.collisionLayer.setCell(x / 32, y / 32, null);
-        System.out.println(this.collisionLayer.getCell(x / 32, y / 32));
     }
 
     public void getBlockId(int x, int y)
@@ -182,12 +205,14 @@ public class Maps {
         this.camera.update();
         this.batch.begin();
         bgLayer = bgLayer.parallax(this.bgLayer, this.batch, this.camera, state, player);
-        chunkLoadingSystem(player, state);
+        //chunkLoadingSystem(player, state);
         perlinNoise1D(nOutputSize, fNoiseSeed1D, nOctaveCount, fPerlinNoise1D);
-        drawPerlinNoise1D();
+
         this.camera.update();
-        mapRenderer.setView(camera);
-        mapRenderer.render();
+        //mapRenderer.setView(camera);
+        //mapRenderer.render();
+        //drawSpriteTab(player);
+        drawPerlinNoise1D();
         this.batch.end();
     }
 

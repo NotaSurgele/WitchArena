@@ -201,15 +201,21 @@ public class Player {
         */
     }
 
-    public void update(StateMachine state, SpriteBatch batch, TiledMapTileLayer currentLayer, Items items)
+    public void printPlayerPosition()
     {
-        checkInventory();
+        System.out.println("Player x: " + this.velocity.x + "\nPlayer y: " + this.velocity.y);
+    }
+
+    public void update(StateMachine state, SpriteBatch batch, TiledMapTileLayer currentLayer, Items items, Maps maps)
+    {
+        //checkInventory();
         //checkHealth(this.health);
         colLayer = currentLayer;
         stateTime += Gdx.graphics.getDeltaTime();
         deltaTime = Gdx.graphics.getDeltaTime();
         currentFrame = animator.setPlayerCurrentFrame(this, state);
-        collider.getPlayerWorldCollision(this, state);
+        state = collider.test(this, maps.sprite, state);
+        //collider.getPlayerWorldCollision(this, state);
         state = move(state);
         gravity(state);
         jumping(state, this.velocity, this.sprite);
