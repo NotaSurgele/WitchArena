@@ -127,13 +127,13 @@ public class Collider {
         }
     }
 
-    public StateMachine test(Player player, Sprite[] sprite, StateMachine state)
+    public StateMachine test(Player player, Sprite[][] sprite, StateMachine state)
     {
-        Rectangle hmm = sprite[(int) player.sprite.getX() / 32].getBoundingRectangle();
-        Rectangle tes = new Rectangle().set(player.sprite.getX(), player.sprite.getY(), 80, 100);
+        Rectangle body = new Rectangle().set(player.sprite.getBoundingRectangle());
+        Rectangle tile = new Rectangle().set(sprite[(int)player.sprite.getX() / 32][(int)player.sprite.getY() / 32].getBoundingRectangle());
 
-        System.out.println(hmm + " " + tes);
-        if (tes.overlaps(hmm)) {
+        //System.out.println(body + " " + tile);
+        if (tile.overlaps(body)) {
             state.playerIsGrounded = true;
         } else {
             state.playerIsGrounded = false;
