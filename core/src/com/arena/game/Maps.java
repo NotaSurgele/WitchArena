@@ -76,7 +76,7 @@ public class Maps {
     {
         for (int i = 0; i < nCount; i++) {
             float fNoise = 0.0f;
-            float fScale = 2.0f;
+            float fScale = 2.0f; // To change for creating mountain
 
             for (int j = 0; j < nOctaves; j++) {
                 int nPitch = nCount >> j;
