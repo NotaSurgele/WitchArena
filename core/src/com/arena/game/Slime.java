@@ -147,7 +147,7 @@ public class Slime {
         batch.end();
     }
 
-    public void update(OrthographicCamera camera, TiledMapTileLayer collisionLayer, Player player)
+    public void update(OrthographicCamera camera, Player player)
     {
         coolDown += Gdx.graphics.getDeltaTime();
         deltaTime = Gdx.graphics.getDeltaTime();

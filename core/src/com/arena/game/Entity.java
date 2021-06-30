@@ -22,7 +22,7 @@ public class Entity {
     {
         collider.playerHitByEntity(this);
         state.update(player);
-        enemys.update(player.camera, player.colLayer, player);
+        enemys.update(player.camera, player);
         player.update(state, batch, items);
     }
 

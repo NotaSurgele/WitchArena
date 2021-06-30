@@ -74,8 +74,6 @@ public class Player {
     //useful
     Collider collider;
     public float deltaTime = 0;
-    public MapLayer collisionLayer;
-    public TiledMapTileLayer colLayer;
 
     public Player(float posX, float posY)
     {
@@ -113,20 +111,6 @@ public class Player {
     private float getCenteredCameraPosY(Sprite sprite)
     {
         return sprite.getY() + paddingY;
-    }
-
-    public void getCollisionLayer(MapLayer layer)
-    {
-        if (this.collisionLayer == null) {
-            this.collisionLayer = layer;
-        }
-    }
-
-    public void getCollLayer(TiledMapTileLayer layer)
-    {
-        if (layer != null) {
-            this.colLayer = layer;
-        }
     }
 
     private void gravity(StateMachine state)
