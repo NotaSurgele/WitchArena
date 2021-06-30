@@ -16,10 +16,10 @@ public class Enemys {
         slime[2] = new Slime(500, 2000, 130, 130);
     }
 
-    public void update(OrthographicCamera camera, Player player) {
-        slime[0].update(camera, player);
-        slime[1].update(camera, player);
-        slime[2].update(camera, player);
+    public void update(OrthographicCamera camera, TiledMapTileLayer colLayer, Player player) {
+        slime[0].update(camera, colLayer, player);
+        slime[1].update(camera, colLayer, player);
+        slime[2].update(camera, colLayer, player);
     }
 
     public void dispose()

@@ -57,24 +57,74 @@ public class Collider {
      * @return
      */
 
+    public StateMachine playerIsColliding(Player player, StateMachine state)
+    {
+        MapObjects mapObjects = player.collisionLayer.getObjects();
+        Array<RectangleMapObject> rectangleObjects = mapObjects.getByType(RectangleMapObject.class);
+
+        for (RectangleMapObject obj : rectangleObjects) {
+            Rectangle object = obj.getRectangle();
+            Rectangle feetHitbox = getFeetHitbox(player);
+            Rectangle bodyHitbox = getBodyHitbox(player);
+
+            if (bodyHitbox.overlaps(object)) {
+                System.out.println("Hello world !");
+            } if (!state.playerIsGrounded) {
+                if (feetHitbox.overlaps(object)) {
+                    state.playerIsGrounded = true;
+                    return state;
+                }
+            } else if (state.playerIsJumping || state.playerisMoving) {
+                if (feetHitbox.overlaps(object)) {
+                    state.playerIsGrounded = true;
+                    return state;
+                } else {
+                    state.playerIsGrounded = false;
+                }
+            }
+        }
+        return state;
+    }
+
     /**
      * This is the current used World Collision with the player
      * @param player
      * @param state
      */
-
-    public StateMachine test(Player player, Sprite[][] sprite, StateMachine state)
+    public void getPlayerWorldCollision(Player player, StateMachine state)
     {
-        Rectangle body = new Rectangle().set(player.sprite.getBoundingRectangle());
-        Rectangle tile = new Rectangle().set(sprite[(int)player.sprite.getX() / 32][(int)player.sprite.getY() / 32].getBoundingRectangle());
+        Rectangle bodyHitbox = getBodyHitbox(player);
+        TiledMapTileLayer.Cell bottomMid = player.colLayer.getCell((int)((bodyHitbox.x + (bodyHitbox.width / 2)) / 32), (int)bodyHitbox.y / 32);
+        TiledMapTileLayer.Cell bottomLeft = player.colLayer.getCell((int) (bodyHitbox.x + 33) / 32, (int) bodyHitbox.y / 32);
+        TiledMapTileLayer.Cell bottomRight = player.colLayer.getCell((int) ((bodyHitbox.x + bodyHitbox.width) - 33) / 32, (int) bodyHitbox.y / 32);
+        TiledMapTileLayer.Cell left = player.colLayer.getCell((int) (bodyHitbox.x + 20) / 32, (int) (bodyHitbox.y + (bodyHitbox.height / 2)) / 32);
+        TiledMapTileLayer.Cell right = player.colLayer.getCell((int) (bodyHitbox.x + 64) / 32, (int) (bodyHitbox.y + (bodyHitbox.height / 2)) / 32);
+        //TiledMapTileLayer.Cell rightBottom = player.colLayer.getCell((int) (bodyHitbox.x ));
 
-        //System.out.println(body + " " + tile);
-        if (tile.overlaps(body)) {
-            state.playerIsGrounded = true;
+        if (left != null) {
+            state.playerCollideLeft = true;
         } else {
-            state.playerIsGrounded = false;
+            state.playerCollideLeft = false;
+        } if (right != null) {
+        state.playerCollideRight = true;
+        } else {
+            state.playerCollideRight = false;
         }
-        return state;
+        if (bottomMid == null && bottomLeft == null && bottomRight == null)
+            state.playerIsGrounded = false;
+        if (!state.playerIsGrounded) {
+            if (bottomMid != null) {
+                state.playerIsGrounded = true;
+            } else {
+                state.playerIsGrounded = false;
+            }
+            if (bottomLeft != null && left == null) {
+                state.playerIsGrounded = true;
+            }
+            if (bottomRight != null && right == null) {
+                state.playerIsGrounded = true;
+            }
+        }
     }
 
     private Rectangle getEntityHitbox(Sprite sprite)

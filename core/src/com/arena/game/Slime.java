@@ -147,7 +147,7 @@ public class Slime {
         batch.end();
     }
 
-    public void update(OrthographicCamera camera, Player player)
+    public void update(OrthographicCamera camera, TiledMapTileLayer collisionLayer, Player player)
     {
         coolDown += Gdx.graphics.getDeltaTime();
         deltaTime = Gdx.graphics.getDeltaTime();
@@ -156,6 +156,7 @@ public class Slime {
         state = collider.checkSlimeAggroZone(this.agroZone, player.sprite.getX(), player.sprite.getY(), state);
         render(camera, this.state);
         sprite.setPosition(velocity.x, velocity.y);
+        state = collider.getSlimeWorldCollision(this, state, collisionLayer);
         this.coolDown = move(this.velocity, deltaTime, this.state, this.coolDown);
     }
 

@@ -74,6 +74,8 @@ public class Player {
     //useful
     Collider collider;
     public float deltaTime = 0;
+    public MapLayer collisionLayer;
+    public TiledMapTileLayer colLayer;
 
     public Player(float posX, float posY)
     {
@@ -111,6 +113,20 @@ public class Player {
     private float getCenteredCameraPosY(Sprite sprite)
     {
         return sprite.getY() + paddingY;
+    }
+
+    public void getCollisionLayer(MapLayer layer)
+    {
+        if (this.collisionLayer == null) {
+            this.collisionLayer = layer;
+        }
+    }
+
+    public void getCollLayer(TiledMapTileLayer layer)
+    {
+        if (layer != null) {
+            this.colLayer = layer;
+        }
     }
 
     private void gravity(StateMachine state)
@@ -185,19 +201,15 @@ public class Player {
         */
     }
 
-    public void printPlayerPosition()
+    public void update(StateMachine state, SpriteBatch batch, TiledMapTileLayer currentLayer, Items items)
     {
-        System.out.println("Player x: " + this.velocity.x + "\nPlayer y: " + this.velocity.y);
-    }
-
-    public void update(StateMachine state, SpriteBatch batch, Items items)
-    {
-        //checkInventory();
+        checkInventory();
         //checkHealth(this.health);
+        colLayer = currentLayer;
         stateTime += Gdx.graphics.getDeltaTime();
         deltaTime = Gdx.graphics.getDeltaTime();
         currentFrame = animator.setPlayerCurrentFrame(this, state);
-        //collider.getPlayerWorldCollision(this, state);
+        collider.getPlayerWorldCollision(this, state);
         state = move(state);
         gravity(state);
         jumping(state, this.velocity, this.sprite);

@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class Entity {
     Player player;
     Enemys enemys;
+    Maps map;
     StateMachine state;
     Collider collider;
     Items items;
@@ -12,7 +13,9 @@ public class Entity {
     public Entity(SpriteBatch batch)
     {
         player = new Player(500, 2000);
+        map = new Maps(player.camera, batch);
         enemys = new Enemys();
+        player.getCollLayer(map.collisionLayer);
         state = new StateMachine();
         collider = new Collider();
         items = new Items();
@@ -20,14 +23,16 @@ public class Entity {
 
     public void update(SpriteBatch batch)
     {
+        map.render(player, state);
         collider.playerHitByEntity(this);
         state.update(player);
-        enemys.update(player.camera, player);
-        player.update(state, batch, items);
+        enemys.update(player.camera, player.colLayer, player);
+        player.update(state, batch, map.collisionLayer, items);
     }
 
     public void dispose()
     {
+        map.dispose();
         player.dispose();
         enemys.dispose();
     }
