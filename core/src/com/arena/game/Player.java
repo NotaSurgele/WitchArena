@@ -194,11 +194,12 @@ public class Player {
 
     public void checkInventory()
     {
-        System.out.println("Inventory items size : " + inventory.inventory.size());
+        //System.out.println("Inventory items size : " + inventory.inventory.size());
         /*for (Item item : inventory.inventory) {
             System.out.println("ItemName: " + item.ITEMNAME + "\nStack: " + item.HOWMANY + "\nId: " + item.ID);
         }
         */
+        return;
     }
 
     public void update(StateMachine state, SpriteBatch batch, TiledMapTileLayer currentLayer, Items items)

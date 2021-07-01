@@ -26,7 +26,7 @@ public class Items {
         return items;
     }
 
-    public Item getWithString(String toGet)
+    public Item getItemWithString(String toGet)
     {
         for (Item item : this.items) {
             if (item.ITEMNAME.equalsIgnoreCase(toGet)) {

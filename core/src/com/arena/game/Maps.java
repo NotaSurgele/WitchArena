@@ -167,18 +167,25 @@ public class Maps {
                 entity.player.inventory.addItem(id);
             else
                 entity.player.inventory.incrementOwnedItem(id);
+            this.collisionLayer.setCell(x / 32, y / 32, null);
         }
-        this.collisionLayer.setCell(x / 32, y / 32, null);
-        System.out.println(this.collisionLayer.getCell(x / 32, y / 32));
     }
 
     public void getBlockId(int x, int y)
     {
-        System.out.println(this.collisionLayer.getCell(x / 32, y / 32).getTile().getId());
+        TiledMapTileLayer.Cell cell = this.collisionLayer.getCell(x / 32, y / 32);
+
+        if (cell != null) {
+            System.out.println(cell.getTile().getId());
+        } else {
+            System.out.println("Tile does not exist !");
+        }
+        return;
     }
 
     public void render(Player player, StateMachine state)
     {
+        System.out.println(map.getLayers().size());
         this.camera.update();
         this.batch.begin();
         bgLayer = bgLayer.parallax(this.bgLayer, this.batch, this.camera, state, player);
