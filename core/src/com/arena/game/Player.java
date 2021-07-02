@@ -135,6 +135,15 @@ public class Player {
         return state;
     }
 
+    public void playerCameraUnZoom()
+    {
+        if (Gdx.input.isKeyPressed(M)) {
+            System.out.println("sau");
+            this.camera.viewportWidth += 5;
+            this.camera.viewportHeight += 5;
+        }
+    }
+
     private void jumping(StateMachine state, Vector2 velocity, Sprite sprite) {
         if (state.playerisAttacking || state.playerIsCharging)
             return;
@@ -198,6 +207,7 @@ public class Player {
         gravity(state);
         jumping(state, this.velocity, this.sprite);
         sprite.setRegion(currentFrame);
+        playerCameraUnZoom();
         render(state, batch);
     }
 

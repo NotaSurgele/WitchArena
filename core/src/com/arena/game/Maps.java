@@ -42,7 +42,7 @@ public class Maps {
     int nOutputSize = 256;
     float[] fNoiseSeed1D;
     float[] fPerlinNoise1D;
-    int nOctaveCount = 3;
+    int nOctaveCount = 4;
 
     float x1 = 0;
     float x2 = 0;
@@ -70,21 +70,24 @@ public class Maps {
 
     private boolean perlinNoise1D(int nCount, float[] fSeed, int nOctaves, float[] fOutput)
     {
-        for (int i = 0; i < nCount; i++) {
-            float fNoise = 0.0f;
-            float fScale = 2.0f; // To change for creating mountain
+        for (int x = 0; x < nCount; x++) {
+            float fNoise = 3.0f;
+            float fScaleAcc = 0.0f;
+            float fScale = 3.0f;
 
-            for (int j = 0; j < nOctaves; j++) {
-                int nPitch = nCount >> j;
-                int nSample1 = (i / nPitch) * nPitch;
+            for (int o = 0; o < nOctaves; o++) {
+                int nPitch = nCount >> o;
+                int nSample1 = (x / nPitch) * nPitch;
                 int nSample2 = (nSample1 + nPitch) % nCount;
 
-                float fBlend = (float) (i - nSample1) / (float) nPitch;
+                float fBlend = (float) (x - nSample1) / (float) nPitch;
+
                 float fSample = (1.0f - fBlend) * fSeed[nSample1] + fBlend * fSeed[nSample2];
+
+                fScaleAcc += fScale;
                 fNoise += fSample * fScale;
-                fScale = fScale / 2.0f;
             }
-            fOutput[i] = fNoise;
+            fOutput[x] = fNoise / fScaleAcc;
         }
         return true;
     }
@@ -125,9 +128,10 @@ public class Maps {
     public boolean drawPerlinNoise1D()
     {
         for (int x = 0; x < nOutputSize; x += 32) {
-            int y = (int) ((fPerlinNoise1D[x] * (float) Gdx.graphics.getHeight() + 500) + (float) Gdx.graphics.getHeight() + 500);
-            for (int f = -y, layer = 0; f < Gdx.graphics.getHeight() * 50; f += 32) {
+            int y = (int) ((fPerlinNoise1D[x] * (float) Gdx.graphics.getHeight() + 800 ) + (float) Gdx.graphics.getHeight() + 200);
+            for (int f = -y, layer = 0; f < Gdx.graphics.getHeight(); f += 32) {
                 TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+                System.out.println(f);
                 if (layer == 0) {
                     cell.setTile(new StaticTiledMapTile(tiles.DIRTGRASS));
                     cell.getTile().setId(id.DIRTGRASS_ID);
@@ -136,11 +140,7 @@ public class Maps {
                     cell.setTile(new StaticTiledMapTile(tiles.DIRT));
                     cell.getTile().setId(id.DIRT_ID);
                     this.collisionLayer.setCell((int) (x1 + x) / 32, (int) (x2 + -f) / 32, cell);
-                } else if (layer > 10 && layer <= 20) {
-                    cell.setTile(new StaticTiledMapTile(tiles.STONE));
-                    cell.getTile().setId(id.STONE_ID);
-                    this.collisionLayer.setCell((int) (x1 + x) / 32, (int) (x2 + -f) / 32, cell);
-                } else if (layer > 30 && layer <= 50) {
+                } else if (layer > 10 && layer <= 40) {
                     cell.setTile(new StaticTiledMapTile(tiles.STONE));
                     cell.getTile().setId(id.STONE_ID);
                     this.collisionLayer.setCell((int) (x1 + x) / 32, (int) (x2 + -f) / 32, cell);

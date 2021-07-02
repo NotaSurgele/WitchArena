@@ -3,6 +3,8 @@ package com.arena.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import static com.badlogic.gdx.Input.Keys.*;
+
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
