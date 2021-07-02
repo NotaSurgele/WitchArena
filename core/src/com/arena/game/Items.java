@@ -23,6 +23,7 @@ public class Items {
 
         items.add(new Item(new TextureRegion(new Texture(TILES + "Tile_02.png")), "Dirtgrass",0, 0));
         items.add(new Item(new TextureRegion(new Texture(TILES + "Tile_12.png")), "Dirt",1, 0));
+        items.add(new Item(new TextureRegion(new Texture("maps/Stone_Tile.png")), "Stone", 2, 0));
         return items;
     }
 

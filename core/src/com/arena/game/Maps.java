@@ -21,7 +21,6 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-
 import static com.badlogic.gdx.Input.Keys.*;
 
 import java.util.Random;
@@ -36,27 +35,21 @@ public class Maps {
     TiledMapTileLayer collisionLayer;
     SpriteBatch batch;
     BackgroundLayer bgLayer;
-
     Tiles tiles;
     Tiles.TilesId id;
-
-    boolean test = false;
-
-    final String TESTING_MAP = "maps/testing_map/map.tmx";
 
     //Perlin Noise
     int nOutputSize = 256;
     float[] fNoiseSeed1D;
     float[] fPerlinNoise1D;
-    int nOctaveCount = 11;
-    int i = 0;
+    int nOctaveCount = 3;
 
     float x1 = 0;
     float x2 = 0;
     final int CHUNKSIZE = Gdx.graphics.getWidth();
 
     double chunkEntireSizeRight = Gdx.graphics.getWidth();
-    double chunkLoadingRight = 640;
+    double chunkLoadingRight = 0;
     double countChunk = 0;
 
     public Maps(OrthographicCamera camera)
@@ -65,7 +58,7 @@ public class Maps {
         this.batch = new SpriteBatch();
         this.camera.update();
         map = new TiledMap();
-        collisionLayer = new TiledMapTileLayer(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), 32, 32);
+        collisionLayer = new TiledMapTileLayer(Gdx.graphics.getWidth(), Gdx.graphics.getHeight() * 50, 32, 32);
         collisionLayer.setName("Collision");
         mapRenderer = new OrthogonalTiledMapRenderer(map);
         bgLayer = new BackgroundLayer();
@@ -100,9 +93,6 @@ public class Maps {
     {
         for (int e = 0; e < nOutputSize; e += 32) {
             fNoiseSeed1D[e] = (float) Math.random() / 1f;
-                /*map.getLayers().remove(collisionLayer);
-                collisionLayer = new TiledMapTileLayer(3000, Gdx.graphics.getHeight(), 32, 32);*/
-            //System.out.println(this.countChunk);
         }
     }
 
@@ -112,9 +102,7 @@ public class Maps {
         fNoiseSeed1D = new float[nOutputSize];
         fPerlinNoise1D = new float[nOutputSize];
 
-        for (int i = 0; i < nOutputSize; i++) {
-            fNoiseSeed1D[i] = (float) Math.random() / 1f;
-        }
+        updateSeed(fNoiseSeed1D);
         perlinNoise1D(nOutputSize, fNoiseSeed1D, nOctaveCount, fPerlinNoise1D);
         drawPerlinNoise1D();
         return true;
@@ -129,6 +117,7 @@ public class Maps {
             updateSeed(this.fNoiseSeed1D);
             this.countChunk++;
             this.x2 = player.sprite.getHeight();
+            perlinNoise1D(nOutputSize, fNoiseSeed1D, nOctaveCount, fPerlinNoise1D);
             drawPerlinNoise1D();
         }
     }
@@ -136,19 +125,31 @@ public class Maps {
     public boolean drawPerlinNoise1D()
     {
         for (int x = 0; x < nOutputSize; x += 32) {
-            int y = (int) ((fPerlinNoise1D[x] * (float) Gdx.graphics.getHeight() / 2) + (float) Gdx.graphics.getHeight() / 2);
-            for (int f = -y, i = 0; f < Gdx.graphics.getHeight() / 2; f += 32) {
+            int y = (int) ((fPerlinNoise1D[x] * (float) Gdx.graphics.getHeight() + 500) + (float) Gdx.graphics.getHeight() + 500);
+            for (int f = -y, layer = 0; f < Gdx.graphics.getHeight() * 50; f += 32) {
                 TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
-                if (i == 0) {
+                if (layer == 0) {
                     cell.setTile(new StaticTiledMapTile(tiles.DIRTGRASS));
                     cell.getTile().setId(id.DIRTGRASS_ID);
                     this.collisionLayer.setCell((int) (x1 + x) / 32, (int) (x2 + -f) / 32, cell);
-                } else {
+                } else if (layer > 0 && layer <= 10) {
                     cell.setTile(new StaticTiledMapTile(tiles.DIRT));
                     cell.getTile().setId(id.DIRT_ID);
                     this.collisionLayer.setCell((int) (x1 + x) / 32, (int) (x2 + -f) / 32, cell);
+                } else if (layer > 10 && layer <= 20) {
+                    cell.setTile(new StaticTiledMapTile(tiles.STONE));
+                    cell.getTile().setId(id.STONE_ID);
+                    this.collisionLayer.setCell((int) (x1 + x) / 32, (int) (x2 + -f) / 32, cell);
+                } else if (layer > 30 && layer <= 50) {
+                    cell.setTile(new StaticTiledMapTile(tiles.STONE));
+                    cell.getTile().setId(id.STONE_ID);
+                    this.collisionLayer.setCell((int) (x1 + x) / 32, (int) (x2 + -f) / 32, cell);
+                } else if (layer > 50){
+                    cell.setTile(new StaticTiledMapTile(tiles.STONE));
+                    cell.getTile().setId(id.STONE_ID);
+                    this.collisionLayer.setCell((int) (x1 + x) / 32, (int) (x2 + -f) / 32, cell);
                 }
-                i++;
+                layer++;
             }
         }
         return true;
@@ -192,14 +193,14 @@ public class Maps {
         this.batch.begin();
         bgLayer = bgLayer.parallax(this.bgLayer, this.batch, this.camera, state, player);
         chunkLoadingSystem(player, state);
-        perlinNoise1D(nOutputSize, fNoiseSeed1D, nOctaveCount, fPerlinNoise1D);
         this.camera.update();
         mapRenderer.setView(camera);
         mapRenderer.render();
         this.batch.end();
     }
 
-    public void dispose() {
+    public void dispose()
+    {
         map.dispose();
     }
 }
