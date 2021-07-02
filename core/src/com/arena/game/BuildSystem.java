@@ -42,9 +42,7 @@ public class BuildSystem {
             if (entity.player.inventory.getItem(id) != null && entity.player.inventory.getItem(id).HOWMANY > 0) {
                 entity.map.addBlock(entity.player.inventory.getItem(id).TEXTUREITEM, (int) this.mousePosition.x, (int) this.mousePosition.y, entity.player.inventory.getItem(id).ID);
                 entity.player.inventory.removeOwnedItem(id);
-            } else
-                return;
-            //map.getLayers().add(collisionLayer);
+            }
         }
         if (Gdx.input.isButtonJustPressed(Input.Buttons.MIDDLE)) {
             entity.map.getBlockId((int) this.mousePosition.x, (int) this.mousePosition.y);

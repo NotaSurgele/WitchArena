@@ -40,6 +40,8 @@ public class Maps {
     Tiles tiles;
     Tiles.TilesId id;
 
+    boolean test = false;
+
     final String TESTING_MAP = "maps/testing_map/map.tmx";
 
     //Perlin Noise
@@ -57,18 +59,19 @@ public class Maps {
     double chunkLoadingRight = 640;
     double countChunk = 0;
 
-    public Maps(OrthographicCamera camera, SpriteBatch batch)
+    public Maps(OrthographicCamera camera)
     {
         this.camera = camera;
         this.batch = new SpriteBatch();
         this.camera.update();
         map = new TiledMap();
-        collisionLayer = new TiledMapTileLayer(10000, Gdx.graphics.getHeight(), 32, 32);
-        map.getLayers().add(collisionLayer);
+        collisionLayer = new TiledMapTileLayer(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), 32, 32);
+        collisionLayer.setName("Collision");
         mapRenderer = new OrthogonalTiledMapRenderer(map);
         bgLayer = new BackgroundLayer();
         tiles = new Tiles();
         id = new Tiles.TilesId();
+        this.map.getLayers().add(this.collisionLayer);
         OnUserCreate();
     }
 
@@ -112,21 +115,21 @@ public class Maps {
         for (int i = 0; i < nOutputSize; i++) {
             fNoiseSeed1D[i] = (float) Math.random() / 1f;
         }
+        perlinNoise1D(nOutputSize, fNoiseSeed1D, nOctaveCount, fPerlinNoise1D);
+        drawPerlinNoise1D();
         return true;
     }
 
     private void chunkLoadingSystem(Player player, StateMachine state)
     {
-        if (!state.playerisRotating) {
-            if (player.sprite.getX() >= this.chunkLoadingRight) {
-                this.x1 = (float) (player.sprite.getX() + (this.chunkEntireSizeRight - player.sprite.getX()));
-                this.chunkLoadingRight += this.CHUNKSIZE;
-                this.chunkEntireSizeRight += this.CHUNKSIZE;
-                map.getLayers().add(collisionLayer);
-                updateSeed(this.fNoiseSeed1D);
-                this.countChunk++;
-                this.x2 = player.sprite.getHeight();
-            }
+        if (player.sprite.getX() >= this.chunkLoadingRight) {
+            this.x1 = (float) (player.sprite.getX() + (this.chunkEntireSizeRight - player.sprite.getX()));
+            this.chunkLoadingRight += this.CHUNKSIZE;
+            this.chunkEntireSizeRight += this.CHUNKSIZE;
+            updateSeed(this.fNoiseSeed1D);
+            this.countChunk++;
+            this.x2 = player.sprite.getHeight();
+            drawPerlinNoise1D();
         }
     }
 
@@ -163,11 +166,11 @@ public class Maps {
     {
         if (this.collisionLayer.getCell(x / 32, y / 32) != null) {
             int id = this.collisionLayer.getCell(x / 32, y / 32).getTile().getId();
+            this.collisionLayer.setCell(x / 32, y / 32, null);
             if (!entity.player.inventory.checkItem(id))
                 entity.player.inventory.addItem(id);
             else
                 entity.player.inventory.incrementOwnedItem(id);
-            this.collisionLayer.setCell(x / 32, y / 32, null);
         }
     }
 
@@ -185,13 +188,11 @@ public class Maps {
 
     public void render(Player player, StateMachine state)
     {
-        System.out.println(map.getLayers().size());
         this.camera.update();
         this.batch.begin();
         bgLayer = bgLayer.parallax(this.bgLayer, this.batch, this.camera, state, player);
         chunkLoadingSystem(player, state);
         perlinNoise1D(nOutputSize, fNoiseSeed1D, nOctaveCount, fPerlinNoise1D);
-        drawPerlinNoise1D();
         this.camera.update();
         mapRenderer.setView(camera);
         mapRenderer.render();

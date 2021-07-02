@@ -51,54 +51,18 @@ public class Collider {
     }
 
     /**
-     * This is the old collision system i let it here in case i need later
-     * @param player
-     * @param state
-     * @return
-     */
-
-    public StateMachine playerIsColliding(Player player, StateMachine state)
-    {
-        MapObjects mapObjects = player.collisionLayer.getObjects();
-        Array<RectangleMapObject> rectangleObjects = mapObjects.getByType(RectangleMapObject.class);
-
-        for (RectangleMapObject obj : rectangleObjects) {
-            Rectangle object = obj.getRectangle();
-            Rectangle feetHitbox = getFeetHitbox(player);
-            Rectangle bodyHitbox = getBodyHitbox(player);
-
-            if (bodyHitbox.overlaps(object)) {
-                System.out.println("Hello world !");
-            } if (!state.playerIsGrounded) {
-                if (feetHitbox.overlaps(object)) {
-                    state.playerIsGrounded = true;
-                    return state;
-                }
-            } else if (state.playerIsJumping || state.playerisMoving) {
-                if (feetHitbox.overlaps(object)) {
-                    state.playerIsGrounded = true;
-                    return state;
-                } else {
-                    state.playerIsGrounded = false;
-                }
-            }
-        }
-        return state;
-    }
-
-    /**
      * This is the current used World Collision with the player
      * @param player
      * @param state
      */
-    public void getPlayerWorldCollision(Player player, StateMachine state)
+    public void getPlayerWorldCollision(Player player, StateMachine state, Entity entity)
     {
         Rectangle bodyHitbox = getBodyHitbox(player);
-        TiledMapTileLayer.Cell bottomMid = player.colLayer.getCell((int)((bodyHitbox.x + (bodyHitbox.width / 2)) / 32), (int)bodyHitbox.y / 32);
-        TiledMapTileLayer.Cell bottomLeft = player.colLayer.getCell((int) (bodyHitbox.x + 33) / 32, (int) bodyHitbox.y / 32);
-        TiledMapTileLayer.Cell bottomRight = player.colLayer.getCell((int) ((bodyHitbox.x + bodyHitbox.width) - 33) / 32, (int) bodyHitbox.y / 32);
-        TiledMapTileLayer.Cell left = player.colLayer.getCell((int) (bodyHitbox.x + 20) / 32, (int) (bodyHitbox.y + (bodyHitbox.height / 2)) / 32);
-        TiledMapTileLayer.Cell right = player.colLayer.getCell((int) (bodyHitbox.x + 64) / 32, (int) (bodyHitbox.y + (bodyHitbox.height / 2)) / 32);
+        TiledMapTileLayer.Cell bottomMid = entity.map.collisionLayer.getCell((int)((bodyHitbox.x + (bodyHitbox.width / 2)) / 32), (int)bodyHitbox.y / 32);
+        TiledMapTileLayer.Cell bottomLeft = entity.map.collisionLayer.getCell((int) (bodyHitbox.x + 33) / 32, (int) bodyHitbox.y / 32);
+        TiledMapTileLayer.Cell bottomRight = entity.map.collisionLayer.getCell((int) ((bodyHitbox.x + bodyHitbox.width) - 33) / 32, (int) bodyHitbox.y / 32);
+        TiledMapTileLayer.Cell left = entity.map.collisionLayer.getCell((int) (bodyHitbox.x + 20) / 32, (int) (bodyHitbox.y + (bodyHitbox.height / 2)) / 32);
+        TiledMapTileLayer.Cell right = entity.map.collisionLayer.getCell((int) (bodyHitbox.x + 64) / 32, (int) (bodyHitbox.y + (bodyHitbox.height / 2)) / 32);
         //TiledMapTileLayer.Cell rightBottom = player.colLayer.getCell((int) (bodyHitbox.x ));
 
         if (left != null) {
