@@ -63,19 +63,34 @@ public class Collider {
         TiledMapTileLayer.Cell bottomRight = entity.map.collisionLayer.getCell((int) ((bodyHitbox.x + bodyHitbox.width) - 33) / 32, (int) bodyHitbox.y / 32);
         TiledMapTileLayer.Cell left = entity.map.collisionLayer.getCell((int) (bodyHitbox.x + 20) / 32, (int) (bodyHitbox.y + (bodyHitbox.height / 2)) / 32);
         TiledMapTileLayer.Cell right = entity.map.collisionLayer.getCell((int) (bodyHitbox.x + 64) / 32, (int) (bodyHitbox.y + (bodyHitbox.height / 2)) / 32);
-        //TiledMapTileLayer.Cell rightBottom = player.colLayer.getCell((int) (bodyHitbox.x ));
+        TiledMapTileLayer.Cell stairsRight = entity.map.collisionLayer.getCell((int) ((bodyHitbox.x + bodyHitbox.width) - 30) / 32, (int) (bodyHitbox.y + 5) / 32);
+        TiledMapTileLayer.Cell stairsLeft = entity.map.collisionLayer.getCell((int) (bodyHitbox.x + 30) / 32, (int) (bodyHitbox.y + 5) / 32);
 
         if (left != null) {
             state.playerCollideLeft = true;
         } else {
             state.playerCollideLeft = false;
         } if (right != null) {
-        state.playerCollideRight = true;
+            state.playerCollideRight = true;
         } else {
             state.playerCollideRight = false;
         }
+
+        if (stairsRight != null && right == null && state.playerisMoving) {
+            state.playerStairsRightColliding = true;
+        } else {
+            state.playerStairsRightColliding = false;
+        }
+
+        if (stairsLeft != null && left == null && state.playerisMoving) {
+            state.playerStairsLeftColliding = true;
+        } else {
+            state.playerStairsLeftColliding = false;
+        }
+
         if (bottomMid == null && bottomLeft == null && bottomRight == null)
             state.playerIsGrounded = false;
+
         if (!state.playerIsGrounded) {
             if (bottomMid != null) {
                 state.playerIsGrounded = true;
@@ -148,14 +163,12 @@ public class Collider {
     public void playerHitByEntity(Entity entity)
     {
         Rectangle playerHitbox = getBodyHitbox(entity.player);
-        int numb = 0;
 
         for (Slime sl : entity.enemys.slime) {
             Rectangle slimeHitbox = getSlimeHitbox(sl);
             if (slimeHitbox.overlaps(playerHitbox)) {
                 //System.out.println("Hit by entity: " + numb);
                 entity.player.health -= 0.1f;
-                numb++;
             }
         }
     }

@@ -128,22 +128,21 @@ public class Maps {
     public boolean drawPerlinNoise1D()
     {
         for (int x = 0; x < nOutputSize; x += 32) {
-            int y = (int) Math.round((fPerlinNoise1D[x] * (float) Gdx.graphics.getHeight() + 800 ) + (float) Gdx.graphics.getHeight() + 200);
+            int y = (int) Math.round((fPerlinNoise1D[x] * (float) Gdx.graphics.getHeight() + 800) + (float) Gdx.graphics.getHeight() + 200);
             for (int f = -y, layer = 0; f < Gdx.graphics.getHeight(); f += 32) {
                 TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
-                System.out.println(f);
                 if (layer == 0) {
                     cell.setTile(new StaticTiledMapTile(tiles.DIRTGRASS));
                     cell.getTile().setId(id.DIRTGRASS_ID);
                     this.collisionLayer.setCell((int) (x1 + x) / 32, (int) (x2 + -f) / 32, cell);
-                } else if (layer > 0) {
+                } else if (layer >= 1 && layer <= 20) {
                     cell.setTile(new StaticTiledMapTile(tiles.DIRT));
                     cell.getTile().setId(id.DIRT_ID);
                     this.collisionLayer.setCell((int) (x1 + x) / 32, (int) (x2 + -f) / 32, cell);
-                } else if (layer >= 10){
+                } else if (layer > 20) {
                     cell.setTile(new StaticTiledMapTile(tiles.STONE));
                     cell.getTile().setId(id.STONE_ID);
-                    this.collisionLayer.setCell((int) (x1 + x) / 32, (int) (-f / 32), cell);
+                    this.collisionLayer.setCell((int) (x1 + x) / 32, (int) (x2 + -f) / 32, cell);
                 }
                 layer++;
             }

@@ -12,7 +12,7 @@ public class Entity {
 
     public Entity(SpriteBatch batch)
     {
-        player = new Player(500, 2000);
+        player = new Player(500, 8000);
         map = new Maps(player.camera);
         enemys = new Enemys();
         state = new StateMachine();

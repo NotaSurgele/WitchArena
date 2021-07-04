@@ -138,9 +138,8 @@ public class Player {
     public void playerCameraUnZoom()
     {
         if (Gdx.input.isKeyPressed(M)) {
-            System.out.println("sau");
-            this.camera.viewportWidth += 5;
-            this.camera.viewportHeight += 5;
+            this.camera.viewportWidth += 20;
+            this.camera.viewportHeight += 20;
         }
     }
 
@@ -195,6 +194,21 @@ public class Player {
         return;
     }
 
+    public void playerSetPosition(float x, float y)
+    {
+        this.velocity.x = this.sprite.getX() + x;
+        this.velocity.y = this.sprite.getY() + y;
+    }
+
+    private void playerStairClimbing(StateMachine state)
+    {
+        if (state.playerStairsRightColliding && !state.playerisRotating) {
+            this.playerSetPosition(2f, 2f);
+        } else if (state.playerStairsLeftColliding && state.playerisRotating) {
+            this.playerSetPosition(-2f, 2f);
+        }
+    }
+
     public void update(StateMachine state, SpriteBatch batch, TiledMapTileLayer currentLayer, Items items, Entity entity)
     {
         checkInventory();
@@ -204,6 +218,7 @@ public class Player {
         currentFrame = animator.setPlayerCurrentFrame(this, state);
         collider.getPlayerWorldCollision(this, state, entity);
         state = move(state);
+        playerStairClimbing(state);
         gravity(state);
         jumping(state, this.velocity, this.sprite);
         sprite.setRegion(currentFrame);

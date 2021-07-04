@@ -17,6 +17,8 @@ public class StateMachine {
     public boolean playerIsFlying = true;
     public boolean playerIsJumping = false;
     public boolean playerColliding = false;
+    public boolean playerStairsRightColliding = false;
+    public boolean playerStairsLeftColliding = false;
     public boolean playerCollideLeft = false;
     public boolean playerIsCharging = false;
     public boolean playerCollideRight = false;
