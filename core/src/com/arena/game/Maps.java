@@ -71,9 +71,9 @@ public class Maps {
     private boolean perlinNoise1D(int nCount, float[] fSeed, int nOctaves, float[] fOutput)
     {
         for (int x = 0; x < nCount; x++) {
-            float fNoise = 3.0f;
-            float fScaleAcc = 0.0f;
-            float fScale = 3.0f;
+            float fNoise = 10.0f;
+            float fScaleAcc = 1.0f;
+            float fScale = 1.0f;
 
             for (int o = 0; o < nOctaves; o++) {
                 int nPitch = nCount >> o;
@@ -94,7 +94,7 @@ public class Maps {
 
     private void updateSeed(float[] fNoiseSeed1D)
     {
-        for (int e = 0; e < nOutputSize; e += 32) {
+        for (int e = 0; e < nOutputSize; e ++) {
             fNoiseSeed1D[e] = (float) Math.random() / 1f;
         }
     }
@@ -117,9 +117,9 @@ public class Maps {
             this.x1 = (float) (player.sprite.getX() + (this.chunkEntireSizeRight - player.sprite.getX()));
             this.chunkLoadingRight += this.CHUNKSIZE;
             this.chunkEntireSizeRight += this.CHUNKSIZE;
-            updateSeed(this.fNoiseSeed1D);
             this.countChunk++;
             this.x2 = player.sprite.getHeight();
+            updateSeed(this.fNoiseSeed1D);
             perlinNoise1D(nOutputSize, fNoiseSeed1D, nOctaveCount, fPerlinNoise1D);
             drawPerlinNoise1D();
         }
@@ -128,7 +128,7 @@ public class Maps {
     public boolean drawPerlinNoise1D()
     {
         for (int x = 0; x < nOutputSize; x += 32) {
-            int y = (int) ((fPerlinNoise1D[x] * (float) Gdx.graphics.getHeight() + 800 ) + (float) Gdx.graphics.getHeight() + 200);
+            int y = (int) Math.round((fPerlinNoise1D[x] * (float) Gdx.graphics.getHeight() + 800 ) + (float) Gdx.graphics.getHeight() + 200);
             for (int f = -y, layer = 0; f < Gdx.graphics.getHeight(); f += 32) {
                 TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
                 System.out.println(f);
@@ -136,18 +136,14 @@ public class Maps {
                     cell.setTile(new StaticTiledMapTile(tiles.DIRTGRASS));
                     cell.getTile().setId(id.DIRTGRASS_ID);
                     this.collisionLayer.setCell((int) (x1 + x) / 32, (int) (x2 + -f) / 32, cell);
-                } else if (layer > 0 && layer <= 10) {
+                } else if (layer > 0) {
                     cell.setTile(new StaticTiledMapTile(tiles.DIRT));
                     cell.getTile().setId(id.DIRT_ID);
                     this.collisionLayer.setCell((int) (x1 + x) / 32, (int) (x2 + -f) / 32, cell);
-                } else if (layer > 10 && layer <= 40) {
+                } else if (layer >= 10){
                     cell.setTile(new StaticTiledMapTile(tiles.STONE));
                     cell.getTile().setId(id.STONE_ID);
-                    this.collisionLayer.setCell((int) (x1 + x) / 32, (int) (x2 + -f) / 32, cell);
-                } else if (layer > 50){
-                    cell.setTile(new StaticTiledMapTile(tiles.STONE));
-                    cell.getTile().setId(id.STONE_ID);
-                    this.collisionLayer.setCell((int) (x1 + x) / 32, (int) (x2 + -f) / 32, cell);
+                    this.collisionLayer.setCell((int) (x1 + x) / 32, (int) (-f / 32), cell);
                 }
                 layer++;
             }
