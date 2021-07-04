@@ -203,9 +203,9 @@ public class Player {
     private void playerStairClimbing(StateMachine state)
     {
         if (state.playerStairsRightColliding && !state.playerisRotating) {
-            this.playerSetPosition(2f, 2f);
+            this.playerSetPosition(3.2f, 3.2f);
         } else if (state.playerStairsLeftColliding && state.playerisRotating) {
-            this.playerSetPosition(-2f, 2f);
+            this.playerSetPosition(-3.2f, 3.2f);
         }
     }
 

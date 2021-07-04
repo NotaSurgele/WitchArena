@@ -58,14 +58,13 @@ public class Maps {
         this.batch = new SpriteBatch();
         this.camera.update();
         map = new TiledMap();
-        collisionLayer = new TiledMapTileLayer(Gdx.graphics.getWidth(), Gdx.graphics.getHeight() * 50, 32, 32);
+        collisionLayer = new TiledMapTileLayer(Gdx.graphics.getWidth() * 50, Gdx.graphics.getHeight() * 20, 32, 32);
         collisionLayer.setName("Collision");
         mapRenderer = new OrthogonalTiledMapRenderer(map);
         bgLayer = new BackgroundLayer();
         tiles = new Tiles();
         id = new Tiles.TilesId();
         this.map.getLayers().add(this.collisionLayer);
-        OnUserCreate();
     }
 
     private boolean perlinNoise1D(int nCount, float[] fSeed, int nOctaves, float[] fOutput)
@@ -99,7 +98,7 @@ public class Maps {
         }
     }
 
-    private boolean OnUserCreate()
+    public boolean OnUserCreate(Player player, StateMachine state)
     {
         nOutputSize = Gdx.graphics.getWidth();
         fNoiseSeed1D = new float[nOutputSize];
@@ -107,11 +106,11 @@ public class Maps {
 
         updateSeed(fNoiseSeed1D);
         perlinNoise1D(nOutputSize, fNoiseSeed1D, nOctaveCount, fPerlinNoise1D);
-        drawPerlinNoise1D();
+        while (!chunkLoadingSystem(player, state));
         return true;
     }
 
-    private void chunkLoadingSystem(Player player, StateMachine state)
+    private boolean chunkLoadingSystem(Player player, StateMachine state)
     {
         if (player.sprite.getX() >= this.chunkLoadingRight) {
             this.x1 = (float) (player.sprite.getX() + (this.chunkEntireSizeRight - player.sprite.getX()));
@@ -122,7 +121,9 @@ public class Maps {
             updateSeed(this.fNoiseSeed1D);
             perlinNoise1D(nOutputSize, fNoiseSeed1D, nOctaveCount, fPerlinNoise1D);
             drawPerlinNoise1D();
+            return false;
         }
+        return true;
     }
 
     public boolean drawPerlinNoise1D()
@@ -147,6 +148,8 @@ public class Maps {
                 layer++;
             }
         }
+        mapRenderer.setView(camera);
+        mapRenderer.render();
         return true;
     }
 
