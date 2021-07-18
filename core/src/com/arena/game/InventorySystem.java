@@ -3,6 +3,7 @@ package com.arena.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -51,29 +52,33 @@ public class InventorySystem {
         } if (this.inventoryRender) {
             this.inventoryGUI.setPosition(player.getX() - (this.inventoryGUI.getWidth() / 2), player.getY() - (this.inventoryGUI.getHeight() / 2));
             this.inventoryGUI.draw(batch);
-            this.displayItemGrid(player, batch);
+            this.fillInventoryGUI(player, batch);
+            //this.displayItemGrid(player, batch);
         }
     }
 
-    private Sprite[] fillInventoryGUI(Player player)
+    private Sprite[] fillInventoryGUI(Player player, SpriteBatch batch)
     {
-        //use inventory
         Sprite[] itemGrid = new Sprite[inventory.size()];
         float x = player.getX() - (this.inventoryGUI.getWidth() / 2) + 8;
-        float y = (float) (player.getY() - (this.inventoryGUI.getHeight() / 2) + 9);
+        float y = player.getY() - (this.inventoryGUI.getHeight() / 2) + 9;
         int index = 0;
 
         for (Item item : inventory) {
             TextureRegion text = item.TEXTUREITEM;
+            BitmapFont stack = new BitmapFont();
             itemGrid[index] = new Sprite();
             itemGrid[index].setRegion(text);
-            itemGrid[index++].setBounds(x, y, 32, 32);
+            itemGrid[index].setBounds(x, y, 32, 32);
+            stack.draw(batch, String.valueOf(item.HOWMANY), x + 32, y + 32);
+            itemGrid[index++].draw(batch);
+            stack.dispose();
             x += 56;
         }
         return itemGrid;
     }
 
-    private void displayItemGrid(Player player, SpriteBatch batch)
+    /*private void displayItemGrid(Player player, SpriteBatch batch)
     {
         Sprite[] itemGrid = fillInventoryGUI(player);
 
@@ -81,6 +86,7 @@ public class InventorySystem {
             s.draw(batch);
         }
     }
+    */
 
     public boolean checkItem(int id)
     {
