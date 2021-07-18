@@ -156,6 +156,7 @@ public class Maps {
     public void addBlock(TextureRegion block, int x, int y, int blockId)
     {
         TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+
         cell.setTile(new StaticTiledMapTile(block));
         this.collisionLayer.setCell(x / 32, y / 32, cell);
         this.collisionLayer.getCell(x / 32, y / 32).getTile().setId(blockId);

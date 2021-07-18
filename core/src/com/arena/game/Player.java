@@ -96,6 +96,16 @@ public class Player {
         inventory = new InventorySystem();
     }
 
+    public float getX()
+    {
+        return this.sprite.getX();
+    }
+
+    public float getY()
+    {
+        return this.sprite.getY();
+    }
+
     private void checkHealth(float health)
     {
         if (health <= 0)
@@ -181,6 +191,7 @@ public class Player {
         sprite = animator.updatePlayerSprite(this, state, batch);
         this.camera = setCameraPositionRelativeToPlayer(state);
         camera.update();
+        inventory.update(this, batch);
         batch.setProjectionMatrix(camera.combined);
     }
 
@@ -234,5 +245,6 @@ public class Player {
         moveRight_img.dispose();
         attackLeft_img.dispose();
         attackRight_img.dispose();
+        inventory.dispose();
     }
 }

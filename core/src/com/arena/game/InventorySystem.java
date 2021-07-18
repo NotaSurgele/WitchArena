@@ -1,15 +1,30 @@
 package com.arena.game;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.input.*;
+
 import java.util.ArrayList;
 
 public class InventorySystem {
 
     ArrayList<Item> inventory;
     Items items;
+    Sprite inventoryGUI;
+    Texture inventoryGUITexture;
+
+    private boolean inventoryRender = false;
 
     public InventorySystem() {
-        inventory = new ArrayList<>();
-        items = new Items();
+        this.inventory = new ArrayList<>();
+        this.items = new Items();
+        this.inventoryGUITexture = new Texture("GUI/Inventory-prototype.png");
+        this.inventoryGUI = new Sprite();
+        this.inventoryGUI.setRegion(this.inventoryGUITexture);
+        this.inventoryGUI.setBounds(0,0, 270, 50);
     }
 
     public void addItem(int itemId)
@@ -25,6 +40,16 @@ public class InventorySystem {
         for (int toIncrement = 0; toIncrement != inventory.size(); toIncrement++) {
             if (inventory.get(toIncrement).ID == id)
                 inventory.get(toIncrement).HOWMANY += 1;
+        }
+    }
+
+    public void openAndCloseInventory(Player player, SpriteBatch batch)
+    {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
+            this.inventoryRender = !this.inventoryRender;
+        } if (this.inventoryRender) {
+            this.inventoryGUI.setPosition(player.getX() - (this.inventoryGUI.getWidth() / 2), player.getY() - (this.inventoryGUI.getHeight() / 2));
+            this.inventoryGUI.draw(batch);
         }
     }
 
@@ -75,5 +100,15 @@ public class InventorySystem {
                 return;
             }
         }
+    }
+
+    public void update(Player player, SpriteBatch batch)
+    {
+        this.openAndCloseInventory(player, batch);
+    }
+
+    public void dispose()
+    {
+        this.inventoryGUITexture.dispose();
     }
 }
