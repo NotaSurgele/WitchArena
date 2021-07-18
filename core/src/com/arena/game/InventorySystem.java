@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.input.*;
 
 import java.util.ArrayList;
@@ -50,6 +51,34 @@ public class InventorySystem {
         } if (this.inventoryRender) {
             this.inventoryGUI.setPosition(player.getX() - (this.inventoryGUI.getWidth() / 2), player.getY() - (this.inventoryGUI.getHeight() / 2));
             this.inventoryGUI.draw(batch);
+            this.displayItemGrid(player, batch);
+        }
+    }
+
+    private Sprite[] fillInventoryGUI(Player player)
+    {
+        //use inventory
+        Sprite[] itemGrid = new Sprite[inventory.size()];
+        float x = player.getX() - (this.inventoryGUI.getWidth() / 2) + 8;
+        float y = (float) (player.getY() - (this.inventoryGUI.getHeight() / 2) + 9);
+        int index = 0;
+
+        for (Item item : inventory) {
+            TextureRegion text = item.TEXTUREITEM;
+            itemGrid[index] = new Sprite();
+            itemGrid[index].setRegion(text);
+            itemGrid[index++].setBounds(x, y, 32, 32);
+            x += 56;
+        }
+        return itemGrid;
+    }
+
+    private void displayItemGrid(Player player, SpriteBatch batch)
+    {
+        Sprite[] itemGrid = fillInventoryGUI(player);
+
+        for (Sprite s : itemGrid) {
+            s.draw(batch);
         }
     }
 
