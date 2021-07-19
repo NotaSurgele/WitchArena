@@ -19,6 +19,7 @@ public class InventorySystem {
     Texture inventoryGUITexture;
 
     private boolean inventoryRender = false;
+    private int INVENTORYSIZE = -1;
 
     public InventorySystem() {
         this.inventory = new ArrayList<>();
@@ -53,11 +54,10 @@ public class InventorySystem {
             this.inventoryGUI.setPosition(player.getX() - (this.inventoryGUI.getWidth() / 2), player.getY() - (this.inventoryGUI.getHeight() / 2));
             this.inventoryGUI.draw(batch);
             this.fillInventoryGUI(player, batch);
-            //this.displayItemGrid(player, batch);
         }
     }
 
-    private Sprite[] fillInventoryGUI(Player player, SpriteBatch batch)
+    private void fillInventoryGUI(Player player, SpriteBatch batch)
     {
         Sprite[] itemGrid = new Sprite[inventory.size()];
         float x = player.getX() - (this.inventoryGUI.getWidth() / 2) + 8;
@@ -65,28 +65,22 @@ public class InventorySystem {
         int index = 0;
 
         for (Item item : inventory) {
+            if (this.inventory.size() != this.INVENTORYSIZE) {
+                this.INVENTORYSIZE = this.inventory.size();
+                return;
+            }
             TextureRegion text = item.TEXTUREITEM;
             BitmapFont stack = new BitmapFont();
             itemGrid[index] = new Sprite();
             itemGrid[index].setRegion(text);
             itemGrid[index].setBounds(x, y, 32, 32);
-            stack.draw(batch, String.valueOf(item.HOWMANY), x + 32, y + 32);
-            itemGrid[index++].draw(batch);
+            stack.draw(batch, Integer.toString(item.HOWMANY), x + 32, y + 32);
+            itemGrid[index].draw(batch);
             stack.dispose();
             x += 56;
-        }
-        return itemGrid;
-    }
-
-    /*private void displayItemGrid(Player player, SpriteBatch batch)
-    {
-        Sprite[] itemGrid = fillInventoryGUI(player);
-
-        for (Sprite s : itemGrid) {
-            s.draw(batch);
+            index++;
         }
     }
-    */
 
     public boolean checkItem(int id)
     {
