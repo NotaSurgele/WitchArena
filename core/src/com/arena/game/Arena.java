@@ -8,11 +8,15 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import org.w3c.dom.Text;
+import com.badlogic.gdx.scenes.scene2d.*;
+
+import java.awt.*;
 
 public class Arena extends ApplicationAdapter {
 	SceneManager scene;
 	Debug debug;
 	SpriteBatch batch;
+	Cursor cursor;
 
 	@Override
 	public void create ()
@@ -20,6 +24,7 @@ public class Arena extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		debug = new Debug();
 		scene = new SceneManager(batch);
+		cursor = new Cursor();
 	}
 
 	@Override
@@ -29,6 +34,7 @@ public class Arena extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
 		scene.drawScene(batch);
+		cursor.update(batch);
 		debug.update();
 		batch.end();
 	}

@@ -76,6 +76,11 @@ public class Animator {
         return slime;
     }
 
+    public Animation<TextureRegion> initializeCursorAnimation(Cursor c, Texture t, float frameDuration, int cols, int rows)
+    {
+        return c.cursorAnimation = this.getAnimation(t, c.cursorAnimation, frameDuration, cols, rows);
+    }
+
     public TextureRegion setPlayerCurrentFrame(Player player, StateMachine state) {
         if (state.isPlaying) {
             if (state.playerisMoving || state.playerIsFlying) {

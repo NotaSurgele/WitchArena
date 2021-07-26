@@ -48,6 +48,9 @@ public class Maps {
     float x2 = 0;
     final int CHUNKSIZE = Gdx.graphics.getWidth();
 
+    static final int mapWidth = 1280;
+    static final int mapHeight = 720;
+
     double chunkEntireSizeRight = Gdx.graphics.getWidth();
     double chunkLoadingRight = 0;
     double countChunk = 0;
@@ -58,7 +61,7 @@ public class Maps {
         this.batch = new SpriteBatch();
         this.camera.update();
         map = new TiledMap();
-        collisionLayer = new TiledMapTileLayer(Gdx.graphics.getWidth() * 50, Gdx.graphics.getHeight() * 20, 32, 32);
+        collisionLayer = new TiledMapTileLayer(mapWidth * 50, mapHeight * 20, 32, 32);
         collisionLayer.setName("Collision");
         mapRenderer = new OrthogonalTiledMapRenderer(map);
         bgLayer = new BackgroundLayer();
@@ -80,7 +83,6 @@ public class Maps {
                 int nSample2 = (nSample1 + nPitch) % nCount;
 
                 float fBlend = (float) (x - nSample1) / (float) nPitch;
-
                 float fSample = (1.0f - fBlend) * fSeed[nSample1] + fBlend * fSeed[nSample2];
 
                 fScaleAcc += fScale;
@@ -93,7 +95,7 @@ public class Maps {
 
     private void updateSeed(float[] fNoiseSeed1D)
     {
-        for (int e = 0; e < nOutputSize; e ++) {
+        for (int e = 0; e < nOutputSize; e++) {
             fNoiseSeed1D[e] = (float) Math.random() / 1f;
         }
     }

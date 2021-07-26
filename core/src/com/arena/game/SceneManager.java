@@ -11,7 +11,7 @@ public class SceneManager {
         PAUSE
     }
 
-    private static SCENE scene = SCENE.GAME;
+    public static SCENE scene = SCENE.GAME;
 
     public SceneManager(SpriteBatch batch)
     {
