@@ -1,6 +1,7 @@
 package com.arena.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -20,8 +21,12 @@ public class Cursor {
 
     final float COOLDOWN = 5f;
     final int ANIMATIONMAX;
+
+    boolean reset = false;
+
     int frame = 0;
     boolean flip = false;
+    boolean cursorCatch = true;
 
     public Cursor() {
         this.animator = new Animator();
@@ -71,13 +76,17 @@ public class Cursor {
         sprite.setPosition(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
     }
 
-    private void cursorOverScreen(Sprite sprite)
+    private void cursorOverScreen()
     {
-        if ((Gdx.input.getX() >= 0 && Gdx.input.getX() <= Gdx.graphics.getWidth()) &&
-                (Gdx.input.getY() >= 0 && Gdx.input.getY() <= Gdx.graphics.getHeight())) {
+        if ((this.sprite.getX() >= 10 && this.sprite.getX() <= Gdx.graphics.getWidth() - 10)) {
             Gdx.input.setCursorCatched(true);
+            this.reset = false;
         } else {
             Gdx.input.setCursorCatched(false);
+            if (!this.reset) {
+                Gdx.input.setCursorPosition((int)this.sprite.getX(), (int)this.sprite.getY());
+                this.reset = true;
+            }
         }
     }
 
@@ -90,7 +99,8 @@ public class Cursor {
             this.doCursorAnimation(this.sprite);
         }
         this.setCursorPosition(this.sprite);
-        this.cursorOverScreen(this.sprite);
-        System.out.println(Gdx.input.getX() + " " + Gdx.input.getY());
+        this.cursorOverScreen();
+        System.out.println(this.sprite.getX() + " " + this.sprite.getY());
+        //System.out.println(Gdx.input.getX() + " " + Gdx.input.getY());
     }
 }
