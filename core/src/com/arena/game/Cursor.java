@@ -73,7 +73,7 @@ public class Cursor {
 
     private void setCursorPosition(Sprite sprite)
     {
-        sprite.setPosition(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+        sprite.setPosition(Gdx.input.getX(), (Gdx.graphics.getHeight() - Gdx.input.getY()) - this.sprite.getHeight());
     }
 
     private void cursorOverScreen()
@@ -84,7 +84,7 @@ public class Cursor {
         } else {
             Gdx.input.setCursorCatched(false);
             if (!this.reset) {
-                Gdx.input.setCursorPosition((int)this.sprite.getX(), (int)this.sprite.getY());
+                Gdx.input.setCursorPosition((int)this.sprite.getX(), Gdx.input.getY());
                 this.reset = true;
             }
         }
