@@ -19,7 +19,7 @@ public class Items {
 
     private ArrayList<Item> setItems()
     {
-        ArrayList<Item> items = new ArrayList<>();
+        ArrayList<Item> items = new ArrayList<Item>();
 
         items.add(new Item(new TextureRegion(new Texture(TILES + "Tile_02.png")), "Dirtgrass",0, 0));
         items.add(new Item(new TextureRegion(new Texture(TILES + "Tile_12.png")), "Dirt",1, 0));

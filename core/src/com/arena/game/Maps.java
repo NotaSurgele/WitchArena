@@ -26,8 +26,6 @@ import static com.badlogic.gdx.Input.Keys.*;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-//1280 720
-
 public class Maps {
     TiledMap map;
     OrthographicCamera camera;
@@ -61,7 +59,7 @@ public class Maps {
         this.batch = new SpriteBatch();
         this.camera.update();
         map = new TiledMap();
-        collisionLayer = new TiledMapTileLayer(mapWidth * 50, mapHeight * 20, 32, 32);
+        collisionLayer = new TiledMapTileLayer(mapWidth * 10, mapHeight * 20, 32, 32);
         collisionLayer.setName("Collision");
         mapRenderer = new OrthogonalTiledMapRenderer(map);
         bgLayer = new BackgroundLayer();

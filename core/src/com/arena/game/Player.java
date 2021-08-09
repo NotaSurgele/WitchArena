@@ -223,6 +223,7 @@ public class Player {
     public void update(StateMachine state, SpriteBatch batch, TiledMapTileLayer currentLayer, Items items, Entity entity)
     {
         checkInventory();
+        System.out.println(this.sprite.getX());
         stateTime += Gdx.graphics.getDeltaTime();
         deltaTime = Gdx.graphics.getDeltaTime();
         currentFrame = animator.setPlayerCurrentFrame(this, state);

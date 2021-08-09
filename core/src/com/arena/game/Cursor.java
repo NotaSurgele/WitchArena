@@ -100,7 +100,5 @@ public class Cursor {
         }
         this.setCursorPosition(this.sprite);
         this.cursorOverScreen();
-        System.out.println(this.sprite.getX() + " " + this.sprite.getY());
-        //System.out.println(Gdx.input.getX() + " " + Gdx.input.getY());
     }
 }

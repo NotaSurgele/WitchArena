@@ -12,21 +12,21 @@ public class Enemys {
 
     public Enemys() {
         slime = new Slime[3];
-        slime[0] = new Slime(200, 2000, 130, 130);
-        slime[1] = new Slime(800, 2000, 130, 130);
-        slime[2] = new Slime(500, 2000, 130, 130);
+        slime[0] = new Slime(1280, 5000, 130, 130);
+        slime[1] = new Slime(2500, 5000, 130, 130);
+        slime[2] = new Slime(5000, 5000, 130, 130);
     }
 
     public void update(OrthographicCamera camera, TiledMapTileLayer colLayer, Player player) {
-        slime[0].update(camera, colLayer, player);
-        slime[1].update(camera, colLayer, player);
-        slime[2].update(camera, colLayer, player);
+        for (Slime s : slime) {
+            s.update(camera, colLayer, player);
+        }
     }
 
     public void dispose()
     {
-        slime[0].dispose();
-        slime[1].dispose();
-        slime[2].dispose();
+        for (Slime s : slime) {
+            s.dispose();
+        }
     }
 }
